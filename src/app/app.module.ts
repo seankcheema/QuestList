@@ -7,11 +7,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './navbar/navbar.component';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { HomeComponent } from './home/home.component';
+import { CommunityComponent } from './community/community.component';
+import { TopGamesComponent } from './top-games/top-games.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    AboutUsComponent,
+    SignUpComponent,
+    HomeComponent,
+    CommunityComponent,
+    TopGamesComponent
   ],
   imports: [
     BrowserModule,

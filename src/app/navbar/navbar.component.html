@@ -1,8 +1,10 @@
 <mat-toolbar color="primary" class="toolbar">
-    <span>QuestList</span>
+    <span class="quest-logo"><a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">QuestList</a></span>
     <div class="spacer"></div>
-    <button mat-button>Upcoming Games</button>
-    <button mat-button>Commmunity</button>
-    <button mat-button>About Us</button>
-    <button mat-raised-button color="accent">Sign Up</button>
+    <button mat-button routerLink="/top-games" routerLinkActive="active" ariaCurrentWhenActive="page">Top Games</button>
+    <button mat-button routerLink="/community" routerLinkActive="active" ariaCurrentWhenActive="page">Commmunity</button>
+    <button mat-button routerLink="/about-us" routerLinkActive="active" ariaCurrentWhenActive="page">About Us</button>
+    <button mat-raised-button color="accent" routerLink="/sign-up" routerLinkActive="active" ariaCurrentWhenActive="page">Sign Up</button>
   </mat-toolbar>
+
+  <router-outlet></router-outlet>
