@@ -45,3 +45,5 @@ Thumbs.db
 # Go junk
 /pkg
 /bin
+go.sum
+go.mod
