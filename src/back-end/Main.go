@@ -1,5 +1,7 @@
 package main
 
+//This is a test code to ensure that back end can retrieve url handles and process them
+
 import (
 	"encoding/json"
 	"fmt"
