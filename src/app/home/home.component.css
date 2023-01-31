@@ -1,0 +1,10 @@
+mat-grid-tile {
+    background: lightblue;
+}
+
+.left-column {
+    margin-top: auto;
+    margin-right: 525px;
+    margin-left: auto;
+    margin-bottom: auto;
+}
