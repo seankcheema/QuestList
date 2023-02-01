@@ -8,6 +8,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//For Testing
+
 func TestMain() {
 
 	//Creates a rounter
