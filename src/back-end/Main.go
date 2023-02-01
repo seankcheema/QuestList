@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
 )
 
@@ -20,7 +21,24 @@ type Person struct {
 	LastName  string `json:"last_name"`
 }
 
+// type Game struct{
+// 	Name string
+// 	Publisher string
+// }
+
 func main() {
+
+	// RAWG SDK
+	config := rawg.Config{
+		ApiKey:   "476cd66f8e4d44eb975aad199e0d7a07", //RAWG API key
+		Language: "en",                               // English
+		Rps:      5,                                  // Has to stay 5 (limit)
+	}
+	client := rawg.NewClient(http.DefaultClient, &config)
+
+	filter := rawg.NewGamesFilter()
+	games, num, err = client.GetGames(filter)
+
 	//Creates a rounter
 	router := mux.NewRouter()
 
