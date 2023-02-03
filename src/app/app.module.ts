@@ -8,13 +8,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarComponent } from './util/navbar/navbar.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { HomeComponent } from './home/home.component';
 import { CommunityComponent } from './community/community.component';
 import { TopGamesComponent } from './top-games/top-games.component';
-import { GamesComponent } from './games/games.component';
+import { GamesComponent } from './util/games/games.component';
 
 @NgModule({
   declarations: [
