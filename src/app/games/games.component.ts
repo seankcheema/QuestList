@@ -14,7 +14,6 @@ export class GamesComponent {
   constructor(private gameService: GameService) { }
 
   showGames() {
-    this.gameService.getGames()
-      .subscribe((data: Games) => this.games = {...data });
+    this.gameService.getGames().subscribe();
   }
 }
