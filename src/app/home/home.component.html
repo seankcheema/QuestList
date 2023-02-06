@@ -1,7 +1,7 @@
 <p>This is the home page</p>
 <div id="content">
     <div class="left-column">
-        <article class="widget-container left">
+        <article class="widget-container-left">
             <div class="widget-header">
                 <h1 class="label1">
                   <p><em>Popular Games</em></p>
@@ -10,7 +10,6 @@
             <div class="widget-content">
                 <mat-grid-list cols="4" rows="2" rowHeight="1:1">
                     <mat-grid-tile>
-                        <img src="//images.igdb.com/igdb/image/upload/t_cover_big/co545v.jpg">
                     </mat-grid-tile>
                     <mat-grid-tile >test</mat-grid-tile>
                     <mat-grid-tile >test again</mat-grid-tile>
@@ -18,8 +17,102 @@
             </mat-grid-list>
             </div>
         </article>
+        <div class="spacer"></div>
+        <article class ="widget-container-left">
+            <div class="widget-header">
+                <h1 class="label1">
+                    <p><em>Recently Released</em></p>
+                </h1>
+            </div>
+            <div class="widget-content">
+                <mat-grid-list cols="4" rows="2" rowHeight="1:1">
+                    <mat-grid-tile>
+                    </mat-grid-tile>
+                    <mat-grid-tile ></mat-grid-tile>
+                    <mat-grid-tile ></mat-grid-tile>
+                 <mat-grid-tile ></mat-grid-tile>
+            </mat-grid-list>
+            </div>
+        </article>
+        <div class="spacer"></div>
+        <article class="widget-containter-left2">
+            <article class="left-list">
+                <div class ="list-header">
+                    <h1 class="label2">
+                        <p><em>New Reviews</em></p>
+                    </h1>
+                </div>
+                <mat-list>
+                    <mat-list-item>
+                     <div matListItemTitle>First Review</div>
+                     This game was great!
+                    </mat-list-item> 
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                     <div matListItemTitle>Second Review</div>
+                     Terrible
+                    </mat-list-item> 
+                    <mat-divider></mat-divider>
+                </mat-list>
+            </article>
+            <div class="spacer"></div>
+            <article class="right-list">
+                <div class ="list-header">
+                    <h1 class="label2">
+                        <p><em>Top Rated </em></p>
+                    </h1>
+                </div>
+            </article>
+        </article>
     </div>
     <div class="right-column">
-    
+        <article class="widget-container-right">
+            <div class="widget-header2">
+                <h1 class="label1">
+                    <p><em>Coming Soon</em></p>
+                </h1>
+            </div>
+            <div class="widget-content2">
+                <mat-list>
+                   <mat-list-item>
+                    <div matListItemTitle>Title</div>
+                    <div matListItemLine>blah blah</div>
+                   </mat-list-item> 
+                   <mat-divider></mat-divider>
+                   <mat-list-item>
+                    <div matListItemTitle>Title</div>
+                    <div matListItemLine>blah blah</div>
+                   </mat-list-item> 
+                   <mat-divider></mat-divider>
+                   <mat-list-item>
+                    <div matListItemTitle>Title</div>
+                    <div matListItemLine>blah blah</div>
+                   </mat-list-item> 
+                   <mat-divider></mat-divider>
+                   <mat-list-item>
+                    <div matListItemTitle>Title</div>
+                    <div matListItemLine>blah blah</div>
+                   </mat-list-item> 
+                   <mat-divider></mat-divider>
+                   <mat-list-item>
+                    <div matListItemTitle>Title</div>
+                    <div matListItemLine>blah blah</div>
+                   </mat-list-item> 
+                   <mat-divider></mat-divider>
+                </mat-list>
+            </div>
+        </article>
+        <div class="spacer"></div>
+        <article class="widget-container-right">
+            <mat-card class="card">
+                <mat-card-header>
+                    <mat-card-title>Featured Game</mat-card-title>
+                </mat-card-header>
+                <!-- img -->
+                <mat-card-content>
+                    <p>Video Game will go here, along with its cover image</p>
+                </mat-card-content>
+            </mat-card>
+        </article>
     </div>
 </div>
