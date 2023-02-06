@@ -9,6 +9,7 @@ Professor Dobra
 
 **_User Stories:_**
 <br />
+<br/>
 
 **1) About Us** <hr />
 As a **new site visitor** I would like to **access an about us page** for the purpose of **learning more about a website.**
