@@ -60,10 +60,13 @@ As a **new site visitor** I would like to **access an about us page** for the pu
 
  - Communicate with backend server 
  - Display information from backend server on site 
- - Create a sign up/log in GUI Creating routing to navigate pages 
+ - Create a sign up/log in GUI 
+ - Creating routing to navigate pages 
  - Implement Angular Materials to create GUI
 
 Most of the time spent by the front-end team was learning how to get started with Angular and using the HTTPClientModule to communicate with the backend server. The frontend team was unfamiliar with the Angular framework and typescript prior to this project. The frontend team learned how to use Angular Materials in order to create a working GUI on the site and routing to move between pages.
+
+We started address our issues by creating a navigation bar which utilized routing in order to move between pages on our site. We were also successful in creating a skeleton for our home page and an About Us page with information about our site for new users using Angular Materials. However, We were unsuccessful in creating a sign-up/log-in GUI before the Sprint 1 deadline mostly because more effort was put into finding a database and attempting to link front-end to back-end. 
 
 **Backend:**
 
