@@ -4,6 +4,7 @@ import { MatButtonModule} from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientModule } from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,7 +35,8 @@ import { GamesComponent } from './util/games/games.component';
     BrowserAnimationsModule,
     MatButtonModule,
     MatToolbarModule,
-    MatGridListModule
+    MatGridListModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

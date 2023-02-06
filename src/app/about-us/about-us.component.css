@@ -1,0 +1,13 @@
+.tabs {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5%;
+    margin-left: 400px;
+    margin-right: 400px;
+    padding: 10px;
+    padding-bottom: 30px;
+}
+.tabs h2 {
+    margin-top: 10px;
+}
