@@ -3,8 +3,28 @@ mat-grid-tile {
 }
 
 .left-column {
-    margin-top: auto;
-    margin-right: 525px;
-    margin-left: auto;
-    margin-bottom: auto;
+    width: 60%;
+    padding: 30px;
+    vertical-align: top;
+    float: left;
+}
+
+.right-column {
+    float: right;
+    width: 30%;
+    vertical-align: top;
+    padding: 30px;
+    
+}
+
+.spacer {
+    height: 30px;
+}
+
+.widget-container-right{
+    border: 1px solid black;
+}
+
+.widget-container-left2 {
+    border: 1px solid black;
 }
