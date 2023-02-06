@@ -4,12 +4,9 @@ import { MatButtonModule} from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientModule } from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
-<<<<<<< HEAD
 import { MatTabsModule } from '@angular/material/tabs';
-=======
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
->>>>>>> de5d00418163a50d5dc3bb79cc74eed7a5d07465
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,12 +38,9 @@ import { GamesComponent } from './util/games/games.component';
     MatButtonModule,
     MatToolbarModule,
     MatGridListModule,
-<<<<<<< HEAD
-    MatTabsModule
-=======
+    MatTabsModule,
     MatListModule,
-    MatCardModule,
->>>>>>> de5d00418163a50d5dc3bb79cc74eed7a5d07465
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
