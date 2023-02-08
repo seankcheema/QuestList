@@ -34,8 +34,8 @@ func main() {
 	router.HandleFunc("/allGames", func(w http.ResponseWriter, r *http.Request) {
 		PrintAllGames(w, r, client)
 	}).Methods("GET")
-	router.HandleFunc("/sign-in", func(w http.ResponseWriter, r *http.Request) {
-		SignIn(w, r, users)
+	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
+		SignUp(w, r, users)
 	}).Methods("GET")
 	router.HandleFunc("/", Hello).Methods("GET")
 	http.Handle("/", router)
@@ -45,7 +45,7 @@ func main() {
 
 }
 
-func SignIn(w http.ResponseWriter, r *http.Request, users map[string]*user) {
+func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 	w.WriteHeader(http.StatusOK)
 
 	//User map Creation
