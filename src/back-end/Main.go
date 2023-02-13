@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"encoding/json"
+
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "gorm.io/gorm"
 )
-
-// type Game struct{
-// 	Name string
-// 	Publisher string
-// }
 
 func main() {
 
@@ -24,8 +23,16 @@ func main() {
 		Rps:      5,                                  // Has to stay 5 (limit)
 	}
 
+	// GORM TESTING
+	// db, err := gorm.Open("sqlite2", "Users.db")
+	// if err != nil {
+	// 	fmt.Println("Connection Failed")
+	// } else {
+	// 	fmt.Println("Connection Established")
+	// }
+
 	//Setup client to talk to database
-	client := rawg.NewClient(http.DefaultClient, &config)
+	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
 	users := make(map[string]*user)
 
 	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
@@ -111,21 +118,18 @@ func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 	var err error
 
 	games, num, err = client.GetGames(filter)
-	limit := num
-	var j int = 1
 
 	//Limit of 40 games per "page" so we iterarte through all pages
-	for limit > 0 {
-		for i := 0; i < 40; i++ {
-			fmt.Fprint(w, "Name: ")
-			fmt.Fprintln(w, games[i].Name)
-		}
 
-		j++
-		filter := rawg.NewGamesFilter().SetPage(j).SetPageSize(40)
-		games, num, err = client.GetGames(filter)
-		limit -= 40
+	// for i := 0; i < 40; i++ {
+	fmt.Fprint(w, "Name: ")
+	fmt.Fprintln(w, games[0])
+	response, err := json.Marshal(games[0])
+	if err != nil {
+		return
 	}
+	//}
+	w.Write(response)
 
 	_ = err
 	_ = num
