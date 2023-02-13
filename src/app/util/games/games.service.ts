@@ -17,12 +17,12 @@ export interface Games {
 
 @Injectable()
 export class GameService {
-    gamesURL = 'http://localhost:8080/games';
+    private _gamesURL = 'http://localhost:8080/allGames';
 
     constructor(private http: HttpClient) { }
 
     getGames() {
-        return this.http.get<GameService>('gamesURL');
+        return this.http.get<GameService>(this._gamesURL);
     }
 
     private handleError(error: HttpErrorResponse) {
