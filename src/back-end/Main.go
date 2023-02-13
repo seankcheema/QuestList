@@ -8,8 +8,8 @@ import (
 
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	_ "gorm.io/gorm"
+	// _ "github.com/jinzhu/gorm/dialects/sqlite"
+	// _ "gorm.io/gorm"
 )
 
 func main() {
