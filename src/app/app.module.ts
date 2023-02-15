@@ -17,7 +17,9 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { HomeComponent } from './home/home.component';
 import { CommunityComponent } from './community/community.component';
 import { TopGamesComponent } from './top-games/top-games.component';
-import { GamesComponent } from './util/games/games.component';
+import { GameComponent } from './util/game/game.component';
+
+import { GameService } from './util/game/game.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,7 @@ import { GamesComponent } from './util/games/games.component';
     HomeComponent,
     CommunityComponent,
     TopGamesComponent,
-    GamesComponent
+    GameComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +44,9 @@ import { GamesComponent } from './util/games/games.component';
     MatListModule,
     MatCardModule
   ],
-  providers: [],
+  providers: [
+    GameService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,7 @@
+<h3>Games Component Working!</h3>
+<button mat-button (click)="clear(); showGames()">Get Games</button>
+<div>
+    <span *ngIf="game">
+        <p>Game Name: {{game.Name}}</p>
+    </span>
+</div>
