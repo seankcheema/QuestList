@@ -12,7 +12,7 @@ export interface Game {
 @Injectable()
 export class GameService {
 
-    gamesUrl = 'localhost:8080/allGames'
+    gamesUrl = 'http://localhost:8080/allGames'
 
     constructor(private http : HttpClient) { }
 
