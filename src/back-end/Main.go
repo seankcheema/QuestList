@@ -35,6 +35,7 @@ func main() {
 	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
 	users := make(map[string]*user)
 
+	//Functions that handles the url's sent from the backend
 	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
 		PrintGames(w, r, client)
 	}).Methods("GET")
@@ -52,11 +53,19 @@ func main() {
 
 }
 
+// Enable the front end to access backend, enables Cross-Origin Resource Sharing because frontend and backend serve from different domains
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	//Updates the header to indicate successful reach of the fuction
 	w.WriteHeader(http.StatusOK)
 
 	//User map Creation
-
 	var username string
 	var password string
 
@@ -74,10 +83,16 @@ func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 }
 
 func Hello(w http.ResponseWriter, r *http.Request) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
 	fmt.Fprint(w, "Hello, Welcome to the Temporary Back-End Home Page")
 }
 
 func PrintGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
 	//Specify status code
 	w.WriteHeader(http.StatusOK)
 
@@ -108,6 +123,9 @@ func PrintGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 }
 
 func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
 	//Specify status code
 	w.WriteHeader(http.StatusOK)
 
