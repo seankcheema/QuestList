@@ -140,15 +140,20 @@ func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 	//Limit of 40 games per "page" so we iterarte through all pages
 
 	// for i := 0; i < 40; i++ {
-	fmt.Fprint(w, "Name: ")
-	fmt.Fprintln(w, games[0])
+
+	// fmt.Fprintln(w, games[0])
 	response, err := json.Marshal(games[0])
 	if err != nil {
 		return
 	}
 	//}
 	w.Write(response)
-
+	// response, err = json.Marshal(games[1])
+	if err != nil {
+		return
+	}
+	//}
+	// w.Write(response)
 	_ = err
 	_ = num
 	_ = games
