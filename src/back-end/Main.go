@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"encoding/json"
 
@@ -23,30 +24,29 @@ func main() {
 		Rps:      5,                                  // Has to stay 5 (limit)
 	}
 
-	// GORM TESTING
-	// db, err := gorm.Open("sqlite2", "Users.db")
-	// if err != nil {
-	// 	fmt.Println("Connection Failed")
-	// } else {
-	// 	fmt.Println("Connection Established")
-	// }
-
 	//Setup client to talk to database
 	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
 	users := make(map[string]*user)
 
-	//Functions that handles the url's sent from the backend
+	//Functions that handles the url's sent from the backend:
 	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
 		PrintGames(w, r, client)
 	}).Methods("GET")
+
 	router.HandleFunc("/allGames", func(w http.ResponseWriter, r *http.Request) {
 		PrintAllGames(w, r, client)
 	}).Methods("GET")
+
 	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
 		SignUp(w, r, users)
 	}).Methods("GET")
+
 	router.HandleFunc("/", Hello).Methods("GET")
 	http.Handle("/", router)
+
+	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
+		recentGames(w, r, client)
+	}).Methods("GET")
 
 	//Start and listen for requests
 	http.ListenAndServe(":8080", router)
@@ -119,7 +119,6 @@ func PrintGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	_ = err
 	_ = num
 	_ = games
-
 }
 
 func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
@@ -142,7 +141,7 @@ func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 	// for i := 0; i < 40; i++ {
 
 	// fmt.Fprintln(w, games[0])
-	response, err := json.Marshal(games[0])
+	response, err := json.Marshal(games)
 	if err != nil {
 		return
 	}
@@ -154,6 +153,42 @@ func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 	}
 	//}
 	// w.Write(response)
+	_ = err
+	_ = num
+	_ = games
+}
+
+// Handles requests to get the 4 most recent games released
+func recentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	//Specify status code
+	w.WriteHeader(http.StatusOK)
+
+	//Create time frame
+	start := time.Now()
+	end := start.AddDate(0, -1, 0) //1 month ago from current time
+
+	var specifiedTime rawg.DateRange
+	specifiedTime.From = end
+	specifiedTime.To = start
+
+	//Set filer to search all games in the past month, ordered by release date {handled by RAWG itself}
+	filter := rawg.NewGamesFilter().SetPageSize(4).SetOrdering("released")
+	var games []*rawg.Game
+	var num int
+	var err error
+
+	games, num, err = client.GetGames(filter)
+
+	response, err := json.Marshal(games)
+	if err != nil {
+		return
+	}
+
+	w.Write(response)
+
 	_ = err
 	_ = num
 	_ = games
