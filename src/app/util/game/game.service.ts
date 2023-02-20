@@ -30,11 +30,16 @@ export interface Game {
 @Injectable()
 export class GameService {
 
-    gamesUrl = 'http://localhost:8080/allGames'
+    gamesUrl: string = 'http://localhost:8080/allGames/'
 
     constructor(private http : HttpClient) { }
 
-    getGames() {
+    getGames(page: number) {
+
+        this.gamesUrl = this.gamesUrl + page;
+
+        console.log(this.gamesUrl)
+
         return this.http.get<Game>(this.gamesUrl)
         .pipe(
             retry(3),
