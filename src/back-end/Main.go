@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"encoding/json"
@@ -29,23 +30,29 @@ func main() {
 	users := make(map[string]*user)
 
 	//Functions that handles the url's sent from the backend:
+
+	//PlaceHolder for a neutral handler
+	router.HandleFunc("/", Hello).Methods("GET")
+	http.Handle("/", router)
+
+	//Takes in a game from the front end that is requested, and return the requested game {CALLS GAME}
 	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
-		PrintGames(w, r, client)
+		Game(w, r, client)
 	}).Methods("GET")
 
-	router.HandleFunc("/allGames", func(w http.ResponseWriter, r *http.Request) {
-		PrintAllGames(w, r, client)
+	//Returns a json of all games in the database {CALLS ALLGAMES}
+	router.HandleFunc("/allGames/{page}", func(w http.ResponseWriter, r *http.Request) {
+		AllGames(w, r, client)
 	}).Methods("GET")
 
+	//Creates a user and adds it to the database {CALLS SIGNUP}
 	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
 		SignUp(w, r, users)
 	}).Methods("GET")
 
-	router.HandleFunc("/", Hello).Methods("GET")
-	http.Handle("/", router)
-
+	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
 	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
-		recentGames(w, r, client)
+		RecentGames(w, r, client)
 	}).Methods("GET")
 
 	//Start and listen for requests
@@ -76,10 +83,20 @@ func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 	if _, ok := users[username]; ok {
 		fmt.Fprint(w, "User ", username, " already exists!")
 	} else {
-		users[username] = newUser(username, password)
+		users[username] = NewUser(username, password)
 		fmt.Fprint(w, "User ", username, " added!")
 	}
 
+}
+
+type user struct {
+	username string
+	password string
+}
+
+func NewUser(username string, password string) *user {
+	u := user{username: username, password: password}
+	return &u
 }
 
 func Hello(w http.ResponseWriter, r *http.Request) {
@@ -89,13 +106,14 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello, Welcome to the Temporary Back-End Home Page")
 }
 
-func PrintGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
 	//Specify status code
 	w.WriteHeader(http.StatusOK)
 
+	//Recieve game name from front-----------------
 	fmt.Println("Input game name:")
 
 	var err error
@@ -103,6 +121,8 @@ func PrintGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	var name string
 
 	fmt.Scanln(&name)
+
+	//--------------------
 
 	//Update response writer
 	filter := rawg.NewGamesFilter().SetPageSize(40).SetSearch(name)
@@ -121,15 +141,22 @@ func PrintGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	_ = games
 }
 
-func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
 	//Specify status code
 	w.WriteHeader(http.StatusOK)
 
+	//Page iterator
+	params := mux.Vars(r)
+	tempCurrPage := params["page"]
+
+	//cast to int
+	currPage, _ := strconv.Atoi(tempCurrPage)
+
 	//Update response writer and request all games
-	filter := rawg.NewGamesFilter().SetPageSize(40)
+	filter := rawg.NewGamesFilter().SetPage(currPage).SetPageSize(40)
 	var games []*rawg.Game
 	var num int
 	var err error
@@ -159,7 +186,7 @@ func PrintAllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 }
 
 // Handles requests to get the 4 most recent games released
-func recentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
@@ -192,14 +219,4 @@ func recentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	_ = err
 	_ = num
 	_ = games
-}
-
-type user struct {
-	username string
-	password string
-}
-
-func newUser(username string, password string) *user {
-	u := user{username: username, password: password}
-	return &u
 }
