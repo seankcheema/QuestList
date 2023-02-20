@@ -146,7 +146,7 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 }
 
 // Takes the handler's page, and returns all games of that page (40 max)
-func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
@@ -171,17 +171,19 @@ func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Limit of 40 games per "page"
 	response, err := json.Marshal(games)
 	if err != nil {
-		return
+		return nil
 	}
 
 	w.Write(response)
 	if err != nil {
-		return
+		return nil
 	}
+	
 
 	_ = err
 	_ = num
 	_ = games
+	return games
 }
 
 // Handles requests to get the 4 most recent games released
