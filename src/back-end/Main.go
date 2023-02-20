@@ -14,6 +14,7 @@ import (
 	// _ "gorm.io/gorm"
 )
 
+// Main function -> the main point of entry
 func main() {
 
 	//Creates a rounter
@@ -36,7 +37,7 @@ func main() {
 	http.Handle("/", router)
 
 	//Takes in a game from the front end that is requested, and return the requested game {CALLS GAME}
-	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/specific-game/{slug}", func(w http.ResponseWriter, r *http.Request) {
 		Game(w, r, client)
 	}).Methods("GET")
 
@@ -57,7 +58,6 @@ func main() {
 
 	//Start and listen for requests
 	http.ListenAndServe(":8080", router)
-
 }
 
 // Enable the front end to access backend, enables Cross-Origin Resource Sharing because frontend and backend serve from different domains
@@ -65,6 +65,21 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
+// User Struct
+type user struct {
+	username string
+	password string
+}
+
+// Placeholder that handles base hanlder "/"
+func Hello(w http.ResponseWriter, r *http.Request) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	fmt.Fprint(w, "Hello, Welcome to the Temporary Back-End Home Page")
+}
+
+// Handles creation of user struct and stores in the database {W-I-P}
 func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
@@ -86,26 +101,15 @@ func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 		users[username] = NewUser(username, password)
 		fmt.Fprint(w, "User ", username, " added!")
 	}
-
 }
 
-type user struct {
-	username string
-	password string
-}
-
+// Helper function to help create tge struct and storing in the database
 func NewUser(username string, password string) *user {
 	u := user{username: username, password: password}
 	return &u
 }
 
-func Hello(w http.ResponseWriter, r *http.Request) {
-	//Allows the doamin to be accessed by frontenf
-	enableCors(&w)
-
-	fmt.Fprint(w, "Hello, Welcome to the Temporary Back-End Home Page")
-}
-
+// Takes the handler, get the game requested, and returns json
 func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
@@ -113,27 +117,27 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Specify status code
 	w.WriteHeader(http.StatusOK)
 
-	//Recieve game name from front-----------------
-	fmt.Println("Input game name:")
-
-	var err error
-
-	var name string
-
-	fmt.Scanln(&name)
+	//Recieve game name from front, using the game's slug
+	params := mux.Vars(r)
+	slug := params["slug"]
 
 	//--------------------
 
 	//Update response writer
-	filter := rawg.NewGamesFilter().SetPageSize(40).SetSearch(name)
+	filter := rawg.NewGamesFilter().SetPageSize(10).SetSearch(slug)
 	var games []*rawg.Game
 	var num int
+	var err error
 	games, num, err = client.GetGames(filter)
-	for i := 0; i < 10; i++ {
-		fmt.Fprint(w, "Name: ")
-		fmt.Fprintln(w, games[i].Name)
-		fmt.Fprint(w, "Rating: ")
-		fmt.Fprintln(w, games[i].Rating)
+
+	response, err := json.Marshal(games)
+	if err != nil {
+		return
+	}
+
+	w.Write(response)
+	if err != nil {
+		return
 	}
 
 	_ = err
@@ -141,6 +145,7 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	_ = games
 }
 
+// Takes the handler's page, and returns all games of that page (40 max)
 func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
@@ -163,23 +168,17 @@ func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 
 	games, num, err = client.GetGames(filter)
 
-	//Limit of 40 games per "page" so we iterarte through all pages
-
-	// for i := 0; i < 40; i++ {
-
-	// fmt.Fprintln(w, games[0])
+	//Limit of 40 games per "page"
 	response, err := json.Marshal(games)
 	if err != nil {
 		return
 	}
-	//}
+
 	w.Write(response)
-	// response, err = json.Marshal(games[1])
 	if err != nil {
 		return
 	}
-	//}
-	// w.Write(response)
+
 	_ = err
 	_ = num
 	_ = games
