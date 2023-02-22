@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Game, GameService } from './game.service';
 
 @Component({
@@ -6,12 +7,19 @@ import { Game, GameService } from './game.service';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent {
+export class GameComponent implements OnInit {
   error: any;
   headers: string[] = [];
   games: Game[] | undefined;
 
-  constructor(private gameService: GameService) { this.showGames() }
+  constructor(private gameService: GameService, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    
+    const page = this.route.snapshot.queryParamMap.get('page');
+
+    this.showGames(page);
+  }
 
   clear() {
     this.games = undefined;
@@ -19,8 +27,8 @@ export class GameComponent {
     this.headers = [];
   }
 
-  showGames() {
-    this.gameService.getGames()
+  showGames(page: string | null) {
+    this.gameService.getGames(page)
     .subscribe((data: Game[]) => this.games = data );
   }
 
