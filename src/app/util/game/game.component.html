@@ -1,6 +1,6 @@
 <h3>Games Component Working!</h3>
 <div>
-    <span *ngIf="game">
-        <p>Game Name: {{game.name}}</p>
+    <span *ngIf="games">
+        <li *ngFor="let game of games">Game Name: {{game.name}}</li>
     </span>
 </div>

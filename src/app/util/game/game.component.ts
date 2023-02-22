@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Game, GameService } from './game.service';
 
 @Component({
@@ -10,20 +9,19 @@ import { Game, GameService } from './game.service';
 export class GameComponent {
   error: any;
   headers: string[] = [];
-  game: Game | undefined;
-  page: number = 1;
+  games: Game[] | undefined;
 
-  constructor(private gameService: GameService, private route: ActivatedRoute) { }
+  constructor(private gameService: GameService) { this.showGames() }
 
   clear() {
-    this.game = undefined;
+    this.games = undefined;
     this.error = undefined;
     this.headers = [];
   }
 
-  showGames(page: number) {
-    this.gameService.getGames(page)
-    .subscribe((data: Game) => this.game = { ...data });
+  showGames() {
+    this.gameService.getGames()
+    .subscribe((data: Game[]) => this.games = data );
   }
 
 }
