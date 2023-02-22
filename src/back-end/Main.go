@@ -80,6 +80,7 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handles creation of user struct and stores in the database {W-I-P}
+// THIS IS NOT INTENDED IMPLEMENTATION AND IS NOT TESTED
 func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
@@ -103,14 +104,14 @@ func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 	}
 }
 
-// Helper function to help create tge struct and storing in the database
+// Helper function to help create tge struct and storing in the database {W}
 func NewUser(username string, password string) *user {
 	u := user{username: username, password: password}
 	return &u
 }
 
 // Takes the handler, get the game requested, and returns json
-func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
@@ -132,17 +133,21 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 
 	response, err := json.Marshal(games)
 	if err != nil {
-		return
+		return nil
 	}
 
 	w.Write(response)
 	if err != nil {
-		return
+		return nil
 	}
 
 	_ = err
 	_ = num
 	_ = games
+
+	fmt.Println(games[0].Name)
+
+	return games
 }
 
 // Takes the handler's page, and returns all games of that page (40 max)
@@ -178,15 +183,16 @@ func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*ra
 	if err != nil {
 		return nil
 	}
-	
 
 	_ = err
 	_ = num
 	_ = games
+
 	return games
 }
 
 // Handles requests to get the 4 most recent games released
+// Due to the constantly changing nature of the games that are updated per day, this cannot be concretely unit tested with set values
 func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
