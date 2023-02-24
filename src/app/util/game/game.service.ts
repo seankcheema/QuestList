@@ -27,7 +27,9 @@ export interface Game {
     platforms: any[];
 }
 
-@Injectable()
+@Injectable(
+    {providedIn: 'root'}
+)
 export class GameService {
 
     gamesUrl: string = 'http://localhost:8080/allGames/'

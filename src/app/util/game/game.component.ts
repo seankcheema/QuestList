@@ -7,6 +7,7 @@ import { Game, GameService } from './game.service';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
+
 export class GameComponent implements OnInit {
   error: any;
   headers: string[] = [];
