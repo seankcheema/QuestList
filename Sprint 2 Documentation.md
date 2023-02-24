@@ -34,6 +34,18 @@ Professor Dobra
 
 **Frontend:**
 
+_HttpClient:_<br/>
+We started by focusing on implementing an HttpClient so that we could effectively communicate with the back-end. Once we we achieved this we were able to send JSON files between the front-end and the back-end.
+
+_Game Service:_<br/>
+We then created an injectable Game Service class with a function that gets an observable from the back-end with a parameter ***page***. This parameter specifies which page should be queried from the back-end. If the Game Service fails to obtain the observable from the back-end, an error handler function is called, and a back-end error code is returned.
+
+_Game Component:_<br/>
+We created a game component that implements the Game Service. The game component subscribes to the data returned from the aforementioned function and displays each game object using the NgFor tag in the component's HTML.
+
+_Summary:_ <br/>
+We obtained an array of games from the back-end and displayed them on the top-games page. We were successful in connecting front and back-end.
+
   <hr />
 
 **Backend:**
