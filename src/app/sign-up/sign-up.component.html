@@ -1,1 +1,48 @@
 <p>This is the sign-up page</p>
+<div class="signup_container">
+    <mat-card class="box">
+        <mat-card-header class="signup_header">
+            <mat-card-title>Sign Up</mat-card-title>
+        </mat-card-header>
+        <form [formGroup]="profileForm" class="signup_form">
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-6">
+                         <mat-form-field class="full_width">
+                            <mat-label>Username: </mat-label>
+                            <input formControlName="username"  matInput placeholder="Username*" required>
+                        </mat-form-field>
+                        <div class="spacer"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field class="full_width">
+                            <mat-label>Email address: </mat-label>
+                            <input formControlName="email" matInput placeholder="Email Address*" required>
+                        </mat-form-field>
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field class="full_width">
+                            <mat-label>Password: </mat-label>
+                            <input formControlName="password" matInput placeholder="Password*" required>
+                        </mat-form-field>
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="col-md-6 top-padding">
+                        <mat-form-field class="full_width" apperance="fill">
+                            <mat-label>Date of Birth</mat-label>
+                            <input formControlName="dob" matInput [matDatepicker]="picker">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button click="signup()" color="accent" class="btn">Sign Up</button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
+</div>
