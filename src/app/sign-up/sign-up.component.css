@@ -1,0 +1,20 @@
+.full_width {
+    width: 100%;
+}
+
+.top_padding {
+    padding-top: 3px;
+}
+
+.margin-left mat-radio-buttion:not(:first-child) {
+    margin-left: 10px;
+}
+
+.box {
+    margin: 100px;
+    text-align: center;
+}
+
+.spacer {
+    height: 30px;
+}
