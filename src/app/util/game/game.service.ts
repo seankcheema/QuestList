@@ -36,7 +36,7 @@ export class GameService {
 
     constructor(private http : HttpClient) { }
 
-    getGames(page: string | null) {
+    getGames(page: string | null): Observable<Game[]>{
 
         console.log(this.gamesUrl+page)
 
