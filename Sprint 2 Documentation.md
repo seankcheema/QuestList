@@ -43,6 +43,9 @@ We then created an injectable Game Service class with a function that gets an ob
 _Game Component:_<br/>
 We created a game component that implements the Game Service. The game component subscribes to the data returned from the aforementioned function and displays each game object using the NgFor tag in the component's HTML.
 
+_Cypress Testing:_<br/>
+Utilized Cypress to test that game component can be mounted and that it can get data from the back-end API.
+
 _Summary:_ <br/>
 We obtained an array of games from the back-end and displayed them on the top-games page. We were successful in connecting front and back-end.
 
