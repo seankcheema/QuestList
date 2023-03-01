@@ -5,6 +5,9 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs'
 import { catchError, retry } from 'rxjs/operators'
 
+/**
+ * Game interface
+ */
 export interface Game {
     id: number;
     slug: string;
@@ -27,15 +30,23 @@ export interface Game {
     platforms: any[];
 }
 
+/**
+ * GameService injectable
+ */
 @Injectable(
     {providedIn: 'root'}
 )
 export class GameService {
 
-    gamesUrl: string = 'http://localhost:8080/allGames/'
+    gamesUrl: string = 'http://localhost:8080/allGames/'; //URL to back-end API
 
     constructor(private http : HttpClient) { }
 
+    /**
+     * Gets a list of games from the back-end API
+     * @param page specifies the page number to query in the back-end API
+     * @returns an observable of type Game[]
+     */
     getGames(page: string | null): Observable<Game[]>{
 
         console.log(this.gamesUrl+page)
@@ -47,6 +58,11 @@ export class GameService {
         );
     }
 
+    /**
+     * Handles an error with getting games from the back-end API
+     * @param error HttpErrorResponse
+     * @returns an observable with a user-facing error message
+     */
     private handleError(error: HttpErrorResponse) {
         if (error.status === 0) {
           // A client-side or network error occurred. Handle it accordingly.

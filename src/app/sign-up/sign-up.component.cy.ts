@@ -1,11 +1,16 @@
 import { SignUpComponent } from "./sign-up.component";
 
+/**
+ * SignUpComponent Cypress test
+ */
 describe('SignUpComponent', () => {
 
+    // Test that the component mounts
     it('mounts', () => {
         cy.mount(SignUpComponent);
     });
 
+    // Test that username input field is working
     it('inputs username', () => {
         const component = cy.mount(SignUpComponent);
         component.get('input[formControlName="username"]')
@@ -13,6 +18,7 @@ describe('SignUpComponent', () => {
             .should('have.value', 'example');
     });
 
+    // Test that email input field is working
     it('inputs email', () => {
         const component = cy.mount(SignUpComponent);
         component.get('input[formControlName="email"]')
@@ -20,6 +26,7 @@ describe('SignUpComponent', () => {
             .should('have.value', 'example@gmail.com');
     });
 
+    // Test that password input field is working
     it('inputs password', () => {
         const component = cy.mount(SignUpComponent);
         component.get('input[formControlName="password"]')
@@ -27,6 +34,7 @@ describe('SignUpComponent', () => {
             .should('have.value', '123456');
     });
 
+    // Test that date input field is working
     it('inputs date', () => {
         const component = cy.mount(SignUpComponent);
         component.get('input[formControlName="dob"]')
