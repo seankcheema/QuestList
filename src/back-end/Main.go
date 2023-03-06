@@ -10,8 +10,10 @@ import (
 
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
-	// _ "github.com/jinzhu/gorm/dialects/sqlite"
-	// _ "gorm.io/gorm"
+	"gorm.io/driver/sqlite"
+	_ "gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	_ "gorm.io/gorm"
 )
 
 // Main function -> the main point of entry
@@ -29,6 +31,16 @@ func main() {
 	//Setup client to talk to database
 	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
 	users := make(map[string]*user)
+	db, err := gorm.Open(sqlite.Open("users.db"), &gorm.Config{
+		CreateBatchSize: 1000,
+	})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	db.AutoMigrate(&user{})
+
+	db.Create(&user{username: "Javi", password: "Sean"})
 
 	//Functions that handles the url's sent from the backend:
 
@@ -37,13 +49,13 @@ func main() {
 	http.Handle("/", router)
 
 	//Takes in a game from the front end that is requested, and return the requested game {CALLS GAME}
-	router.HandleFunc("/specific-game/{slug}", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
 		Game(w, r, client)
 	}).Methods("GET")
 
 	//Returns a json of all games in the database {CALLS ALLGAMES}
-	router.HandleFunc("/allGames/{page}", func(w http.ResponseWriter, r *http.Request) {
-		AllGames(w, r, client)
+	router.HandleFunc("/games", func(w http.ResponseWriter, r *http.Request) {
+		Games(w, r, client)
 	}).Methods("GET")
 
 	//Creates a user and adds it to the database {CALLS SIGNUP}
@@ -67,8 +79,9 @@ func enableCors(w *http.ResponseWriter) {
 
 // User Struct
 type user struct {
-	username string
-	password string
+	gorm.Model
+	username string `gorm:"uniqueIndex"`
+	password string `gorm:"not null"`
 }
 
 // Placeholder that handles base hanlder "/"
@@ -151,7 +164,7 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 }
 
 // Takes the handler's page, and returns all games of that page (40 max)
-func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
+func Games(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
@@ -159,17 +172,26 @@ func AllGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*ra
 	w.WriteHeader(http.StatusOK)
 
 	//Page iterator
-	params := mux.Vars(r)
-	tempCurrPage := params["page"]
+	// params := mux.Vars(r)
+	// tempCurrPage := params["page"]
+	tempCurrPage := r.URL.Query().Get("page")
+	tempPageSize := r.URL.Query().Get("pageSize")
 
+	var err error
 	//cast to int
-	currPage, _ := strconv.Atoi(tempCurrPage)
+	currPage, err := strconv.Atoi(tempCurrPage)
+	if err != nil {
+		currPage = 1
+	}
+	pageSize, err := strconv.Atoi(tempPageSize)
+	if err != nil {
+		pageSize = 40
+	}
 
 	//Update response writer and request all games
-	filter := rawg.NewGamesFilter().SetPage(currPage).SetPageSize(40)
+	filter := rawg.NewGamesFilter().SetPage(currPage).SetPageSize(pageSize)
 	var games []*rawg.Game
 	var num int
-	var err error
 
 	games, num, err = client.GetGames(filter)
 

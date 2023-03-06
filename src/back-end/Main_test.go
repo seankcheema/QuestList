@@ -112,7 +112,7 @@ func TestAllGames(t *testing.T) {
 	//Setup client to talk to database
 	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
 
-	r, _ := http.NewRequest("GET", "allGames/1", nil)
+	r, _ := http.NewRequest("GET", "/games", nil)
 	w := httptest.NewRecorder()
 
 	//Check page 1
@@ -122,7 +122,7 @@ func TestAllGames(t *testing.T) {
 
 	r = mux.SetURLVars(r, page)
 
-	got1 := AllGames(w, r, client)
+	got1 := Games(w, r, client)
 	got := got1[0].Name
 	want := "Grand Theft Auto V"
 
