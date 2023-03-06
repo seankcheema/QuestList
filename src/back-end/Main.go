@@ -11,10 +11,15 @@ import (
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
-	_ "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	_ "gorm.io/gorm"
 )
+
+// User Struct
+type User struct {
+	gorm.Model
+	Username string
+	Password string
+}
 
 // Main function -> the main point of entry
 func main() {
@@ -30,17 +35,25 @@ func main() {
 
 	//Setup client to talk to database
 	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
-	users := make(map[string]*user)
-	db, err := gorm.Open(sqlite.Open("users.db"), &gorm.Config{
-		CreateBatchSize: 1000,
-	})
+
+	users := make(map[string]*User)
+
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
 	}
 
-	db.AutoMigrate(&user{})
+	db.AutoMigrate(&User{})
 
-	db.Create(&user{username: "Javi", password: "Sean"})
+	db.Create(&User{Username: "Javi", Password: "Sean"})
+	db.Create(&User{Username: "Jeff", Password: "Name"})
+	db.Create(&User{Username: "Boffa", Password: "Deez"})
+
+	fmt.Println("TEST PRINT")
+	var user User
+	db.First(&user, 1)
+	fmt.Println(user.CreatedAt)
+	fmt.Println("TEST PRINT 2")
 
 	//Functions that handles the url's sent from the backend:
 
@@ -77,13 +90,6 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
-// User Struct
-type user struct {
-	gorm.Model
-	username string `gorm:"uniqueIndex"`
-	password string `gorm:"not null"`
-}
-
 // Placeholder that handles base hanlder "/"
 func Hello(w http.ResponseWriter, r *http.Request) {
 	//Allows the doamin to be accessed by frontenf
@@ -94,7 +100,7 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 
 // Handles creation of user struct and stores in the database {W-I-P}
 // ------------ THIS IS NOT INTENDED IMPLEMENTATION AND IS NOT TESTED ---------------------------------
-func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
+func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*User) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
@@ -118,8 +124,8 @@ func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*user) {
 }
 
 // Helper function to help create tge struct and storing in the database {W}
-func NewUser(username string, password string) *user {
-	u := user{username: username, password: password}
+func NewUser(username string, password string) *User {
+	u := User{Username: username, Password: password}
 	return &u
 }
 
