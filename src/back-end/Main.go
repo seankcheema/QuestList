@@ -17,7 +17,7 @@ import (
 // User Struct
 type User struct {
 	gorm.Model
-	Username string
+	Username string `gorm:"uniqueIndex"`
 	Password string
 }
 
@@ -38,23 +38,6 @@ func main() {
 
 	users := make(map[string]*User)
 
-	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect to database")
-	}
-
-	db.AutoMigrate(&User{})
-
-	db.Create(&User{Username: "Javi", Password: "Sean"})
-	db.Create(&User{Username: "Jeff", Password: "Name"})
-	db.Create(&User{Username: "Boffa", Password: "Deez"})
-
-	fmt.Println("TEST PRINT")
-	var user User
-	db.First(&user, 1)
-	fmt.Println(user.CreatedAt)
-	fmt.Println("TEST PRINT 2")
-
 	//Functions that handles the url's sent from the backend:
 
 	//PlaceHolder for a neutral handler
@@ -67,7 +50,7 @@ func main() {
 	}).Methods("GET")
 
 	//Returns a json of all games in the database {CALLS ALLGAMES}
-	router.HandleFunc("/games", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/games", func(w http.ResponseWriter, r *http.Request) { //games?page=#&pageSize=#
 		Games(w, r, client)
 	}).Methods("GET")
 
@@ -100,27 +83,59 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 
 // Handles creation of user struct and stores in the database {W-I-P}
 // ------------ THIS IS NOT INTENDED IMPLEMENTATION AND IS NOT TESTED ---------------------------------
-func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*User) {
+func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*User) *User {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
 	//Updates the header to indicate successful reach of the fuction
 	w.WriteHeader(http.StatusOK)
 
-	//User map Creation
-	var username string
-	var password string
-
-	fmt.Println("Input Username:")
-	fmt.Scanln(&username)
-	fmt.Println("Input Password:")
-	fmt.Scanln(&password)
-	if _, ok := users[username]; ok {
-		fmt.Fprint(w, "User ", username, " already exists!")
-	} else {
-		users[username] = NewUser(username, password)
-		fmt.Fprint(w, "User ", username, " added!")
+	//Open the database
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
 	}
+
+	//Migrate the format of the user struct to Gorm's database
+	db.AutoMigrate(&User{})
+
+	var user User
+
+	//Recieve username and password from front, using the parameters listed in the passed in json file
+	// params := mux.Vars(r)
+	// attemptedUsername := params["username"]
+	// attemptedPassword := params["password"]
+
+	json.NewDecoder(r.Body).Decode(&user)
+
+	//Check that the username doesn't already exist in the database
+	if err := db.Where("username = ?", user.Username).First(&user).Error; err != nil { //If it does exist, say user exists and return nil
+		fmt.Fprint(w, "User ", user.Username, " already exists!")
+		w.WriteHeader(http.StatusTeapot) //IDK What this status does
+		return nil
+
+	} else { //If its a new user, add the user and the information to the database
+		db.Create(&User{Username: user.Username, Password: user.Password})
+		fmt.Fprint(w, "User ", user.Username, " added!")
+		w.WriteHeader(http.StatusCreated)
+		return &user
+
+	}
+
+	// //User map Creation
+	// var username string
+	// var password string
+
+	// fmt.Println("Input Username:")
+	// fmt.Scanln(&username)
+	// fmt.Println("Input Password:")
+	// fmt.Scanln(&password)
+	// if _, ok := users[username]; ok {
+	// 	fmt.Fprint(w, "User ", username, " already exists!")
+	// } else {
+	// 	users[username] = NewUser(username, password)
+	// 	fmt.Fprint(w, "User ", username, " added!")
+	// }
 }
 
 // Helper function to help create tge struct and storing in the database {W}
