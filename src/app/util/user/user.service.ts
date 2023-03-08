@@ -25,7 +25,7 @@ export interface User {
 })
 export class UserService {
 
-  usersUrl: string = 'http://localhost:8080/users/'; //URL to back-end API
+  usersUrl: string = 'http://localhost:8080/sign-up'; //URL to back-end API
 
   constructor(private http : HttpClient) { }
 
@@ -35,6 +35,7 @@ export class UserService {
    * @returns Observable of User - can be subscribed to and used to update the UI
    */
   addUser(user: User): Observable<User> {
+    console.log("addUser: " + user.username + " " + user.password);
     return this.http.post<User>(this.usersUrl, user, httpOptions)
     .pipe(
       retry(3),
