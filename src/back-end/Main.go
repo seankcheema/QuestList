@@ -63,7 +63,7 @@ func main() {
 	//Creates a user and adds it to the database {CALLS SIGNUP}
 	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
 		SignUp(w, r)
-	}).Methods("GET")
+	})
 
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
 	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
@@ -93,6 +93,10 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
+	fmt.Print("IN SIGN_UP")
+
+	w.Header().Set("Content-Type", "application/json")
+
 	//Updates the header to indicate successful reach of the fuction
 	w.WriteHeader(http.StatusOK)
 
@@ -108,18 +112,20 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	var user User
 
 	//Recieve username and password from front, using the parameters listed in the passed in json file
-	// params := mux.Vars(r)
-	// attemptedUsername := params["username"]
-	// attemptedPassword := params["password"]
 
 	json.NewDecoder(r.Body).Decode(&user)
 
+	fmt.Print(user.Username)
+
 	//Check that the username doesn't already exist in the database
-	if err := db.Where("username = ?", user.Username).First(&user).Error; err != nil { //If it does exist, say user exists and return nil
+	// _, hasUser := db.Get(user.Username)
+	hasUser := db.Where("username = ?", user.Username).First(&user).Error
+	fmt.Println(hasUser)
+
+	if hasUser == nil {
 		fmt.Fprint(w, "User ", user.Username, " already exists!")
 		w.WriteHeader(http.StatusTeapot) //IDK What this status does
 		return nil
-
 	} else { //If its a new user, add the user and the information to the database
 		db.Create(&User{Username: user.Username, Password: user.Password})
 		fmt.Fprint(w, "User ", user.Username, " added!")
@@ -128,6 +134,20 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 		return &user
 
 	}
+
+	// if err = db.Where("username = ?", user.Username).First(&user).Error; err != nil { //If it does exist, say user exists and return nil
+	// 	fmt.Fprint(w, "User ", user.Username, " already exists!")
+	// 	w.WriteHeader(http.StatusTeapot) //IDK What this status does
+	// 	return nil
+
+	// } else { //If its a new user, add the user and the information to the database
+	// 	db.Create(&User{Username: user.Username, Password: user.Password})
+	// 	fmt.Fprint(w, "User ", user.Username, " added!")
+
+	// 	w.WriteHeader(http.StatusCreated)
+	// 	return &user
+
+	// }
 
 }
 
