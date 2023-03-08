@@ -21,6 +21,14 @@ type User struct {
 	Password string
 }
 
+// Review Struct
+type Review struct {
+	gorm.Model
+	Rating      float32
+	Description string
+	User        string
+}
+
 // Main function -> the main point of entry
 func main() {
 
@@ -35,8 +43,6 @@ func main() {
 
 	//Setup client to talk to database
 	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
-
-	users := make(map[string]*User)
 
 	//Functions that handles the url's sent from the backend:
 
@@ -56,7 +62,7 @@ func main() {
 
 	//Creates a user and adds it to the database {CALLS SIGNUP}
 	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
-		SignUp(w, r, users)
+		SignUp(w, r)
 	}).Methods("GET")
 
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
@@ -83,7 +89,7 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 
 // Handles creation of user struct and stores in the database {W-I-P}
 // ------------ THIS IS NOT INTENDED IMPLEMENTATION AND IS NOT TESTED ---------------------------------
-func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*User) *User {
+func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
@@ -117,31 +123,12 @@ func SignUp(w http.ResponseWriter, r *http.Request, users map[string]*User) *Use
 	} else { //If its a new user, add the user and the information to the database
 		db.Create(&User{Username: user.Username, Password: user.Password})
 		fmt.Fprint(w, "User ", user.Username, " added!")
+
 		w.WriteHeader(http.StatusCreated)
 		return &user
 
 	}
 
-	// //User map Creation
-	// var username string
-	// var password string
-
-	// fmt.Println("Input Username:")
-	// fmt.Scanln(&username)
-	// fmt.Println("Input Password:")
-	// fmt.Scanln(&password)
-	// if _, ok := users[username]; ok {
-	// 	fmt.Fprint(w, "User ", username, " already exists!")
-	// } else {
-	// 	users[username] = NewUser(username, password)
-	// 	fmt.Fprint(w, "User ", username, " added!")
-	// }
-}
-
-// Helper function to help create tge struct and storing in the database {W}
-func NewUser(username string, password string) *User {
-	u := User{Username: username, Password: password}
-	return &u
 }
 
 // Takes the handler, get the game requested, and returns json
