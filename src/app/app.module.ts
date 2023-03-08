@@ -25,6 +25,7 @@ import { TopGamesComponent } from './top-games/top-games.component';
 import { GameComponent } from './util/game/game.component';
 
 import { GameService } from './util/game/game.service';
+import { UserComponent } from './util/user/user.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { GameService } from './util/game/game.service';
     HomeComponent,
     CommunityComponent,
     TopGamesComponent,
-    GameComponent
+    GameComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

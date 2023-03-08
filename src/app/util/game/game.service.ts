@@ -38,7 +38,7 @@ export interface Game {
 )
 export class GameService {
 
-    gamesUrl: string = 'http://localhost:8080/allGames/'; //URL to back-end API
+    gamesUrl: string = 'http://localhost:8080/games/'; //URL to back-end API
 
     constructor(private http : HttpClient) { }
 
