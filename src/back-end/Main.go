@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 
 	"github.com/dimuska139/rawg-sdk-go"
+	//"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -34,6 +35,7 @@ func main() {
 
 	//Creates a rounter
 	router := mux.NewRouter()
+
 	//Create RAWG SDK config and client
 	config := rawg.Config{
 		ApiKey:   "476cd66f8e4d44eb975aad199e0d7a07", //RAWG API key
@@ -63,7 +65,7 @@ func main() {
 	//Creates a user and adds it to the database {CALLS SIGNUP}
 	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
 		SignUp(w, r)
-	})
+	}).Methods("POST", "OPTIONS", "PUT")
 
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
 	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +79,8 @@ func main() {
 // Enable the front end to access backend, enables Cross-Origin Resource Sharing because frontend and backend serve from different domains
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
 // Placeholder that handles base hanlder "/"
@@ -95,10 +99,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 
 	fmt.Print("IN SIGN_UP")
 
-	w.Header().Set("Content-Type", "application/json")
-
 	//Updates the header to indicate successful reach of the fuction
-	w.WriteHeader(http.StatusOK)
+	// w.WriteHeader(http.StatusOK)
 
 	//Open the database
 	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
@@ -115,16 +117,16 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 
 	json.NewDecoder(r.Body).Decode(&user)
 
-	fmt.Print(user.Username)
+	fmt.Println("username: " + user.Username)
 
 	//Check that the username doesn't already exist in the database
 	// _, hasUser := db.Get(user.Username)
 	hasUser := db.Where("username = ?", user.Username).First(&user).Error
-	fmt.Println(hasUser)
+	// fmt.Println(hasUser)
 
 	if hasUser == nil {
-		fmt.Fprint(w, "User ", user.Username, " already exists!")
-		w.WriteHeader(http.StatusTeapot) //IDK What this status does
+		fmt.Println("User ", user.Username, " already exists!")
+		//w.WriteHeader(http.StatusTeapot) //IDK What this status does
 		return nil
 	} else { //If its a new user, add the user and the information to the database
 		db.Create(&User{Username: user.Username, Password: user.Password})
