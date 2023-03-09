@@ -1,12 +1,4 @@
-import { defineConfig } from "cypress";
-
-export default defineConfig({
-  e2e: {
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
-  },
-
+export default {
   component: {
     devServer: {
       framework: "angular",
@@ -14,4 +6,4 @@ export default defineConfig({
     },
     specPattern: "**/*.cy.ts",
   },
-});
+};

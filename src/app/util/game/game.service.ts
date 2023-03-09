@@ -38,7 +38,7 @@ export interface Game {
 )
 export class GameService {
 
-    gamesUrl: string = 'http://localhost:8080/games/'; //URL to back-end API
+    gamesUrl: string = 'http://localhost:8080/games'; //URL to back-end API
 
     constructor(private http : HttpClient) { }
 
@@ -49,9 +49,9 @@ export class GameService {
      */
     getGames(page: string | null): Observable<Game[]>{
 
-        console.log(this.gamesUrl+page)
+        console.log(this.gamesUrl + "?page=" + (page || '1'));
 
-        return this.http.get<Game[]>(this.gamesUrl+page) //TODO: Fix url formatting
+        return this.http.get<Game[]>(this.gamesUrl + "?page=" + (page || '1'))
         .pipe(
             retry(3),
             catchError(this.handleError)
