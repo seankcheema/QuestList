@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 
 	"github.com/dimuska139/rawg-sdk-go"
-	//"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -97,11 +96,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
-	fmt.Print("IN SIGN_UP")
-
-	//Updates the header to indicate successful reach of the fuction
-	// w.WriteHeader(http.StatusOK)
-
 	//Open the database
 	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
 	if err != nil {
@@ -111,46 +105,24 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	//Migrate the format of the user struct to Gorm's database
 	db.AutoMigrate(&User{})
 
+	//Create a user
 	var user User
 
 	//Recieve username and password from front, using the parameters listed in the passed in json file
-
 	json.NewDecoder(r.Body).Decode(&user)
 
-	fmt.Println("username: " + user.Username)
-
 	//Check that the username doesn't already exist in the database
-	// _, hasUser := db.Get(user.Username)
 	hasUser := db.Where("username = ?", user.Username).First(&user).Error
-	// fmt.Println(hasUser)
 
-	if hasUser == nil {
+	if hasUser == nil { //If the user already exists, return an error
 		fmt.Println("User ", user.Username, " already exists!")
-		//w.WriteHeader(http.StatusTeapot) //IDK What this status does
+		w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
 		return nil
 	} else { //If its a new user, add the user and the information to the database
 		db.Create(&User{Username: user.Username, Password: user.Password})
-		fmt.Fprint(w, "User ", user.Username, " added!")
-
 		w.WriteHeader(http.StatusCreated)
 		return &user
-
 	}
-
-	// if err = db.Where("username = ?", user.Username).First(&user).Error; err != nil { //If it does exist, say user exists and return nil
-	// 	fmt.Fprint(w, "User ", user.Username, " already exists!")
-	// 	w.WriteHeader(http.StatusTeapot) //IDK What this status does
-	// 	return nil
-
-	// } else { //If its a new user, add the user and the information to the database
-	// 	db.Create(&User{Username: user.Username, Password: user.Password})
-	// 	fmt.Fprint(w, "User ", user.Username, " added!")
-
-	// 	w.WriteHeader(http.StatusCreated)
-	// 	return &user
-
-	// }
-
 }
 
 // Takes the handler, get the game requested, and returns json
