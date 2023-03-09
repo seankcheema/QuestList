@@ -3,11 +3,10 @@ import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-}
+const httpOptions =  new HttpHeaders()
+  .set('content-type', 'application/json')
+  .set('Access-Control-Allow-Origin', '*');
+
 
 /**
  * User interface
@@ -25,7 +24,7 @@ export interface User {
 })
 export class UserService {
 
-  usersUrl: string = 'http://localhost:8080/sign-up'; //URL to back-end API
+  usersUrl: string = 'http://localhost:8080/sign-up/'; //URL to back-end API
 
   constructor(private http : HttpClient) { }
 
@@ -36,7 +35,7 @@ export class UserService {
    */
   addUser(user: User): Observable<User> {
     console.log("addUser: " + user.username + " " + user.password);
-    return this.http.post<User>(this.usersUrl, user, httpOptions)
+    return this.http.post<User>(this.usersUrl, JSON.stringify(user), {'headers': httpOptions})
     .pipe(
       retry(3),
       catchError(this.handleError)
