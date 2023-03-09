@@ -51,7 +51,7 @@ export class GameService {
 
         console.log(this.gamesUrl+page)
 
-        return this.http.get<Game[]>(this.gamesUrl+page)
+        return this.http.get<Game[]>(this.gamesUrl+page) //TODO: Fix url formatting
         .pipe(
             retry(3),
             catchError(this.handleError)
