@@ -11,7 +11,7 @@ import { Game, GameService } from './game.service';
 /**
  * GameComponent
  */
-export class GameComponent implements OnInit {
+export class GameComponent {
   error: any;
   headers: string[] = [];
   games: Game[] | undefined;

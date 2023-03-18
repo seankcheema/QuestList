@@ -31,7 +31,10 @@ export class UserComponent {
    */
   addUser(username: string, password: string) : void {
 
-    this.userService.addUser({username, password} as User);
+    this.userService.addUser({username, password} as User)
+    .subscribe((response: any) => {
+      console.log(response);
+    });
 
   }
 }

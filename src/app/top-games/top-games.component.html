@@ -1,11 +1,12 @@
-<p>This is the top games page</p>
-<app-game></app-game>
-    <div id="content">
-        <article class="top_container">
-            <!-- Rank column -->
-            <table mat-table [dataSource]="data">
-                <ng-container matColumnDef="position">
-                    <th mat-header-cell *matHeaderCellDef> Rank </th>
+<div id="content">
+    <article class="top_container">
+
+        <!-- Create table if the datasource exists -->
+        <span *ngIf="dataSource">
+            <table mat-table [dataSource]="dataSource">
+                <!-- Rank column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> Game ID </th>
                     <td mat-cell *matCellDef="let element"> {{element.id}} </td>
                 </ng-container>
                 <!-- Name Column -->
@@ -14,18 +15,20 @@
                     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                 </ng-container>
                 <!-- Score column -->
-                <ng-container matColumnDef="score">
+                <ng-container matColumnDef="rating">
                     <th mat-header-cell *matHeaderCellDef> Score </th>
                     <td mat-cell *matCellDef="let element"> {{element.rating}} </td>
                 </ng-container>
 
+                <!-- Display the columns -->
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
+            </table>
 
-                <mat-paginator [pageSizeOptions]="[10, 20, 30]" 
-                    showFirstLastButtons 
-                    aria-label="Select page of top games">
-                </mat-paginator>
-        </article>
-    </div>
+            <!-- TODO: Do we want a paginator or just a button that will add query parameter? -->
+            <mat-paginator [pageSizeOptions]="[10, 20, 30]" 
+                aria-label="Select page of top games">
+            </mat-paginator>
+        </span>
+    </article>
+</div>
