@@ -36,7 +36,7 @@ export class TableDataSource extends DataSource<any> {
 
 /*
 
-first attempt for inserting games into table 
+ {{ FIRST ATTEMPT FOR INSERTING GAMES INTO TABLE }}
 
 export class TopGamesComponent implements OnInit{
   data: Game[] = [];
@@ -52,7 +52,7 @@ export class TopGamesComponent implements OnInit{
 }
 
 
-original (pre games into table)
+{{ ORIGINAL (PRE - GAMES INTO TABLE) }}
 
 export class TopGamesComponent implements AfterViewInit{
   displayedColumns: string[] = ['position', 'name', 'score'];
