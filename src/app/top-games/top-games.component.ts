@@ -1,12 +1,58 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
+import { GameService } from '../util/game/game.service';
+import { Game } from '../util/game/game.service';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-top-games',
   templateUrl: './top-games.component.html',
-  styleUrls: ['./top-games.component.css']
+  styleUrls: ['./top-games.component.css'],
+  providers: [GameService]
 })
+
+export class TopGamesComponent implements OnInit{
+  data = new TableDataSource(this.web);
+  displayedColumns: string[] = ['id', 'name', 'rating'];
+
+
+  constructor(private web : GameService) {}
+
+  ngOnInit(){}
+}
+
+export class TableDataSource extends DataSource<any> {
+  constructor(private web : GameService){
+    super();
+  }
+  connect(): Observable<Game[]> {
+    return this.web.getGames(null);
+    // need to find argument 
+  }
+  disconnect() {}
+}
+
+/*
+
+first attempt for inserting games into table 
+
+export class TopGamesComponent implements OnInit{
+  data: Game[] = [];
+  displayedColumns: string[] = ['id', 'name', 'rating'];
+
+
+  constructor(private web : GameService) {
+    this.web.getGames().subscribe(x => {
+      this.data = x;
+      console.log(this.data);
+    })
+  }
+}
+
+
+original (pre games into table)
 
 export class TopGamesComponent implements AfterViewInit{
   displayedColumns: string[] = ['position', 'name', 'score'];
@@ -40,3 +86,7 @@ const topgames_data: TopGames[]= [
   {position: 11, name: 'PUBG', score: 50},
   {position: 12, name: 'Skyrim', score : 1},
 ];
+
+*/
+
+
