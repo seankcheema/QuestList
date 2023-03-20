@@ -18,17 +18,18 @@ import (
 type User struct {
 	gorm.Model
 	Username string `gorm:"uniqueIndex"`
+	Email    string `gorm:"uniqueIndex"`
 	Password string
 }
 
 // Review Struct
 type Review struct {
 	gorm.Model
-	GameName	string	//Names of game being reviewed
-	Rating      float32	//Rating (out of 5) of the game
-	Description string	//Description of the game played
-	Username    string	//Name of the account
-	PlayStatus	string //PLAYING, DROPPED, COMPLETED, ON HOLD
+	GameName    string  //Names of game being reviewed
+	Rating      float32 //Rating (out of 5) of the game
+	Description string  //Description of the game played
+	Username    string  //Name of the account
+	PlayStatus  string  //PLAYING, DROPPED, COMPLETED, ON HOLD
 }
 
 // Main function -> the main point of entry
@@ -88,8 +89,6 @@ func main() {
 	http.ListenAndServe(":8080", router)
 }
 
-
-
 // Enable the front end to access backend, enables Cross-Origin Resource Sharing because frontend and backend serve from different domains
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
@@ -128,10 +127,15 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 
 	//Check that the username doesn't already exist in the database
 	hasUser := db.Where("username = ?", user.Username).First(&user).Error
+	hasEmail := db.Where("email = ?", user.Email).First(&user).Error
 
 	if hasUser == nil { //If the user already exists, return an error
 		fmt.Println("User ", user.Username, " already exists!")
-		w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
+		w.WriteHeader(http.StatusInternalServerError) //Error is sent
+		return nil
+	} else if hasEmail == nil { //If the email already exists, return an error
+		fmt.Println("Email ", user.Email, " already exists!")
+		w.WriteHeader(http.StatusInternalServerError) //Error is sent
 		return nil
 	} else { //If its a new user, add the user and the information to the database
 		db.Create(&User{Username: user.Username, Password: user.Password})
@@ -140,7 +144,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	}
 }
 
-func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *User{
+func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *User {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
@@ -163,13 +167,12 @@ func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string)
 	var currUser User
 	hasUser := db.Where("username = ?", user.Username).First(&currUser).Error
 
-
 	if hasUser != nil { //If the user doesn't exist, return error
 		fmt.Println("User ", user.Username, " doesn't exist!")
 		w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
 		return nil
 	} else { //If its a new user, add the user and the information to the database
-		if(currUser.Password != user.Password){
+		if currUser.Password != user.Password {
 			fmt.Println("User ", user.Username, " doesn't exist!")
 			w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
 			return nil
@@ -180,7 +183,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string)
 	}
 }
 
-func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *Review{
+func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *Review {
 	db, err := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
@@ -190,18 +193,17 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	db.AutoMigrate(&Review{})
 
 	var review Review // new review
-	var temp Review // old review
+	var temp Review   // old review
 	json.NewDecoder(r.Body).Decode(&review)
 
-
-	
 	hasReview := db.Where("username = ?", review.Username, "gamename = ?", review.GameName).First(&temp).Error
-	if hasReview == nil{ // if review already exists, overwrite it
+	if hasReview == nil { // if review already exists, overwrite it
 		temp.Rating = review.Rating
 		temp.Description = review.Description
 		temp.PlayStatus = review.PlayStatus
+		w.WriteHeader(http.StatusOK)
 		return &temp
-	} else{ // else create new review
+	} else { // else create new review
 		db.Create(&Review{GameName: review.GameName, Rating: review.Rating, Description: review.Description, Username: review.Username, PlayStatus: review.PlayStatus})
 		w.WriteHeader(http.StatusCreated)
 		return &review
