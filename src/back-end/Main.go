@@ -24,9 +24,11 @@ type User struct {
 // Review Struct
 type Review struct {
 	gorm.Model
-	Rating      float32
-	Description string
-	User        string
+	GameName	string	//Names of game being reviewed
+	Rating      float32	//Rating (out of 5) of the game
+	Description string	//Description of the game played
+	Username    string	//Name of the account
+	PlayStatus	string //PLAYING, DROPPED, COMPLETED, ON HOLD
 }
 
 // Main function -> the main point of entry
@@ -34,6 +36,9 @@ func main() {
 
 	//Creates a rounter
 	router := mux.NewRouter()
+
+	//Keeps track of who is currently signed in
+	var currentlyActiveUser string = ""
 
 	//Create RAWG SDK config and client
 	config := rawg.Config{
@@ -66,6 +71,14 @@ func main() {
 		SignUp(w, r)
 	}).Methods("POST", "OPTIONS", "PUT")
 
+	router.HandleFunc("/sign-in", func(w http.ResponseWriter, r *http.Request) {
+		SignIn(w, r, &currentlyActiveUser)
+	}).Methods("POST", "OPTIONS", "PUT")
+
+	router.HandleFunc("/writeareview", func(w http.ResponseWriter, r *http.Request) {
+		WriteAReview(w, r, &currentlyActiveUser)
+	}).Methods("POST", "OPTIONS", "PUT")
+
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
 	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
 		RecentGames(w, r, client)
@@ -74,6 +87,8 @@ func main() {
 	//Start and listen for requests
 	http.ListenAndServe(":8080", router)
 }
+
+
 
 // Enable the front end to access backend, enables Cross-Origin Resource Sharing because frontend and backend serve from different domains
 func enableCors(w *http.ResponseWriter) {
@@ -122,6 +137,74 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 		db.Create(&User{Username: user.Username, Password: user.Password})
 		w.WriteHeader(http.StatusCreated)
 		return &user
+	}
+}
+
+func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *User{
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	//Open the database
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Migrate the format of the user struct to Gorm's database
+	db.AutoMigrate(&User{})
+
+	//Create a user
+	var user User
+
+	//Recieve username and password from front, using the parameters listed in the passed in json file
+	json.NewDecoder(r.Body).Decode(&user)
+
+	//Check that the username doesn't already exist in the database
+	var currUser User
+	hasUser := db.Where("username = ?", user.Username).First(&currUser).Error
+
+
+	if hasUser != nil { //If the user doesn't exist, return error
+		fmt.Println("User ", user.Username, " doesn't exist!")
+		w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
+		return nil
+	} else { //If its a new user, add the user and the information to the database
+		if(currUser.Password != user.Password){
+			fmt.Println("User ", user.Username, " doesn't exist!")
+			w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
+			return nil
+		}
+		currentlyActiveUser = &currUser.Username
+		w.WriteHeader(http.StatusOK)
+		return &currUser
+	}
+}
+
+func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *Review{
+	db, err := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Migrate the format of the user struct to Gorm's database
+	db.AutoMigrate(&Review{})
+
+	var review Review // new review
+	var temp Review // old review
+	json.NewDecoder(r.Body).Decode(&review)
+
+
+	
+	hasReview := db.Where("username = ?", review.Username, "gamename = ?", review.GameName).First(&temp).Error
+	if hasReview == nil{ // if review already exists, overwrite it
+		temp.Rating = review.Rating
+		temp.Description = review.Description
+		temp.PlayStatus = review.PlayStatus
+		return &temp
+	} else{ // else create new review
+		db.Create(&Review{GameName: review.GameName, Rating: review.Rating, Description: review.Description, Username: review.Username, PlayStatus: review.PlayStatus})
+		w.WriteHeader(http.StatusCreated)
+		return &review
 	}
 }
 
