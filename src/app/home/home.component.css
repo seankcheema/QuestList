@@ -28,3 +28,7 @@ mat-grid-tile {
 .widget-container-left2 {
     border: 1px solid black;
 }
+
+.gameImage {
+    width: 25%;
+}
