@@ -24,9 +24,11 @@ type User struct {
 // Review Struct
 type Review struct {
 	gorm.Model
-	Rating      float32
-	Description string
-	User        string
+	GameName	string	//Names of game being reviewed
+	Rating      float32	//Rating (out of 5) of the game
+	Description string	//Description of the game played
+	Username    string	//Name of the account
+	PlayStatus	string //PLAYING, DROPPED, COMPLETED, ON HOLD
 }
 
 // Main function -> the main point of entry
@@ -34,6 +36,9 @@ func main() {
 
 	//Creates a rounter
 	router := mux.NewRouter()
+
+	//Keeps track of who is currently signed in
+	var currentlyActiveUser string = ""
 
 	//Create RAWG SDK config and client
 	config := rawg.Config{
@@ -64,6 +69,10 @@ func main() {
 	//Creates a user and adds it to the database {CALLS SIGNUP}
 	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
 		SignUp(w, r)
+	}).Methods("POST", "OPTIONS", "PUT")
+
+	router.HandleFunc("/sign-in", func(w http.ResponseWriter, r *http.Request) {
+		SignIn(w, r, &currentlyActiveUser)
 	}).Methods("POST", "OPTIONS", "PUT")
 
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
@@ -123,6 +132,47 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 		w.WriteHeader(http.StatusCreated)
 		return &user
 	}
+}
+
+func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser string) *User{
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	//Open the database
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Migrate the format of the user struct to Gorm's database
+	db.AutoMigrate(&User{})
+
+	//Create a user
+	var user User
+
+	//Recieve username and password from front, using the parameters listed in the passed in json file
+	json.NewDecoder(r.Body).Decode(&user)
+
+	//Check that the username doesn't already exist in the database
+	var currUser User
+	hasUser := db.Where("username = ?", user.Username).First(&currUser).Error
+
+
+	if hasUser != nil { //If the user doesn't exist, return error
+		fmt.Println("User ", user.Username, " doesn't exist!")
+		w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
+		return nil
+	} else { //If its a new user, add the user and the information to the database
+		if(currUser.Password != user.Password){
+			fmt.Println("User ", user.Username, " doesn't exist!")
+			w.WriteHeader(http.StatusInternalServerError) //IDK What this status does
+			return nil
+		}
+		currentlyActiveUser = currUser.Username
+		w.WriteHeader(http.StatusOK)
+		return &currUser
+	}
+
 }
 
 // Takes the handler, get the game requested, and returns json
