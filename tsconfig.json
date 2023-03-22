@@ -32,6 +32,9 @@
   },
   
   "exclude": [
-    "**/*.spec.ts"
+    "node_modules",
+    "cypress",
+    "cypress.config.ts",
+    "**/*.cy.jsx"
   ],
 }

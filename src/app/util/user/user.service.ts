@@ -6,7 +6,6 @@ import { Observable, throwError } from 'rxjs';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    //'Access-Control-Allow-Origin': '*'
   })
 }
 
@@ -41,11 +40,8 @@ export class UserService {
     const signUpURL:string = this.baseUrl + '/sign-up';
 
     console.log("addUser: " + user.username + ' ' + user.email + ' ' + user.password + ' '+ signUpURL);
-    return this.http.post<User>(signUpURL, user, httpOptions)
-    // .pipe(
-    //   retry(3),
-    //   catchError(this.handleError)
-    // );   //TODO: Fix retry event
+
+    return this.http.post<User>(signUpURL, user, httpOptions);
   }
 
 
