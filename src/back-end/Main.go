@@ -105,7 +105,6 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handles creation of user struct and stores in the database {W-I-P}
-// ------------ THIS IS NOT INTENDED IMPLEMENTATION AND IS NOT TESTED ---------------------------------
 func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
