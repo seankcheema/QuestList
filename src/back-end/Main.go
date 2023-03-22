@@ -80,6 +80,10 @@ func main() {
 		WriteAReview(w, r, &currentlyActiveUser)
 	}).Methods("POST", "OPTIONS", "PUT")
 
+	// router.HandleFunc("/getreview", func(w http.ResponseWriter, r *http.Request) {
+	// 	GetAReview(w, r, &currentlyActiveUser)
+	// }).Methods("GET")
+
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
 	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
 		RecentGames(w, r, client)
@@ -136,13 +140,14 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 		fmt.Println("Email ", user.Email, " already exists!")
 		w.WriteHeader(http.StatusInternalServerError) //Error is sent
 		return nil
-	} else { //If its a new user, add the user and the information to the database
-		db.Create(&User{Username: user.Username, Password: user.Password})
+	} else { //If its a new user, add the user and its associated information to the database
+		db.Create(&User{Username: user.Username, Email: user.Email, Password: user.Password})
 		w.WriteHeader(http.StatusCreated)
 		return &user
 	}
 }
 
+// Signs in the user, and tell the front end that the user
 func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *User {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
