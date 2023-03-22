@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { CommunityComponent } from './community/community.component';
 import { HomeComponent } from './home/home.component';
+import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { TopGamesComponent } from './top-games/top-games.component';
 
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'community', component: CommunityComponent},
   { path: 'about-us', component: AboutUsComponent},
   { path: 'sign-up', component: SignUpComponent},
+  { path: 'sign-in', component: SignInComponent}
 ];
 
 @NgModule({
