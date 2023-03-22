@@ -69,15 +69,27 @@ func main() {
 
 	//Creates a user and adds it to the database {CALLS SIGNUP}
 	router.HandleFunc("/sign-up", func(w http.ResponseWriter, r *http.Request) {
-		SignUp(w, r)
-	}).Methods("POST", "OPTIONS", "PUT")
+		if r.Method == "OPTIONS" {
+			enableCors(&w)
+		} else {
+			SignUp(w, r)
+		}
+	}).Methods("POST", "OPTIONS")
 
 	router.HandleFunc("/sign-in", func(w http.ResponseWriter, r *http.Request) {
-		SignIn(w, r, &currentlyActiveUser)
+		if r.Method == "OPTIONS" {
+			enableCors(&w)
+		} else {
+			SignIn(w, r, &currentlyActiveUser)
+		}
 	}).Methods("POST", "OPTIONS", "PUT")
 
 	router.HandleFunc("/writeareview", func(w http.ResponseWriter, r *http.Request) {
-		WriteAReview(w, r, &currentlyActiveUser)
+		if r.Method == "OPTIONS" {
+			enableCors(&w)
+		} else {
+			WriteAReview(w, r, &currentlyActiveUser)
+		}
 	}).Methods("POST", "OPTIONS", "PUT")
 
 	// router.HandleFunc("/getreview", func(w http.ResponseWriter, r *http.Request) {
@@ -127,6 +139,9 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 
 	//Recieve username and password from front, using the parameters listed in the passed in json file
 	json.NewDecoder(r.Body).Decode(&user)
+
+	fmt.Println("\"", user.Username, "\"")
+	fmt.Println("\"", user.Password, "\"")
 
 	//Check that the username doesn't already exist in the database
 	hasUser := db.Where("username = ?", user.Username).First(&user).Error
@@ -213,6 +228,14 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 		return &review
 	}
 }
+
+// func GetAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *Review {
+// 	db, err := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
+// 	if err != nil {
+// 		panic("failed to connect to database")
+// 	}
+
+// }
 
 // Takes the handler, get the game requested, and returns json
 func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
