@@ -11,6 +11,7 @@ require (
 require (
 	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
+	github.com/moemoe89/go-helpers v1.0.1 // indirect
 	github.com/rs/cors v1.8.3 // indirect
 )
 

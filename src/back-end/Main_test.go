@@ -8,6 +8,8 @@ import (
 
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 // Test that our default handler goes to the placeholder screen {TESTS HELLO function}
@@ -18,7 +20,7 @@ func TestHello(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	Hello(w, r)
-	want := "Hello, Welcome to the Temporary Back-End Home Page"
+	want := "Hello, Welcome to the userorary Back-End Home Page"
 
 	if w.Body.String() != want {
 		t.Errorf("Returned wrong string: " + w.Body.String())
@@ -131,4 +133,59 @@ func TestAllGames(t *testing.T) {
 	} else {
 		fmt.Print("Successful AllGames Test")
 	}
+}
+
+func TestSignUp(t *testing.T) {
+	t.Parallel()
+
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{}) // open db
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	var username, email, password string // desired username, email, and password
+
+	username = "UnitTest"        // should be unique
+	email = "UnitTest@gmail.com" // should be unique
+	password = "PASSWORD"
+
+	var user User
+
+	db.Where("username = ?", username).First(&user)
+
+	fmt.Println(user.Username, user.Email, user.Password)
+	if user.Username != username || user.Email != email || user.Password != password {
+		t.Errorf("User not added successfully")
+	} else {
+		fmt.Println("User successfully added to database")
+	}
+
+}
+
+
+func TestSignIn(t *testing.T) {
+	t.Parallel()
+
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{}) // open db
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	var username, email, password string // desired username, email, and password
+
+	username = "UnitTest"        // should be unique
+	email = "UnitTest@gmail.com" // should be unique
+	password = "PASSWORD"
+
+	var user User
+
+	db.Where("username = ?", username).First(&user)
+
+	fmt.Println(user.Username, user.Email, user.Password)
+	if user.Username != username || user.Email != email || user.Password != password {
+		t.Errorf("User not added successfully")
+	} else {
+		fmt.Println("User successfully added to database")
+	}
+
 }
