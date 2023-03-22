@@ -92,9 +92,9 @@ func main() {
 		}
 	}).Methods("POST", "OPTIONS", "PUT")
 
-	// router.HandleFunc("/getreview", func(w http.ResponseWriter, r *http.Request) {
-	// 	GetAReview(w, r, &currentlyActiveUser)
-	// }).Methods("GET")
+	router.HandleFunc("/getreview", func(w http.ResponseWriter, r *http.Request) {
+		GetAReview(w, r, &currentlyActiveUser)
+	}).Methods("GET")
 
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
 	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +114,7 @@ func enableCors(w *http.ResponseWriter) {
 
 // Placeholder that handles base hanlder "/"
 func Hello(w http.ResponseWriter, r *http.Request) {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the domain to be accessed by frontend
 	enableCors(&w)
 
 	fmt.Fprint(w, "Hello, Welcome to the Temporary Back-End Home Page")
@@ -122,7 +122,7 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 
 // Handles creation of user struct and stores in the database {W-I-P}
 func SignUp(w http.ResponseWriter, r *http.Request) *User {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the domain to be accessed by frontend
 	enableCors(&w)
 
 	//Open the database
@@ -164,7 +164,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 
 // Signs in the user, and tell the front end that the user
 func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *User {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the domain to be accessed by frontend
 	enableCors(&w)
 
 	//Open the database
@@ -203,6 +203,10 @@ func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string)
 }
 
 func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *Review {
+	//Allows the domain to be accessed by frontend
+	enableCors(&w)
+
+	//Open the database
 	db, err := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
@@ -229,13 +233,38 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	}
 }
 
-// func GetAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *Review {
-// 	db, err := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
-// 	if err != nil {
-// 		panic("failed to connect to database")
-// 	}
+// Returns to front end a JSON of all of a specified user's game reviews
+func GetAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) []*Review {
+	//Allows the domain to be accessed by frontend
+	enableCors(&w)
 
-// }
+	//Open the database
+	db, err := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Migrate the format of the user struct to Gorm's database to get the username
+	db.AutoMigrate(&User{})
+
+	//Create a user and search the REVIEW database
+	var user User
+	json.NewDecoder(r.Body).Decode(&user)
+	var reviews []*Review
+	db.Where("username = ?", user.Username).Find(&reviews)
+
+	response, err := json.Marshal(reviews)
+	if err != nil {
+		return nil
+	}
+
+	w.Write(response)
+	if err != nil {
+		return nil
+	}
+
+	return reviews
+}
 
 // Takes the handler, get the game requested, and returns json
 func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
