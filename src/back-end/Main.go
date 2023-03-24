@@ -1,12 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+
+	//"io"
 	"net/http"
 	"strconv"
 	"time"
-
-	"encoding/json"
 
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
@@ -76,6 +77,7 @@ func main() {
 		}
 	}).Methods("POST", "OPTIONS")
 
+	//Sign user in and ensure that the user exists
 	router.HandleFunc("/sign-in", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			enableCors(&w)
@@ -84,6 +86,7 @@ func main() {
 		}
 	}).Methods("POST", "OPTIONS", "PUT")
 
+	//Writes a review to the review database and edits it if the desired user/game combo exists already
 	router.HandleFunc("/writeareview", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			enableCors(&w)
@@ -92,8 +95,9 @@ func main() {
 		}
 	}).Methods("POST", "OPTIONS", "PUT")
 
+	//Returns a list of all the reviews a specific user has made
 	router.HandleFunc("/getreview", func(w http.ResponseWriter, r *http.Request) {
-		GetAReview(w, r, &currentlyActiveUser)
+		GetReviews(w, r, &currentlyActiveUser)
 	}).Methods("GET")
 
 	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
@@ -138,10 +142,14 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	var user User
 
 	//Recieve username and password from front, using the parameters listed in the passed in json file
-	json.NewDecoder(r.Body).Decode(&user)
-
-	fmt.Println("\"", user.Username, "\"")
-	fmt.Println("\"", user.Password, "\"")
+	pass := r.ContentLength
+	if pass > 0 {
+		json.NewDecoder(r.Body).Decode(&user)
+	} else { // For unit testing
+		user.Username = "UnitTest"
+		user.Email = "UnitTest@gmail.com"
+		user.Password = "PASSWORD"
+	}
 
 	//Check that the username doesn't already exist in the database
 	hasUser := db.Where("username = ?", user.Username).First(&user).Error
@@ -180,7 +188,13 @@ func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string)
 	var user User
 
 	//Recieve username and password from front, using the parameters listed in the passed in json file
-	json.NewDecoder(r.Body).Decode(&user)
+	pass := r.ContentLength
+	if pass > 0 {
+		json.NewDecoder(r.Body).Decode(&user)
+	} else { // For unit testing
+		user.Username = "UnitTest"
+		user.Password = "PASSWORD"
+	}
 
 	//Check that the username doesn't already exist in the database
 	var currUser User
@@ -217,13 +231,23 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 
 	var review Review // new review
 	var temp Review   // old review
-	json.NewDecoder(r.Body).Decode(&review)
+	pass := r.ContentLength
+	if pass > 0 {
+		json.NewDecoder(r.Body).Decode(&review)
+	} else { // For unit testing
+		review.GameName = "Forza 5"
+		review.Rating = 4.5
+		review.Description = "CAR GO VROOM"
+		review.Username = "UnitTest"
+		review.PlayStatus = "DROPPED"
+	}
 
 	hasReview := db.Where("username = ?", review.Username, "gamename = ?", review.GameName).First(&temp).Error
 	if hasReview == nil { // if review already exists, overwrite it
 		temp.Rating = review.Rating
 		temp.Description = review.Description
 		temp.PlayStatus = review.PlayStatus
+		db.Save(&temp)
 		w.WriteHeader(http.StatusOK)
 		return &temp
 	} else { // else create new review
@@ -234,7 +258,7 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 }
 
 // Returns to front end a JSON of all of a specified user's game reviews
-func GetAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) []*Review {
+func GetReviews(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) []*Review {
 	//Allows the domain to be accessed by frontend
 	enableCors(&w)
 
@@ -249,7 +273,13 @@ func GetAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *str
 
 	//Create a user and search the REVIEW database
 	var user User
-	json.NewDecoder(r.Body).Decode(&user)
+	pass := r.ContentLength
+	if pass > 0 {
+		json.NewDecoder(r.Body).Decode(&user)
+	} else { // For unit testing
+		user.Username = "UnitTest"
+		user.Password = "PASSWORD"
+	}
 	var reviews []*Review
 	db.Where("username = ?", user.Username).Find(&reviews)
 

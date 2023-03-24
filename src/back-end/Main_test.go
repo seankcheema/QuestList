@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+
 
 // Test that our default handler goes to the placeholder screen {TESTS HELLO function}
 func TestHello(t *testing.T) {
@@ -20,7 +20,7 @@ func TestHello(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	Hello(w, r)
-	want := "Hello, Welcome to the userorary Back-End Home Page"
+	want := "Hello, Welcome to the Temporary Back-End Home Page"
 
 	if w.Body.String() != want {
 		t.Errorf("Returned wrong string: " + w.Body.String())
@@ -143,6 +143,11 @@ func TestSignUp(t *testing.T) {
 		panic("failed to connect to database")
 	}
 
+	r, _ := http.NewRequest("POST", "sign-up", nil)
+	w := httptest.NewRecorder()
+
+	SignUp(w,r) // call sign up and add user to DB
+
 	var username, email, password string // desired username, email, and password
 
 	username = "UnitTest"        // should be unique
@@ -153,7 +158,7 @@ func TestSignUp(t *testing.T) {
 
 	db.Where("username = ?", username).First(&user)
 
-	fmt.Println(user.Username, user.Email, user.Password)
+	fmt.Println("Username: ", user.Username, "\nEmail: ", user.Email, "\nPassword: ",user.Password)
 	if user.Username != username || user.Email != email || user.Password != password {
 		t.Errorf("User not added successfully")
 	} else {
@@ -177,15 +182,89 @@ func TestSignIn(t *testing.T) {
 	email = "UnitTest@gmail.com" // should be unique
 	password = "PASSWORD"
 
-	var user User
+	
+
+	r, _ := http.NewRequest("POST", "sign-in", nil)
+	w := httptest.NewRecorder()
+
+	user := SignIn(w,r, nil)
 
 	db.Where("username = ?", username).First(&user)
 
-	fmt.Println(user.Username, user.Email, user.Password)
+	fmt.Println("Username: ", user.Username, "\nEmail: ", user.Email, "\nPassword: ",user.Password)
 	if user.Username != username || user.Email != email || user.Password != password {
-		t.Errorf("User not added successfully")
+		t.Errorf("User does not exist")
 	} else {
-		fmt.Println("User successfully added to database")
+		fmt.Println("User successfully found database")
+	}
+
+}
+
+func TestWriteReview(t *testing.T) {
+	t.Parallel()
+
+	db, err := gorm.Open(sqlite.Open("reviews.db"), &gorm.Config{}) // open db
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	
+	// Desired vars
+	GameName := "Forza 5"
+	Rating := 4.5
+	Description := "CAR GO VROOM"
+	Username := "UnitTest"
+	PlayStatus := "DROPPED"
+
+	var review Review
+
+	r, _ := http.NewRequest("POST", "/writeareview", nil)
+	w := httptest.NewRecorder()
+
+	WriteAReview(w,r, nil)
+
+	db.Where("username = ?", Username).First(&review)
+
+	fmt.Println("Game Name: ", review.GameName, "\nRating: ", review.Rating, "\nDescription: ",review.Description,"\nUsername: ", review.Username,"\nPlay Status: ", review.PlayStatus)
+	if GameName != review.GameName || Rating != float64(review.Rating) || Description != review.Description || Username != review.Username || PlayStatus != review.PlayStatus {
+		t.Errorf("Review not added successfully")
+	} else {
+		fmt.Println("Review found in database")
+	}
+
+}
+
+func TestGetReview(t *testing.T) {
+	t.Parallel()
+
+	db, err := gorm.Open(sqlite.Open("reviews.db"), &gorm.Config{}) // open db
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	
+	// Desired vars
+	GameName := "Forza 5"
+	Rating := 5.0
+	Description := "CAR GO VROOM"
+	Username := "UnitTest"
+	PlayStatus := "DROPPED"
+
+	
+
+	r, _ := http.NewRequest("POST", "/getreview", nil)
+	w := httptest.NewRecorder()
+
+	reviews := GetReviews(w,r, nil)
+	review := reviews[0]
+
+	db.Where("username = ?", Username).First(&review)
+
+	fmt.Println("Game Name: ", review.GameName, "\nRating: ", review.Rating, "\nDescription: ",review.Description,"\nUsername: ", review.Username,"\nPlay Status: ", review.PlayStatus)
+	if GameName != review.GameName || Rating != float64(review.Rating) || Description != review.Description || Username != review.Username || PlayStatus != review.PlayStatus {
+		t.Errorf("Review not added successfully")
+	} else {
+		fmt.Println("Review found in database")
 	}
 
 }
