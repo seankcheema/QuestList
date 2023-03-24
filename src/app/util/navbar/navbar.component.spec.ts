@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/compiler';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatToolbar } from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { AppRoutingModule } from 'src/app/app-routing.module';
 
 import { NavbarComponent } from './navbar.component';
 
@@ -10,6 +11,7 @@ describe('NavbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [MatToolbarModule, AppRoutingModule],
       declarations: [ NavbarComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })

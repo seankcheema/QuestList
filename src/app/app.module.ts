@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
-import { MatCardModule } from '@angular/material/card';
+import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -27,6 +27,8 @@ import { GameComponent } from './util/game/game.component';
 import { GameService } from './util/game/game.service';
 import { UserComponent } from './util/user/user.component';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldControl } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,9 @@ import { SignInComponent } from './sign-in/sign-in.component';
     FormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCardModule,
+    MatInputModule,
+    BrowserAnimationsModule
   ],
   providers: [
     GameService
