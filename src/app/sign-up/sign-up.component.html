@@ -1,6 +1,9 @@
 <!--TODO: Beautify-->
 <form [formGroup]="profileForm" class="signup_form">
     <mat-card-content>
+        <div class="header">
+            <h2>Sign Up</h2>
+        </div>
         <!--Username Field-->
         <div class="row">
             <div class="col-md-6">
@@ -34,7 +37,7 @@
     </mat-card-content>
     <!--Sign Up Button-->
     <mat-card-actions>
-        <button mat-button routerLink="/sign-in" routerLinkActive="active" ariaCurrentWhenActive="page">Sign-In</button>
         <button mat-raised-button (click)="addUser(this.profileForm.controls['username'].value || '', this.profileForm.controls['email'].value || '', this.profileForm.controls['password'].value || '')" color="accent" class="btn">Sign Up</button>
+        <div class="mini-text">Already have an account? <a id="signin" routerLink="/sign-in">Sign In</a></div>
     </mat-card-actions>
 </form>
