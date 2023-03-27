@@ -1,7 +1,12 @@
-.signup_form, .mini-text {
+.signup_form{
+    margin: 2em auto;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 10px;
+    width: 20%;
+}
+
+.mini-text {
     margin: 2em auto;
     text-align: center;
 }
-
-
-
