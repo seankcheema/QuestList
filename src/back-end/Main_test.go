@@ -82,7 +82,7 @@ func TestGame(t *testing.T) {
 	}
 
 	//TEST 3: Rocket League
-	r, _ = http.NewRequest("GET", "specific-game/destiny-2", nil)
+	r, _ = http.NewRequest("GET", "specific-game/rocket-league", nil)
 	w = httptest.NewRecorder()
 
 	slug = map[string]string{

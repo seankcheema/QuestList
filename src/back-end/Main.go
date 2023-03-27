@@ -317,8 +317,8 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 	params := mux.Vars(r)
 	slug := params["slug"]
 
-	// Pull slug from query params
-	//slug := r.URL.Query().Get("slug")
+	//Pull slug from query params
+	// slug := r.URL.Query().Get("slug")
 	
 
 	//--------------------
