@@ -59,6 +59,9 @@ Professor Dobra
 <hr />
 
 **Frontend:**
+_Work Completed_:<br/> ~~~~~~~~~~~~~~~~~~~~~Detail Work Completed and How
+
+_Units Tests_:<br/> ~~~~~~~~~~~~~~~~~~~~~~~~List and describe your unit tests and thier functions
 
 _HttpClient:_<br/>
 We started by focusing on implementing an HttpClient so that we could effectively communicate with the back-end. Once we we achieved this we were able to send JSON files between the front-end and the back-end.
@@ -85,13 +88,17 @@ _Work Completed_:<br/>
 
 
 _Back End Unit Tests_: <br/>
-We have implemented a variety of Unit Tests using the built-in Go testing. Initially, we created TestHello() to test the functionality of the Go “testing” import. To test our Main.go functions we created tests TestGame() and TestAllGames(). 
+We have implemented a variety of Unit Tests using the built-in Go testing. Initially, we created TestHello() to test the functionality of the Go “testing” import. To test our Main.go functions we created tests TestGame(), TestAllGames(), TestSignUp, TestSignIn, TestWriteReview, and TestGetReview. 
 
 -TestGame():<br/>
 TestGame() tests the function Game() with a specific game “slug” (slug is a concatenated version of a game name setting all letters to lowercase and replacing all spaces with hyphens). When this slug is passed, Game should return the 10 most similar games to that slug with array[0] being the most similar and array[9] being the least similar. For this test we pulled the first element of the array as it is the desired game and compared it to our intended game string. 
 
 -TestAllGames():<br/>
 Next, we used TestAllGames() to test the function AllGames(). AllGames() should return every game in the RAWG API one “page” at a time. Each page will have 40 games starting from the most popular game in the API to the least popular for all 800,000+ games. For this test, we pulled the first element of the first page which would be the most popular game in the API, in this case “Grand Theft Auto V”. 
+
+-TestSignUp
+TestSignUp():<br/>
+This tests the functionality of Sign-Up(). This tested function should add a new user to the database of users if their username and/or passwords 
 
 -Testing Limitations:<br/>
 It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently.
