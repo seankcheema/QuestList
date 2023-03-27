@@ -85,7 +85,8 @@ We obtained an array of games from the back-end and displayed them on the top-ga
 **Backend:**
 
 _Work Completed_:<br/>
-
+In this sprint, we worked on the User and Review databases and all of the functions associated with it. We started by making User and Review structs to store specific information about these objects. The user struct stores a unique username, unique email, and a password. For the review struct, it stores the game being reviewed, rating out of 5, description, username of the user who reviewed the game, and a playstatus .To retrieve these objects from the front-end, we pull body content from the front-end using json.Decode() and format these objects into the struct. The main functionality that we changed in this sprint regarding back-end urls is how we read in parameters. Originally, we were pulling parameters via mux.Vars() which pulls the parameters straight from the url (e.g. /specific-game/overwatch), but now we are using the url query parameters to specify needed attributes (e.g. /games?page=1). To send, we used the json.Marshal() function and wrote to the header. As for the functionality associated with these databases, we are now able to create user and review structs, add them to the database, and look them up.
+<br/>
 
 _Back End Unit Tests_: <br/>
 We have implemented a variety of Unit Tests using the built-in Go testing. Initially, we created TestHello() to test the functionality of the Go “testing” import. To test our Main.go functions we created tests TestGame(), TestAllGames(), TestSignUp(), TestSignIn(), TestWriteReview(), and TestGetReview(). 
@@ -101,6 +102,12 @@ This tests the functionality of Sign-Up(). This tested function should add a new
 
 -TestSignIN():<br/>
 This tests the functionality of Sign-In(). Sign-In() should check that a requested username exists in the database. If they do exisit, we compare the stored password with the requested one. If everything matches up, we return an OK status and mark the signed-in user as the active user. If something doesn't match the database, we return an error status. Our test first tries to find a user that does exist with a mathcing password. This should return an OK status. Afterwards, it tries logging in with a nonexistent user, resulting in an error.
+
+-TestWriteReview():<br/>
+This tests the function WriteAReview() with a review struct passed in containing elements such as the game being reviewed, rating out of 5, description, username of the user who reviewed the game, and a playstatus. The intended functionality is that WriteAReview() will add the review to the Review database if that user has not already reviewed that game, and modify the review if a user has already created a review for that game.
+
+-TestGetReview():<br/>
+This tests the function GetReview() with a user struct passed in containing elements such as a unique username, unique email, and a password. The intended functionality of GetReview() is that the function retrieves all instances of a specific user’s reviews from the review database and writes an error status to the header if the user has not created a review.
 
 -Testing Limitations:<br/>
 It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently.
