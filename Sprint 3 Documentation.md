@@ -100,7 +100,7 @@ Next, we used TestAllGames() to test the function AllGames(). AllGames() should 
 -TestSignUp():<br/>
 This tests the functionality of Sign-Up(). This tested function should add a new user to the database of users if their username and/or email have not been used already. For this test, we created an arbitary username, password, and email and inserted them into the database. To ensure they were added, we scan the database to find the first, and only occurrance of their username. To test the prevention of duplicate users, we try to add an already existing username and expect an error.
 
--TestSignIN():<br/>
+-TestSignIn():<br/>
 This tests the functionality of Sign-In(). Sign-In() should check that a requested username exists in the database. If they do exisit, we compare the stored password with the requested one. If everything matches up, we return an OK status and mark the signed-in user as the active user. If something doesn't match the database, we return an error status. Our test first tries to find a user that does exist with a mathcing password. This should return an OK status. Afterwards, it tries logging in with a nonexistent user, resulting in an error.
 
 -TestWriteReview():<br/>
