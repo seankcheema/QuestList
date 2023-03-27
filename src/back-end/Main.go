@@ -59,7 +59,7 @@ func main() {
 	http.Handle("/", router)
 
 	//Takes in a game from the front end that is requested, and return the requested game {CALLS GAME}
-	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/specific-game/", func(w http.ResponseWriter, r *http.Request) {
 		Game(w, r, client)
 	}).Methods("GET")
 
@@ -316,6 +316,10 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 	//Recieve game name from front, using the game's slug
 	params := mux.Vars(r)
 	slug := params["slug"]
+
+	// Pull slug from query params
+	//slug := r.URL.Query().Get("slug")
+	
 
 	//--------------------
 
