@@ -401,8 +401,7 @@ func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontenf
 	enableCors(&w)
 
-	//Specify status code
-	w.WriteHeader(http.StatusOK)
+	
 
 	//Create time frame
 	start := time.Now()
@@ -425,6 +424,7 @@ func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 		return
 	}
 
+	//Specify status code
 	w.WriteHeader(http.StatusOK)
 	w.Write(response)
 
