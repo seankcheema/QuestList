@@ -88,7 +88,7 @@ _Work Completed_:<br/>
 
 
 _Back End Unit Tests_: <br/>
-We have implemented a variety of Unit Tests using the built-in Go testing. Initially, we created TestHello() to test the functionality of the Go “testing” import. To test our Main.go functions we created tests TestGame(), TestAllGames(), TestSignUp, TestSignIn, TestWriteReview, and TestGetReview. 
+We have implemented a variety of Unit Tests using the built-in Go testing. Initially, we created TestHello() to test the functionality of the Go “testing” import. To test our Main.go functions we created tests TestGame(), TestAllGames(), TestSignUp(), TestSignIn(), TestWriteReview(), and TestGetReview(). 
 
 -TestGame():<br/>
 TestGame() tests the function Game() with a specific game “slug” (slug is a concatenated version of a game name setting all letters to lowercase and replacing all spaces with hyphens). When this slug is passed, Game should return the 10 most similar games to that slug with array[0] being the most similar and array[9] being the least similar. For this test we pulled the first element of the array as it is the desired game and compared it to our intended game string. 
@@ -96,9 +96,11 @@ TestGame() tests the function Game() with a specific game “slug” (slug is a 
 -TestAllGames():<br/>
 Next, we used TestAllGames() to test the function AllGames(). AllGames() should return every game in the RAWG API one “page” at a time. Each page will have 40 games starting from the most popular game in the API to the least popular for all 800,000+ games. For this test, we pulled the first element of the first page which would be the most popular game in the API, in this case “Grand Theft Auto V”. 
 
--TestSignUp
-TestSignUp():<br/>
-This tests the functionality of Sign-Up(). This tested function should add a new user to the database of users if their username and/or passwords 
+-TestSignUp():<br/>
+This tests the functionality of Sign-Up(). This tested function should add a new user to the database of users if their username and/or email have not been used already. For this test, we created an arbitary username, password, and email and inserted them into the database. To ensure they were added, we scan the database to find the first, and only occurrance of their username. To test the prevention of duplicate users, we try to add an already existing username and expect an error.
+
+-TestSignIN():<br/>
+This tests the functionality of Sign-In(). Sign-In() should check that a requested username exists in the database. If they do exisit, we compare the stored password with the requested one. If everything matches up, we return an OK status and mark the signed-in user as the active user. If something doesn't match the database, we return an error status. Our test first tries to find a user that does exist with a mathcing password. This should return an OK status. Afterwards, it tries logging in with a nonexistent user, resulting in an error.
 
 -Testing Limitations:<br/>
 It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently.
