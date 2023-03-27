@@ -283,17 +283,26 @@ func GetReviews(w http.ResponseWriter, r *http.Request, currentlyActiveUser *str
 	var reviews []*Review
 	db.Where("username = ?", user.Username).Find(&reviews)
 
-	response, err := json.Marshal(reviews)
-	if err != nil {
+	if len(reviews) == 0{
+		w.WriteHeader(http.StatusInternalServerError)
 		return nil
+	} else{
+		response, err := json.Marshal(reviews)
+		if err != nil {
+			return nil
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	
+		if err != nil {
+			return nil
+		}
+	
+		return reviews
 	}
 
-	w.Write(response)
-	if err != nil {
-		return nil
-	}
-
-	return reviews
+	
+	
 }
 
 // Takes the handler, get the game requested, and returns json
@@ -416,6 +425,7 @@ func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 		return
 	}
 
+	w.WriteHeader(http.StatusOK)
 	w.Write(response)
 
 	_ = err
