@@ -1,5 +1,8 @@
 describe('template spec', () => {
   
+  /**
+   * Test that the top games page displays games
+   */
   it('top games should display games', () => {
     cy.visit('localhost:4200')
 
@@ -8,6 +11,9 @@ describe('template spec', () => {
     cy.contains('Grand Theft Auto V')
   });
 
+  /**
+   * Test that sign up displays the sign up form and that the form can be filled out
+   */
   it('should sign up', () => {
     cy.visit('localhost:4200')
 
@@ -20,6 +26,9 @@ describe('template spec', () => {
     cy.get('input[formControlName="password"]').type('password', {force: true})
   });
 
+  /**
+   * Test that sign in displays the sign in form and that the form can be filled out
+   */
   it('should sign in', () => {
     cy.visit('localhost:4200')
 
