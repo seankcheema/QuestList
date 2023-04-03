@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms'
 import { User, UserService } from '../util/user/user.service';
+import { UserAuthService } from '../util/user-auth/user-auth.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -13,7 +14,7 @@ export class SignUpComponent{
    * Constructor for SignUpComponent class
    * @param formBuilder FormBuilder used to create the sign-up form
    */
-  constructor(private formBuilder:FormBuilder, private userService: UserService) { }
+  constructor(private formBuilder:FormBuilder, private userService: UserService, private userAuthService: UserAuthService) { }
   
   // Form group for sign-up form
   profileForm = this.formBuilder.group({
@@ -30,8 +31,8 @@ export class SignUpComponent{
    */
   addUser(username: string, email:string, password: string) : void {
     this.userService.addUser({username, email, password} as User)
-    .subscribe((response: any) => {
-      console.log(response);
+    .subscribe((response: any) => { 
+      this.userAuthService.login(username);
     });
   }
 }

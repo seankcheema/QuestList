@@ -1,25 +1,7 @@
-<form [formGroup]="profileForm" class="signup_form">
-    <mat-card-content>
-        <div class="row">
-            <div class="col-md-6">
-                 <mat-form-field class="full_width">
-                    <mat-label>Username: </mat-label>
-                    <input formControlName="username"  matInput placeholder="Username*" required>
-                </mat-form-field>
-                <div class="spacer"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <mat-form-field class="full_width">
-                    <mat-label>Password: </mat-label>
-                    <input formControlName="password" matInput placeholder="Password*" required>
-                </mat-form-field>
-                <div class="spacer"></div>
-            </div>
-        </div>
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-raised-button (click)="addUser(this.profileForm.controls['username'].value || '', this.profileForm.controls['password'].value || '')" color="accent" class="btn">Sign Up</button>
-    </mat-card-actions>
-</form>
+<span *ngIf="isLoggedIn">
+    <p> we're in >:)</p>
+</span>
+
+<span *ngIf="!isLoggedIn">
+    <p> we're out >:(</p>
+</span>

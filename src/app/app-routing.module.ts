@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { TopGamesComponent } from './top-games/top-games.component';
+import { UserComponent } from './util/user/user.component';
 
 // Routes for the application
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'community', component: CommunityComponent},
   { path: 'about-us', component: AboutUsComponent},
   { path: 'sign-up', component: SignUpComponent},
-  { path: 'sign-in', component: SignInComponent}
+  { path: 'sign-in', component: SignInComponent},
+  { path: 'user/:username', component: UserComponent }
 ];
 
 @NgModule({

@@ -29,6 +29,7 @@ import { UserComponent } from './util/user/user.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { UserAuthService } from './util/user-auth/user-auth.service';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { MatFormFieldControl } from '@angular/material/form-field';
     BrowserAnimationsModule
   ],
   providers: [
-    GameService
+    GameService,
+    UserAuthService
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

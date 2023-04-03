@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { UserAuthService } from '../user-auth/user-auth.service';
 import { User, UserService } from './user.service';
 
 @Component({
@@ -13,29 +14,21 @@ import { User, UserService } from './user.service';
  */
 export class UserComponent {
 
+  isLoggedIn: boolean = false;
+
   /**
    * Constuctor for UserComponent class
    * @param userService Injectable UserService that provides game data Observable
    */
-  constructor(private userService: UserService, private formBuilder:FormBuilder) { }
+  constructor(private userService: UserService, private userAuthService: UserAuthService, private route: ActivatedRoute) { }
 
-  profileForm: FormGroup = this.formBuilder.group({
-    username: [''],
-    password: ['']
-  });
+  ngOnInit(): void {
 
-  /**
-   * Posts a new user to the back-end API
-   * @param username Username of the new user
-   * @param password Password of the new user
-   */
-  addUser(username: string, password: string) : void {
+    const username = this.route.snapshot.paramMap.get('username');
 
-    this.userService.addUser({username, password} as User)
-    .subscribe((response: any) => {
-      console.log(response);
-    });
-
+    if(username != null)
+    this.isLoggedIn = this.userAuthService.isUserLoggedIn(username);
   }
+
 }
 
