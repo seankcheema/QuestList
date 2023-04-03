@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { of } from "rxjs";
 
 import { GameService } from "./game.service";
@@ -7,15 +7,24 @@ describe("GameService", () => {
     let service: GameService;
     let httpClientSpy: jasmine.SpyObj<HttpClient>;
     
+    /**
+     * Setup the service and spy before each test
+     */
     beforeEach(() => {
         httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
         service = new GameService(httpClientSpy);
     });
     
+    /**
+     * Test that the service is created
+     */
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
 
+    /**
+     * Test that the getGames method returns the expected value
+     */
     it('#getGames() should return value from observable', (done: DoneFn) => {
 
         const expectedGameSlug:string = 'grand-theft-auto-v';
@@ -36,6 +45,9 @@ describe("GameService", () => {
             .toBe(1);
     });
 
+    /**
+     * Test that the getRecentGames method returns the expected value
+     */
     it('#getRecentGames() should return value from observable', (done: DoneFn) => {
             
             const expectedGameSlug:string = 'most recent game name';

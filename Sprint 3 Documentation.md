@@ -55,32 +55,46 @@ Professor Dobra
 <br />
 
 
-**Work Completed**
+**Work Completed**<hr/>
+
+**Front-end:**
+
+_Work Completed_:<br/>
+We have successfully displayed the back-end onto the front end and have made advancements with our GUIs. Unit testing has been crucial in this sprint and has been successful. 
+
+_Recently Released / Home_:<br/>
+We have started displaying the games retrieved from the backend onto our home page. Our first section is the recently released section, as the backend has only worked on sending us the most recently released games from the database. We utilized our initial grid from Angular material and inserted the cover images of the first four games from the database. This was done by calling our getRecentGames() function and taking the first four elements and their background_image data from its array in our datasource. 
+
+_Top games table_:<br/>
+We have inserted the list of games from the database into our Angular material table. Currently, since the database is providing the recently released games, this will need to be adjusted to display the top rated games. We have called our getGames() function and iterated through the list of games provided within the table. 
+
+_Sign in_:<br/>
+Our sign in form will allow for users to access their accounts found in the back-end database. We have also cleaned up the page and added a nicer GUI for the form.
+
+_Sign up_:<br/>
+We added a separate sign up component instead of keeping both sign up and sign in functions within one component. This new component will utilize our addUser() function to send the user’s data to the back-end’s database. We have also added a new page and GUI for this form, which can be accessed through a hyperlink on the initial sign in page.
+
+_Units Tests_:<br/>
+We implemented a variety of front-end unit tests using Jasmine, built into Angular. Each component has a should create unit test that tests whether the component was successfully able to be created. We also implemented unit testing for our GameService. We accomplish this by creating a mock HttpClient and making sure that a value can be returned from the observable of the specific GameService function.
+
+-getGames():<br/>
+This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService’s getGames() function is then called with the mock HttpClient injected and the observable returned is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
+
+-getRecentGames():<br/>
+This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService’s geRecentGames() function is then called with the mock HttpClient injected and the observable returned is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
+
+Cypress Testing:<br/>
+We also implemented end-to-end Cypress testing that ensures many features of the site work as intended. 
+
+‘Should Display Games’: Ensures that the top games page can be navigated to and displays games received from our back-end API call.
+
+‘Should Sign Up’: Ensures that the sign-up page can be navigated to and that the form exists and can be filled.
+
+‘Should Sign In’: Ensures that the sign-in page can be navigated to and that the form exists and can be filled.
+
+_Testing Challenges_: <br/>
+One issue we encountered was that the typescript compiler had chai type conflict errors when using Jasmine alongside Cypress. While the tests for both Cypress and Jasmine would still run, VSCode threw errors. This was important to fix, though, as it was difficult to leverage typescript’s errors for debugging purposes while these type conflict errors were present.
 <hr />
-
-**Frontend:**
-_Work Completed_:<br/> ~~~~~~~~~~~~~~~~~~~~~Detail Work Completed and How
-
-_Units Tests_:<br/> ~~~~~~~~~~~~~~~~~~~~~~~~List and describe your unit tests and thier functions
-
-_HttpClient:_<br/>
-We started by focusing on implementing an HttpClient so that we could effectively communicate with the back-end. Once we we achieved this we were able to send JSON files between the front-end and the back-end.
-
-_Game Service:_<br/>
-We then created an injectable Game Service class with a function that gets an observable from the back-end with a parameter ***page***. This parameter specifies which page should be queried from the back-end. If the Game Service fails to obtain the observable from the back-end, an error handler function is called, and a back-end error code is returned.
-
-_Game Component:_<br/>
-We created a game component that implements the Game Service. The game component subscribes to the data returned from the aforementioned function and displays each game object using the NgFor tag in the component's HTML.
-
-_Cypress Testing:_<br/>
-Utilized Cypress to test that game component can be mounted and that it can get data from the back-end API.
-
-_Summary:_ <br/>
-We obtained an array of games from the back-end and displayed them on the top-games page. We were successful in connecting front and back-end.
-
------------------------------------------------WORK IN PROGRESS-------------------------------------------
-
-  <hr />
 
 **Backend:**
 

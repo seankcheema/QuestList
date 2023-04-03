@@ -1,9 +1,9 @@
-export default {
-  component: {
-    devServer: {
-      framework: "angular",
-      bundler: "webpack",
+import { defineConfig } from "cypress";
+
+export default defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
     },
-    specPattern: "**/*.cy.ts",
   },
-};
+});
