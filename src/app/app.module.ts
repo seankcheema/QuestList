@@ -12,6 +12,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +31,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { UserAuthService } from './util/user-auth/user-auth.service';
+import { SearchBarComponent } from './util/search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { UserAuthService } from './util/user-auth/user-auth.service';
     TopGamesComponent,
     GameComponent,
     UserComponent,
-    SignInComponent
+    SignInComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +66,8 @@ import { UserAuthService } from './util/user-auth/user-auth.service';
     MatNativeDateModule,
     MatCardModule,
     MatInputModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
   ],
   providers: [
     GameService,
