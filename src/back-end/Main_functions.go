@@ -31,6 +31,13 @@ type Review struct {
 	PlayStatus  string  //PLAYING, DROPPED, COMPLETED, ON HOLD
 }
 
+type GameRanking struct {
+	gorm.Model
+	GameName      string  `gorm:"uniqueIndex"` // Name of game
+	AverageRating float32 // Average Rating (out of 5) of the game
+	NumReviews    int     // Number of times a game has been reviewed
+}
+
 // Enable the front end to access backend, enables Cross-Origin Resource Sharing because frontend and backend serve from different domains
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
@@ -182,13 +189,6 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	}
 }
 
-type GameRanking struct {
-	gorm.Model
-	GameName      string  `gorm:"uniqueIndex"` // Name of game
-	AverageRating float32 // Average Rating (out of 5) of the game
-	NumReviews    int     // Number of times a game has been reviewed
-}
-
 func UserGameRankings(review *Review, add bool) {
 	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
 	if err != nil {
@@ -259,7 +259,6 @@ func GetReviews(w http.ResponseWriter, r *http.Request, currentlyActiveUser *str
 
 		return reviews
 	}
-
 }
 
 // Takes the handler, get the game requested, and returns json
@@ -417,7 +416,7 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 			}
 		} else {
 			for i := 0; i < len(reviews); i++ {
-				if reviews[i].Rating > max  && topGameNames[j-1] != reviews[i].GameName{
+				if reviews[i].Rating > max && topGameNames[j-1] != reviews[i].GameName {
 					max = reviews[i].Rating
 					tempGameName = reviews[i].GameName
 				}
@@ -427,7 +426,7 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	}
 
 	var topGames []rawg.Game
-	for i:= 0; i<len(topGameNames); i++{
+	for i := 0; i < len(topGameNames); i++ {
 		filter := rawg.NewGamesFilter().SetPageSize(1).SetSearch(topGameNames[i])
 		temp, _, _ := client.GetGames(filter)
 		topGames[i] = *temp[0]
@@ -440,5 +439,40 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
 	}
+}
 
+// Returns upcoming games that haven't been released yet
+func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	//Create time frame
+	temp := time.Now()
+	start := temp.AddDate(0, 0, 1) //Starts tomorrow
+	end := start.AddDate(0, 1, 0)  //1 month from now
+
+	var specifiedTime rawg.DateRange
+	specifiedTime.From = start
+	specifiedTime.To = end
+
+	//Set filer to search all games in the next, ordered by release date {handled by RAWG itself}
+	filter := rawg.NewGamesFilter().SetPageSize(40).SetOrdering("released")
+	var games []*rawg.Game
+	var num int
+	var err error
+
+	games, num, err = client.GetGames(filter)
+
+	response, err := json.Marshal(games)
+	if err != nil {
+		return
+	}
+
+	//Specify status code
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
+
+	_ = err
+	_ = num
+	_ = games
 }
