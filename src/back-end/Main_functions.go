@@ -182,14 +182,14 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	}
 }
 
-type GameRanking struct{
+type GameRanking struct {
 	gorm.Model
-	GameName    string  `gorm:"uniqueIndex"` // Name of game
-	AverageRating      float32 // Average Rating (out of 5) of the game
-	NumReviews int  // Number of times a game has been reviewed
+	GameName      string  `gorm:"uniqueIndex"` // Name of game
+	AverageRating float32 // Average Rating (out of 5) of the game
+	NumReviews    int     // Number of times a game has been reviewed
 }
 
-func UserGameRankings(review *Review, add bool){
+func UserGameRankings(review *Review, add bool) {
 	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
@@ -199,19 +199,19 @@ func UserGameRankings(review *Review, add bool){
 
 	var temp GameRanking
 	hasGame := db.Where("GameName = ?", review.GameName).First(&temp).Error
-	if hasGame == nil && add{ // game already exists and we're adding
+	if hasGame == nil && add { // game already exists and we're adding
 		num := temp.AverageRating * float32(temp.NumReviews)
 		num += review.Rating
 		temp.NumReviews++
-		temp.AverageRating = (num/float32(temp.NumReviews))
+		temp.AverageRating = (num / float32(temp.NumReviews))
 		db.Save(&temp)
-	} else if hasGame == nil && !add{ // game already exists and we're subtracting
+	} else if hasGame == nil && !add { // game already exists and we're subtracting
 		num := temp.AverageRating * float32(temp.NumReviews)
 		num -= review.Rating
 		temp.NumReviews--
-		temp.AverageRating = (num/float32(temp.NumReviews))
+		temp.AverageRating = (num / float32(temp.NumReviews))
 		db.Save(&temp)
-	}else{
+	} else {
 		db.Create(&GameRanking{GameName: review.GameName, AverageRating: review.Rating, NumReviews: 1})
 	}
 }
@@ -389,4 +389,56 @@ func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	_ = err
 	_ = num
 	_ = games
+}
+
+// Returns up to 5? top games to be displayed on the homepage
+func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+	enableCors(&w)
+
+	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	var reviews []Review
+	db.Where("rating > ?", -1).Find(&reviews)
+
+	var topGameNames []string
+	var tempGameName string
+	max := reviews[0].Rating
+	for j := 0; j < 5; j++ {
+		topGameNames[j] = ""
+		if j == 0 {
+			for i := 0; i < len(reviews); i++ {
+				if reviews[i].Rating > max {
+					max = reviews[i].Rating
+					tempGameName = reviews[i].GameName
+				}
+			}
+		} else {
+			for i := 0; i < len(reviews); i++ {
+				if reviews[i].Rating > max  && topGameNames[j-1] != reviews[i].GameName{
+					max = reviews[i].Rating
+					tempGameName = reviews[i].GameName
+				}
+			}
+		}
+		topGameNames[j] = tempGameName
+	}
+
+	var topGames []rawg.Game
+	for i:= 0; i<len(topGameNames); i++{
+		filter := rawg.NewGamesFilter().SetPageSize(1).SetSearch(topGameNames[i])
+		temp, _, _ := client.GetGames(filter)
+		topGames[i] = *temp[0]
+	}
+
+	if len(topGames) == 0 {
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		response, _ := json.Marshal(topGames)
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	}
+
 }

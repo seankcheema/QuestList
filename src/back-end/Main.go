@@ -79,6 +79,10 @@ func main() {
 		RecentGames(w, r, client)
 	}).Methods("GET")
 
+	router.HandleFunc("/topgames", func(w http.ResponseWriter, r *http.Request) {
+		TopGames(w, r, client)
+	}).Methods("GET")
+
 	//Start and listen for requests
 	http.ListenAndServe(":8080", router)
 }
