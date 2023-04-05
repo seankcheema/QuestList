@@ -32,10 +32,7 @@
             <!-- Recently Released Content-->
             <div class="widget-content">
                 <mat-grid-list cols="4" rows="2" rowHeight="1:1">
-                    <img class="gameImage" src="{{dataSource[0].background_image}}">
-                    <img class="gameImage" src="{{dataSource[1].background_image}}">
-                    <img class="gameImage" src="{{dataSource[2].background_image}}">
-                    <img class="gameImage" src="{{dataSource[3].background_image}}">
+                    <img *ngFor="let game of dataSource | slice:0:4; let i = index " class="gameImage" src="{{game.background_image}}">
                 </mat-grid-list>
             </div>
         </article>
