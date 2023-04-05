@@ -4,12 +4,141 @@ import (
 	"net/http"
 	"github.com/dimuska139/rawg-sdk-go"
 	"github.com/gorilla/mux"
-	
+
+	"math/rand"
+	"fmt"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
+
+func generateUsername() string {
+    // Generate a random username
+    var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    b := make([]rune, 8)
+    for i := range b {
+        b[i] = letterRunes[rand.Intn(len(letterRunes))]
+    }
+    return string(b)
+}
+
+func generateEmail() string {
+    // Generate a random email
+    var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    var domainRunes = []rune("abcdefghijklmnopqrstuvwxyz")
+    b := make([]rune, 8)
+    for i := range b {
+        b[i] = letterRunes[rand.Intn(len(letterRunes))]
+    }
+    return fmt.Sprintf("%s@%s.com", string(b), string(domainRunes[rand.Intn(len(domainRunes))]))
+}
+
+func generatePassword() string {
+    // Generate a random password
+    var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    var digitRunes = []rune("0123456789")
+    b := make([]rune, 12)
+    for i := range b {
+        if i < 6 {
+            b[i] = letterRunes[rand.Intn(len(letterRunes))]
+        } else {
+            b[i] = digitRunes[rand.Intn(len(digitRunes))]
+        }
+    }
+    return string(b)
+}
+
+func generateUsers(count int) []User {
+    // Generate an array of users with unique usernames, emails, and passwords
+    var users []User
+    usernames := make(map[string]bool)
+    emails := make(map[string]bool)
+
+    for i := 0; i < count; i++ {
+        var username string
+        var email string
+        for {
+            username = generateUsername()
+            if !usernames[username] {
+                usernames[username] = true
+                break
+            }
+        }
+        for {
+            email = generateEmail()
+            if !emails[email] {
+                emails[email] = true
+                break
+            }
+        }
+        password := generatePassword()
+        users = append(users, User{Username: username, Email: email, Password: password})
+    }
+
+    return users
+}
+
+
+func generateReview(gameName string) Review {
+    // Generate a random review for the given game
+    var descriptions = []string{
+        "Great game, highly recommend it!",
+        "Decent game, but could use some improvements.",
+        "Terrible game, would not recommend it.",
+        "The best game I've ever played!",
+        "Average game, nothing special.",
+    }
+
+	var PS = []string{
+        "DROPPED",
+        "PLAYING",
+        "COMPLETED",
+        "ON HOLD",
+    }
+
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Migrate the format of the user struct to Gorm's database
+	db.AutoMigrate(&User{})
+	users := generateUsers(1)
+	db.Create(&users[0])
+    return Review{GameName: gameName, Rating: float32(rand.Intn(5)+1), Description: descriptions[rand.Intn(len(descriptions))], Username: users[0].Username, PlayStatus: PS[rand.Intn(len(PS))]}
+}
+
+func generateReviews() []Review {
+    // Generate an array of 10,000 unique game reviews
+    var reviews []Review
+    gameNames := []string{"Overwatch", "Valorant", "Destiny", "Wizard101", "Minecraft", "Xenoblade", "Pokemon"}
+    gameReviews := make(map[string]map[float32]bool)
+
+    for _, gameName := range gameNames {
+        gameReviews[gameName] = make(map[float32]bool)
+    }
+
+    for len(reviews) < 10000 {
+        gameName := gameNames[rand.Intn(len(gameNames))]
+        review := generateReview(gameName)
+        if !gameReviews[gameName][review.Rating] {
+            gameReviews[gameName][review.Rating] = true
+            reviews = append(reviews, review)
+        }
+    }
+
+    return reviews
+}
 
 // Main function -> the main point of entry
 func main() {
+	db, err := gorm.Open(sqlite.Open("reviews.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
 
+	//Migrate the format of the user struct to Gorm's database
+	db.AutoMigrate(&Review{})
+	db.Create(generateReviews())
 	//Creates a rounter
 	router := mux.NewRouter()
 
