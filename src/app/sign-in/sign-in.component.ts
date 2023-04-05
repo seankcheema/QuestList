@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { UserService } from '../util/user/user.service';
+import { User, UserService } from '../util/user/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -9,12 +10,21 @@ import { UserService } from '../util/user/user.service';
 })
 export class SignInComponent {
 
-  constructor(private formBuilder:FormBuilder, private userService: UserService) { }
+  constructor(private formBuilder:FormBuilder, private userService: UserService, private router:Router) { }
   
   // Form group for sign-up form
   profileForm = this.formBuilder.group({
     username:[''],
     password:[''],
   })
+
+  // Posts a new user to the back-end API
+  checkUser(username: string, password: string) : void {
+    this.userService.findUser({username, password} as User)
+    .subscribe((response: any) => { 
+        sessionStorage.setItem('username', username);
+        this.router.navigate(['/home']);
+    });
+  }
 
 }
