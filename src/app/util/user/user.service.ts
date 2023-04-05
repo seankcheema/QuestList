@@ -44,7 +44,19 @@ export class UserService {
     return this.http.post<User>(signUpURL, user, httpOptions);
   }
 
-
+  /**
+   * Finds if the user exists in the back-end API
+   * @param user User to find
+   * @returns Observable of User - can be subscribed to and used to update the UI
+   */
+  findUser(user:User): Observable<User> {
+      
+      const signInURL:string = this.baseUrl + '/sign-in';
+  
+      console.log("findUser: " + user.username + ' ' + user.password + ' '+ signInURL);
+  
+      return this.http.post<User>(signInURL, user, httpOptions);
+  }
 
   /**
    * Handles errors from the back-end API

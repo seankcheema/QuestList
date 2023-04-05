@@ -10,3 +10,12 @@
 .search {
   padding-top: 22px;
 }
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border-style: solid;
+  border-color: black;
+}

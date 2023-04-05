@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms'
 import { User, UserService } from '../util/user/user.service';
 import { UserAuthService } from '../util/user-auth/user-auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -14,7 +15,7 @@ export class SignUpComponent{
    * Constructor for SignUpComponent class
    * @param formBuilder FormBuilder used to create the sign-up form
    */
-  constructor(private formBuilder:FormBuilder, private userService: UserService, private userAuthService: UserAuthService) { }
+  constructor(private formBuilder:FormBuilder, private userService: UserService, private userAuthService: UserAuthService, private router:Router) { }
   
   // Form group for sign-up form
   profileForm = this.formBuilder.group({
@@ -33,6 +34,7 @@ export class SignUpComponent{
     this.userService.addUser({username, email, password} as User)
     .subscribe((response: any) => { 
       this.userAuthService.login(username);
+      this.router.navigate(['/home']);
     });
   }
 }

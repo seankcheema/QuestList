@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Game, GameService } from '../util/game/game.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
