@@ -24,6 +24,16 @@ describe('template spec', () => {
     cy.get('input[formControlName="username"]').type('admin', {force: true})
     cy.get('input[formControlName="email"]').type('admin@localhost', {force: true})
     cy.get('input[formControlName="password"]').type('password', {force: true})
+
+    const stub = cy.stub()
+
+    cy.on('window:alert', stub)
+
+    cy.get('button').contains('Sign Up').click()
+    .then(() => {
+      expect(stub.getCall(0)).to.be.calledWith("This user already exists")
+    })
+
   });
 
   /**
@@ -36,6 +46,10 @@ describe('template spec', () => {
 
     cy.get('input[formControlName="username"]').type('admin', {force: true})
     cy.get('input[formControlName="password"]').type('password', {force: true})
+
+    cy.get('.btn').click()
+
+    cy.url().should('include', '/home')
   });
 
 });

@@ -32,9 +32,14 @@ export class SignUpComponent{
    */
   addUser(username: string, email:string, password: string) : void {
     this.userService.addUser({username, email, password} as User)
-    .subscribe((response: any) => { 
-      this.userAuthService.login(username);
-      this.router.navigate(['/home']);
+    .subscribe({ 
+      next: () => {
+        this.userAuthService.login(username);
+        this.router.navigate(['/home']);
+      },
+      error: () => {
+        alert('This user already exists');
+      }
     });
   }
 }
