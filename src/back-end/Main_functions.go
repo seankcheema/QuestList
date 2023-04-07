@@ -447,16 +447,22 @@ func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 	enableCors(&w)
 
 	//Create time frame
-	temp := time.Now()
-	start := temp.AddDate(0, 0, 1) //Starts tomorrow
-	end := start.AddDate(0, 1, 0)  //1 month from now
+	now := time.Now()
+	tomorrow := time.Now().AddDate(0, 0, -1)
+	currentYear, currentMonth, _ := now.Date()
+	currentLocation := now.Location()
+	firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
+
+	start := tomorrow
+	end := lastOfMonth //1 month from now
 
 	var specifiedTime rawg.DateRange
 	specifiedTime.From = start
 	specifiedTime.To = end
 
 	//Set filer to search all games in the next, ordered by release date {handled by RAWG itself}
-	filter := rawg.NewGamesFilter().SetPageSize(40).SetOrdering("released")
+	filter := rawg.NewGamesFilter().SetPageSize(40).SetDates(&specifiedTime).SetOrdering("rating_top")
 	var games []*rawg.Game
 	var num int
 	var err error
