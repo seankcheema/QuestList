@@ -160,6 +160,7 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 
 	var review Review // new review
 	var temp Review   // old review
+
 	pass := r.ContentLength
 	if pass > 0 {
 		json.NewDecoder(r.Body).Decode(&review)
@@ -171,13 +172,13 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 		review.PlayStatus = "DROPPED"
 	}
 
-	hasReview := db.Where("username = ?", review.Username, "gamename = ?", review.GameName).First(&temp).Error
+	hasReview := db.Where("username = ?", review.Username, "gamename = ?", review.GameName).First(&review).Error
 	if hasReview == nil { // if review already exists, overwrite it
-		UserGameRankings(&temp, false)
-		temp.Rating = review.Rating
-		temp.Description = review.Description
-		temp.PlayStatus = review.PlayStatus
-		db.Save(&temp)
+		UserGameRankings(&review, false)
+		// temp.Rating = review.Rating
+		// temp.Description = review.Description
+		// temp.PlayStatus = review.PlayStatus
+		db.Save(&review)
 		UserGameRankings(&review, true)
 		w.WriteHeader(http.StatusOK)
 		return &temp
@@ -202,6 +203,7 @@ func UserGameRankings(review *Review, add bool) {
 	if hasGame == nil && add { // game already exists and we're adding
 		num := temp.AverageRating * float32(temp.NumReviews)
 		num += review.Rating
+		//temp.GameName = review.GameName
 		temp.NumReviews++
 		temp.AverageRating = (num / float32(temp.NumReviews))
 		db.Save(&temp)

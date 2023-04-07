@@ -156,7 +156,7 @@ func generateReviews() []Review {
 
 // Main function -> the main point of entry
 func main() {
-	//generateReviews() <- this line was used to generate random reviews and users
+	generateReviews() //<- this line was used to generate random reviews and users
 
 
 	//Creates a rounter
