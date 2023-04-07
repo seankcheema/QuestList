@@ -21,9 +21,14 @@ export class SignInComponent {
   // Posts a new user to the back-end API
   checkUser(username: string, password: string) : void {
     this.userService.findUser({username, password} as User)
-    .subscribe((response: any) => { 
-        sessionStorage.setItem('username', username);
-        this.router.navigate(['/home']);
+    .subscribe({ 
+        next: () => {
+          sessionStorage.setItem('username', username);
+          this.router.navigate(['/home']);
+        },
+        error: () => {
+          alert('Invalid username or password');
+        }
     });
   }
 
