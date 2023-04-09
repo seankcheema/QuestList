@@ -218,6 +218,10 @@ func UserGameRankings(review *Review, add bool) {
 	}
 }
 
+
+
+
+
 // Returns to front end a JSON of all of a specified user's game reviews
 func GetReviews(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) []*Review {
 	//Allows the domain to be accessed by frontend

@@ -13,7 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//lines 17 through 155 were functions created to make random users and reviews
+// lines 17 through 155 were functions created to make random users and reviews
 func generateUsername() string {
 	// Generate a random username
 	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -97,8 +97,6 @@ func generateReview(gameName string, username string) Review {
 		"ON HOLD",
 	}
 
-	
-
 	return Review{GameName: gameName, Rating: float32(rand.Intn(5) + 1), Description: descriptions[rand.Intn(len(descriptions))], Username: username, PlayStatus: PS[rand.Intn(len(PS))]}
 }
 
@@ -156,8 +154,29 @@ func generateReviews() []Review {
 
 // Main function -> the main point of entry
 func main() {
-	generateReviews() //<- this line was used to generate random reviews and users
+	//generateReviews() //<- this line was used to generate random reviews and users
 
+
+	//this is sean trying stuff to see if our functionality works
+
+	// db, _ := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
+	// db.AutoMigrate(&Review{})
+
+	// review := Review{GameName: "Overwatch 1", Rating: 1.5, Description: "WIDOW", Username: "seanlul", PlayStatus: "DROPPED"}
+	// var oldReview Review
+	// hasReview := db.Model(Review{Username: review.Username, GameName: review.GameName}).First(&oldReview).Error
+	// if hasReview == nil { // if review already exists, overwrite it
+	// 	UserGameRankings(&oldReview, false)
+	// 	oldReview.GameName = review.GameName
+	// 	oldReview.Rating = review.Rating
+	// 	oldReview.Description = review.Description
+	// 	oldReview.PlayStatus = review.PlayStatus
+	// 	db.Save(&oldReview)
+	// 	UserGameRankings(&oldReview, true)
+	// } else { // else create new review
+	// 	db.Create(&Review{GameName: review.GameName, Rating: review.Rating, Description: review.Description, Username: review.Username, PlayStatus: review.PlayStatus})
+	// 	UserGameRankings(&review, true)
+	// }
 
 	//Creates a rounter
 	router := mux.NewRouter()
