@@ -13,7 +13,11 @@
       <button mat-raised-button color="accent" routerLink="/sign-in" routerLinkActive="active" ariaCurrentWhenActive="page">Sign In</button>
     </span>
     <span *ngIf="isLoggedIn">
-      <img src = "../../../assets/icon-profile.png" class = "profile-image">
+      <button [mat-menu-trigger-for]="menu" class = "profile-button"><img src = "../../../assets/icon-profile.png" class = "profile-image"></button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="redirectToProfile()">Profile</button>
+        <button mat-menu-item (click)="logout()">Logout</button>
+      </mat-menu>
     </span>
   </mat-toolbar>
 

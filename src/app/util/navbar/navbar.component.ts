@@ -17,4 +17,13 @@ export class NavbarComponent {
     this.isLoggedIn = this.userAuthService.isUserLoggedIn(sessionStorage.getItem('username') || '');
   }
 
+  logout(): void {
+    this.userAuthService.logout();
+    window.location.href = '/home';
+  }
+
+  redirectToProfile(): void {
+    window.location.href = '/user/' + sessionStorage.getItem('username');
+  }
+
 }

@@ -19,3 +19,9 @@
   border-style: solid;
   border-color: black;
 }
+
+.profile-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
