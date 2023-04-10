@@ -233,6 +233,12 @@ func main() {
 		UpcomingGames(w, r, client)
 	}).Methods("GET")
 
+	router.HandleFunc("/getuser", func(w http.ResponseWriter, r *http.Request) {
+		GetUsers(w, r)
+	}).Methods("GET")
+
+
+
 	//Start and listen for requests
 	http.ListenAndServe(":8080", router)
 }

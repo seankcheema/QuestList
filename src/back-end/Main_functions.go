@@ -475,3 +475,36 @@ func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 	_ = num
 	_ = games
 }
+
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	//Open database
+	db, err := gorm.Open(sqlite.Open("currentUsers.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Get the username we will be working with
+	username := r.URL.Query().Get("user")
+
+	//Migrate the given json file and fomrat it in terms of the User struct so we may work with it
+	db.AutoMigrate(&User{})
+
+	//Create a user array to return all user sthat somewhat match the name given to us by the front end
+	var users []User
+
+	//Search our databse for all the possible users that are "LIKE" the given string
+	hasUsers := db.Where("username LIKE = ?", username).Find(&users).Error
+
+	//If we the found material is some error, then it doesn't exist and we write an Internal Server error to the writer
+	//Otherwise, we return the marshalled user array and return successful
+	if(hasUsers != nil){
+		w.WriteHeader(http.StatusInternalServerError)
+	} else{
+		response, _ := json.Marshal(users)
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	}
+}
