@@ -237,6 +237,9 @@ func main() {
 		GetUsers(w, r)
 	}).Methods("GET")
 
+	router.HandleFunc("/recentreviews", func(w http.ResponseWriter, r *http.Request) {
+		RecentReviews(w, r)
+	}).Methods("GET")
 
 
 	//Start and listen for requests

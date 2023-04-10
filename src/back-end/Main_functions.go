@@ -267,7 +267,6 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 	//Specify status code
 	w.WriteHeader(http.StatusOK)
 
-
 	//Pull slug from query params
 	slug := r.URL.Query().Get("slug")
 
@@ -500,11 +499,41 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 
 	//If we the found material is some error, then it doesn't exist and we write an Internal Server error to the writer
 	//Otherwise, we return the marshalled user array and return successful
-	if(hasUsers != nil){
+	if hasUsers != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-	} else{
+	} else {
 		response, _ := json.Marshal(users)
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
 	}
+}
+
+func RecentReviews(w http.ResponseWriter, r *http.Request) {
+	//Allows the doamin to be accessed by frontenf
+	enableCors(&w)
+
+	//Open database
+	db, err := gorm.Open(sqlite.Open("reviews.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Create time frame
+	start := time.Now()
+	end := start.AddDate(0, -1, 0) //1 month ago from current time
+
+	db.AutoMigrate(&Review{})
+
+	var latestReviews []Review
+
+	recentReviews := db.Where("updated_at > ?", end).Find(&latestReviews).Error
+
+	if recentReviews != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		response, _ := json.Marshal(latestReviews)
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	}
+
 }
