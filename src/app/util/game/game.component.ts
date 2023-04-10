@@ -12,9 +12,8 @@ import { Game, GameService } from './game.service';
  * GameComponent
  */
 export class GameComponent {
-  error: any;
-  headers: string[] = [];
-  games: Game[] | undefined;
+
+  dataSource: Game[] | undefined;
 
   /**
    * Constuctor for GameComponent class
@@ -28,27 +27,12 @@ export class GameComponent {
    */
   ngOnInit(): void {
     
-    const page = this.route.snapshot.queryParamMap.get('page');
+    const gameSlug = this.route.snapshot.paramMap.get('game-slug');
 
-    this.showGames(page);
+    this.gameService.getGame(gameSlug).subscribe((data: Game[]) => { this.dataSource = data; });
+
   }
 
-  /**
-   * Clears the games array and error message
-   */
-  clear() : void {
-    this.games = undefined;
-    this.error = undefined;
-    this.headers = [];
-  }
-
-  /**
-   * Subscribes to the gameService Observable and sets the games array to the data returned
-   * @param page the page number to query in the back-end API
-   */
-  showGames(page: string | null) : void {
-    this.gameService.getGames(page)
-    .subscribe((data: Game[]) => this.games = data );
-  }
+  
 
 }

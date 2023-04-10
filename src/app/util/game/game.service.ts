@@ -48,9 +48,6 @@ export class GameService {
      * @returns an observable of type Game[]
      */
     getGames(page: string | null): Observable<Game[]>{
-
-        console.log(this.gamesUrl + "/games?page=" + (page || '1'));
-
         return this.http.get<Game[]>(this.gamesUrl + "/games?page=" + (page || '1'))
         .pipe(
             retry(3),
@@ -58,11 +55,25 @@ export class GameService {
         );
     }
 
-    getRecentGames(): Observable<Game[]>{
-
-        console.log(this.gamesUrl + "/recent" );
-
+    /**
+     * Gets a list of recent games from the back-end API
+     * @returns an observable of type Game[]
+     */
+    getRecentGames(): Observable<Game[]> {
         return this.http.get<Game[]>(this.gamesUrl + "/recent")
+        .pipe(
+            retry(3),
+            catchError(this.handleError)
+        )
+    }
+
+    /**
+     * Gets an array of games closest matching slug from the back-end API
+     * @param slug Specifies the slug of the game to get from the back-end API
+     * @returns an observable of type Game[]
+     */
+    getGame(slug: string | null): Observable<Game[]> {
+        return this.http.get<Game[]>(this.gamesUrl + "/specific-game?slug=" + (slug || ''))
         .pipe(
             retry(3),
             catchError(this.handleError)

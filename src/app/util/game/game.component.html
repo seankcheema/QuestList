@@ -1,9 +1,5 @@
-<!--Test message to ensure that the component is working-->
-<h3>Games Component Working!</h3>
-
-<!--Displays each game's name in the game array-->
-<div>
-    <span *ngIf="games">
-        <li *ngFor="let game of games">Game Name: {{game.name}}</li>
-    </span>
-</div>
+<span *ngIf="dataSource">
+    <img src="{{dataSource[0].background_image}}">
+    <p>{{dataSource[0].name}}</p>
+    <p>is data</p>
+</span>
