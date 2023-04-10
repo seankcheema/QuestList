@@ -261,7 +261,7 @@ func GetReviews(w http.ResponseWriter, r *http.Request, currentlyActiveUser *str
 
 // Takes the handler, get the game requested, and returns json
 func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
 	//Specify status code
@@ -300,7 +300,7 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 
 // Takes the handler's page, and returns all games of that page (40 max)
 func Games(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.Game {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
 	//Specify status code
@@ -349,7 +349,7 @@ func Games(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.
 // Handles requests to get the 4 most recent games released
 // Due to the constantly changing nature of the games that are updated per day, this cannot be concretely unit tested with set values
 func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
 	//Create time frame
@@ -435,7 +435,7 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 
 // Returns upcoming games that haven't been released yet
 func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
 	//Create time frame
@@ -476,7 +476,7 @@ func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
 	//Open database
@@ -509,11 +509,11 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func RecentReviews(w http.ResponseWriter, r *http.Request) {
-	//Allows the doamin to be accessed by frontenf
+	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
 	//Open database
-	db, err := gorm.Open(sqlite.Open("reviews.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
 	}
@@ -536,4 +536,42 @@ func RecentReviews(w http.ResponseWriter, r *http.Request) {
 		w.Write(response)
 	}
 
+}
+
+// Returns the game with the most number of reviews in the last month
+func GetFeaturedGame(w http.ResponseWriter, r *http.Request) {
+	//Allows the doamin to be accessed by frontend
+	enableCors(&w)
+
+	//Open database
+	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Create time frame
+	start := time.Now()
+	end := start.AddDate(0, -1, 0) //1 month ago from current time
+
+	db.AutoMigrate(&GameRanking{})
+
+	var gameRankings []GameRanking
+
+	recentRankings := db.Where("updated_at > ?", end).Find(&gameRankings).Error
+
+	if recentRankings != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		var featuredGame string
+		max := gameRankings[0].NumReviews
+		for i := 0; i<len(gameRankings); i++ {
+			if(gameRankings[i].NumReviews > max){
+				featuredGame = gameRankings[i].GameName
+				max = gameRankings[i].NumReviews
+			}
+		}
+		response, _ := json.Marshal(featuredGame)
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	}
 }

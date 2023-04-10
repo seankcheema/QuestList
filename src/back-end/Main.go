@@ -241,6 +241,10 @@ func main() {
 		RecentReviews(w, r)
 	}).Methods("GET")
 
+	router.HandleFunc("/featuredgame", func(w http.ResponseWriter, r *http.Request) {
+		GetFeaturedGame(w, r)
+	}).Methods("GET")
+
 
 	//Start and listen for requests
 	http.ListenAndServe(":8080", router)
