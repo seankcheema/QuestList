@@ -155,30 +155,7 @@ func generateReviews() []Review {
 // Main function -> the main point of entry
 func main() {
 	//generateReviews() //<- this line was used to generate random reviews and users
-
-
-	//this is sean trying stuff to see if our functionality works
-
-	// db, _ := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
-	// db.AutoMigrate(&Review{})
-
-	// review := Review{GameName: "Overwatch", Rating: 1.5, Description: "WIDOW", Username: "seanlul", PlayStatus: "DROPPED"}
-	// var oldReview Review
-	// hasReview := db.Where("username = ?", review.Username).Where("game_name = ?", review.GameName).First(&oldReview).Error
-	// if hasReview == nil { // if review already exists, overwrite it
-	// 	//fmt.Print(oldReview.GameName, oldReview.Rating, oldReview.Description, oldReview.Username, oldReview.PlayStatus)
-	// 	UserGameRankings(&oldReview, false)
-	// 	oldReview.GameName = review.GameName
-	// 	oldReview.Rating = review.Rating
-	// 	oldReview.Description = review.Description
-	// 	oldReview.PlayStatus = review.PlayStatus
-	// 	db.Save(&oldReview)
-	// 	UserGameRankings(&oldReview, true)
-	// } else { // else create new review
-	// 	db.Create(&Review{GameName: review.GameName, Rating: review.Rating, Description: review.Description, Username: review.Username, PlayStatus: review.PlayStatus})
-	// 	UserGameRankings(&review, true)
-	// }
-
+	
 	//Creates a rounter
 	router := mux.NewRouter()
 

@@ -172,7 +172,7 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 		review.PlayStatus = "DROPPED"
 	}
 
-	hasReview := db.Where("username = ?", review.Username, "game_name = ?", review.GameName).First(&review).Error
+	hasReview := db.Where("username = ?", review.Username).Where("game_name = ?", review.GameName).First(&review).Error
 	if hasReview == nil { // if review already exists, overwrite it
 		UserGameRankings(&review, false)
 		// temp.Rating = review.Rating
@@ -275,9 +275,6 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 	//Specify status code
 	w.WriteHeader(http.StatusOK)
 
-	//Recieve game name from front, using the game's slug
-	// params := mux.Vars(r)
-	// slug := params["slug"]
 
 	//Pull slug from query params
 	slug := r.URL.Query().Get("slug")
@@ -319,8 +316,6 @@ func Games(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.
 	w.WriteHeader(http.StatusOK)
 
 	//Page iterator
-	// params := mux.Vars(r)
-	// tempCurrPage := params["page"]
 	tempCurrPage := r.URL.Query().Get("page")
 	tempPageSize := r.URL.Query().Get("pageSize")
 
