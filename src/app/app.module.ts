@@ -67,7 +67,7 @@ import { SearchBarComponent } from './util/search-bar/search-bar.component';
     MatCardModule,
     MatInputModule,
     BrowserAnimationsModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule
   ],
   providers: [
     GameService,

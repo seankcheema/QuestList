@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.css']
+  styleUrls: ['./sign-up.component.css'],
+  providers: [{provide: Window, useValue: window}]
 })
 export class SignUpComponent{
 
@@ -15,7 +16,7 @@ export class SignUpComponent{
    * Constructor for SignUpComponent class
    * @param formBuilder FormBuilder used to create the sign-up form
    */
-  constructor(private formBuilder:FormBuilder, private userService: UserService, private userAuthService: UserAuthService, private router:Router) { }
+  constructor(private formBuilder:FormBuilder, private userService: UserService, private userAuthService: UserAuthService, private window: Window) { }
   
   // Form group for sign-up form
   profileForm = this.formBuilder.group({
@@ -35,7 +36,7 @@ export class SignUpComponent{
     .subscribe({ 
       next: () => {
         this.userAuthService.login(username);
-        this.router.navigate(['/home']);
+        this.window.location.href = '/home';
       },
       error: () => {
         alert('This user already exists');
