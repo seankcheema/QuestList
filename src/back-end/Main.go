@@ -162,10 +162,11 @@ func main() {
 	// db, _ := gorm.Open(sqlite.Open("Reviews.db"), &gorm.Config{})
 	// db.AutoMigrate(&Review{})
 
-	// review := Review{GameName: "Overwatch 1", Rating: 1.5, Description: "WIDOW", Username: "seanlul", PlayStatus: "DROPPED"}
+	// review := Review{GameName: "Overwatch", Rating: 1.5, Description: "WIDOW", Username: "seanlul", PlayStatus: "DROPPED"}
 	// var oldReview Review
-	// hasReview := db.Model(Review{Username: review.Username, GameName: review.GameName}).First(&oldReview).Error
+	// hasReview := db.Where("username = ?", review.Username).Where("game_name = ?", review.GameName).First(&oldReview).Error
 	// if hasReview == nil { // if review already exists, overwrite it
+	// 	//fmt.Print(oldReview.GameName, oldReview.Rating, oldReview.Description, oldReview.Username, oldReview.PlayStatus)
 	// 	UserGameRankings(&oldReview, false)
 	// 	oldReview.GameName = review.GameName
 	// 	oldReview.Rating = review.Rating
@@ -201,7 +202,7 @@ func main() {
 	http.Handle("/", router)
 
 	//Takes in a game from the front end that is requested, and return the requested game {CALLS GAME}
-	router.HandleFunc("/specific-game/", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/specific-game", func(w http.ResponseWriter, r *http.Request) {
 		Game(w, r, client)
 	}).Methods("GET")
 

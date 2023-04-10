@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/dimuska139/rawg-sdk-go"
-	"github.com/gorilla/mux"
+	//"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -172,7 +172,7 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 		review.PlayStatus = "DROPPED"
 	}
 
-	hasReview := db.Where("username = ?", review.Username, "gamename = ?", review.GameName).First(&review).Error
+	hasReview := db.Where("username = ?", review.Username, "game_name = ?", review.GameName).First(&review).Error
 	if hasReview == nil { // if review already exists, overwrite it
 		UserGameRankings(&review, false)
 		// temp.Rating = review.Rating
@@ -199,7 +199,7 @@ func UserGameRankings(review *Review, add bool) {
 	db.AutoMigrate(&GameRanking{})
 
 	var temp GameRanking
-	hasGame := db.Where("GameName = ?", review.GameName).First(&temp).Error
+	hasGame := db.Where("game_name = ?", review.GameName).First(&temp).Error
 	if hasGame == nil && add { // game already exists and we're adding
 		num := temp.AverageRating * float32(temp.NumReviews)
 		num += review.Rating
@@ -276,11 +276,11 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 	w.WriteHeader(http.StatusOK)
 
 	//Recieve game name from front, using the game's slug
-	params := mux.Vars(r)
-	slug := params["slug"]
+	// params := mux.Vars(r)
+	// slug := params["slug"]
 
 	//Pull slug from query params
-	// slug := r.URL.Query().Get("slug")
+	slug := r.URL.Query().Get("slug")
 
 	//--------------------
 
