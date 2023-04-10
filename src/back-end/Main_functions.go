@@ -159,7 +159,6 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	db.AutoMigrate(&Review{})
 
 	var review Review // new review
-	var temp Review   // old review
 
 	pass := r.ContentLength
 	if pass > 0 {
@@ -175,13 +174,10 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	hasReview := db.Where("username = ?", review.Username).Where("game_name = ?", review.GameName).First(&review).Error
 	if hasReview == nil { // if review already exists, overwrite it
 		UserGameRankings(&review, false)
-		// temp.Rating = review.Rating
-		// temp.Description = review.Description
-		// temp.PlayStatus = review.PlayStatus
 		db.Save(&review)
 		UserGameRankings(&review, true)
 		w.WriteHeader(http.StatusOK)
-		return &temp
+		return &review
 	} else { // else create new review
 		db.Create(&Review{GameName: review.GameName, Rating: review.Rating, Description: review.Description, Username: review.Username, PlayStatus: review.PlayStatus})
 		UserGameRankings(&review, true)
@@ -217,10 +213,6 @@ func UserGameRankings(review *Review, add bool) {
 		db.Create(&GameRanking{GameName: review.GameName, AverageRating: review.Rating, NumReviews: 1})
 	}
 }
-
-
-
-
 
 // Returns to front end a JSON of all of a specified user's game reviews
 func GetReviews(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) []*Review {
