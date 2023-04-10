@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
-  styleUrls: ['./sign-in.component.css']
+  styleUrls: ['./sign-in.component.css'],
+  providers: [{provide: Window, useValue: window}]
 })
 export class SignInComponent {
 
-  constructor(private formBuilder:FormBuilder, private userService: UserService, private router:Router) { }
+  constructor(private formBuilder:FormBuilder, private userService: UserService, private window: Window) { }
   
   // Form group for sign-up form
   profileForm = this.formBuilder.group({
@@ -24,7 +25,7 @@ export class SignInComponent {
     .subscribe({ 
         next: () => {
           sessionStorage.setItem('username', username);
-          this.router.navigate(['/home']);
+          this.window.location.href = '/home';
         },
         error: () => {
           alert('Invalid username or password');
