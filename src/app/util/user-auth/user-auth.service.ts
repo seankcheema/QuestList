@@ -16,4 +16,8 @@ export class UserAuthService {
     sessionStorage.setItem('username', username);
   }
 
+  public logout(): void {
+    sessionStorage.clear();
+  }
+
 }

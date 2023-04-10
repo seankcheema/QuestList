@@ -13,6 +13,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatMenuModule } from '@angular/material/menu'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +33,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { UserAuthService } from './util/user-auth/user-auth.service';
 import { SearchBarComponent } from './util/search-bar/search-bar.component';
+
 
 @NgModule({
   declarations: [
@@ -67,7 +69,8 @@ import { SearchBarComponent } from './util/search-bar/search-bar.component';
     MatCardModule,
     MatInputModule,
     BrowserAnimationsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatMenuModule
   ],
   providers: [
     GameService,
