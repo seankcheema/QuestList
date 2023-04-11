@@ -225,24 +225,29 @@ func main() {
 		RecentGames(w, r, client)
 	}).Methods("GET")
 
+	// Returns the top 5 games as rated by QuestList users
 	router.HandleFunc("/topgames", func(w http.ResponseWriter, r *http.Request) {
 		TopGames(w, r, client)
 	}).Methods("GET")
 
+	// Returns upcoming games that haven't been released yet
 	router.HandleFunc("/upcominggames", func(w http.ResponseWriter, r *http.Request) {
 		UpcomingGames(w, r, client)
 	}).Methods("GET")
 
+	// Returns the usernames most similar to the username passed in through the URL
 	router.HandleFunc("/getuser", func(w http.ResponseWriter, r *http.Request) {
 		GetUsers(w, r)
 	}).Methods("GET")
 
+	// Returns an array of reviews from the last month arranged from most recent to least recent
 	router.HandleFunc("/recentreviews", func(w http.ResponseWriter, r *http.Request) {
 		RecentReviews(w, r)
 	}).Methods("GET")
 
+	// Returns the game with the most number of reviews in the last month
 	router.HandleFunc("/featuredgame", func(w http.ResponseWriter, r *http.Request) {
-		GetFeaturedGame(w, r)
+		GetFeaturedGame(w, r, client)
 	}).Methods("GET")
 
 

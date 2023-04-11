@@ -187,13 +187,16 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 }
 
 func UserGameRankings(review *Review, add bool) {
+	// Open rankings db
 	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
 	}
 
+	//Migrate the GameRanking struct
 	db.AutoMigrate(&GameRanking{})
 
+	// Find the first (should be only) instance of that game
 	var temp GameRanking
 	hasGame := db.Where("game_name = ?", review.GameName).First(&temp).Error
 	if hasGame == nil && add { // game already exists and we're adding
@@ -209,7 +212,7 @@ func UserGameRankings(review *Review, add bool) {
 		temp.NumReviews--
 		temp.AverageRating = (num / float32(temp.NumReviews))
 		db.Save(&temp)
-	} else {
+	} else { // if game doesn't exist, add it
 		db.Create(&GameRanking{GameName: review.GameName, AverageRating: review.Rating, NumReviews: 1})
 	}
 }
@@ -240,10 +243,10 @@ func GetReviews(w http.ResponseWriter, r *http.Request, currentlyActiveUser *str
 	var reviews []*Review
 	db.Where("username = ?", user.Username).Find(&reviews)
 
-	if len(reviews) == 0 {
+	if len(reviews) == 0 { // if there are no reviews, write an error to the header
 		w.WriteHeader(http.StatusInternalServerError)
 		return nil
-	} else {
+	} else { // else send reviews to front-end
 		response, err := json.Marshal(reviews)
 		if err != nil {
 			return nil
@@ -292,8 +295,6 @@ func Game(w http.ResponseWriter, r *http.Request, client *rawg.Client) []*rawg.G
 	_ = err
 	_ = num
 	_ = games
-
-	fmt.Println(games[0].Name)
 
 	return games
 }
@@ -386,30 +387,34 @@ func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	enableCors(&w)
 
+	// Open GameRankings db
 	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
 	}
 
-	var reviews []Review
-	db.Where("rating > ?", -1).Find(&reviews)
+	//get all game rankings and store in review
+	var reviews []GameRanking
+	db.Where("average_rating > ?", -1).Find(&reviews)
 
+
+	// Collect the names of the 5 highest rated games
 	var topGameNames []string
 	var tempGameName string
-	max := reviews[0].Rating
+	max := reviews[0].AverageRating
 	for j := 0; j < 5; j++ {
 		topGameNames[j] = ""
 		if j == 0 {
 			for i := 0; i < len(reviews); i++ {
-				if reviews[i].Rating > max {
-					max = reviews[i].Rating
+				if reviews[i].AverageRating > max {
+					max = reviews[i].AverageRating
 					tempGameName = reviews[i].GameName
 				}
 			}
 		} else {
 			for i := 0; i < len(reviews); i++ {
-				if reviews[i].Rating > max && topGameNames[j-1] != reviews[i].GameName {
-					max = reviews[i].Rating
+				if reviews[i].AverageRating > max && topGameNames[j-1] != reviews[i].GameName {
+					max = reviews[i].AverageRating
 					tempGameName = reviews[i].GameName
 				}
 			}
@@ -417,6 +422,7 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 		topGameNames[j] = tempGameName
 	}
 
+	// Turn these game names into rawg.Game objects
 	var topGames []rawg.Game
 	for i := 0; i < len(topGameNames); i++ {
 		filter := rawg.NewGamesFilter().SetPageSize(1).SetSearch(topGameNames[i])
@@ -424,9 +430,9 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 		topGames[i] = *temp[0]
 	}
 
-	if len(topGames) == 0 {
+	if len(topGames) == 0 { // if 0 games, write an error to the header
 		w.WriteHeader(http.StatusInternalServerError)
-	} else {
+	} else { // else send games to front-end
 		response, _ := json.Marshal(topGames)
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
@@ -475,6 +481,7 @@ func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 	_ = games
 }
 
+// Returns the usernames most similar to the username passed in through the URL
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
@@ -508,8 +515,9 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Returns an array of reviews from the last month arranged from most recent to least recent
 func RecentReviews(w http.ResponseWriter, r *http.Request) {
-	//Allows the doamin to be accessed by frontend
+	//Allows the domain to be accessed by front-end
 	enableCors(&w)
 
 	//Open database
@@ -526,6 +534,7 @@ func RecentReviews(w http.ResponseWriter, r *http.Request) {
 
 	var latestReviews []Review
 
+	// Get the reveiews from the last month
 	recentReviews := db.Where("updated_at > ?", end).Find(&latestReviews).Error
 
 	if recentReviews != nil {
@@ -539,7 +548,7 @@ func RecentReviews(w http.ResponseWriter, r *http.Request) {
 }
 
 // Returns the game with the most number of reviews in the last month
-func GetFeaturedGame(w http.ResponseWriter, r *http.Request) {
+func GetFeaturedGame(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
@@ -557,20 +566,26 @@ func GetFeaturedGame(w http.ResponseWriter, r *http.Request) {
 
 	var gameRankings []GameRanking
 
+	// Get all games updated in the last month
 	recentRankings := db.Where("updated_at > ?", end).Find(&gameRankings).Error
 
 	if recentRankings != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {
-		var featuredGame string
+		var featuredGame string // the game with the highest ranking from []gameRankings
 		max := gameRankings[0].NumReviews
-		for i := 0; i<len(gameRankings); i++ {
-			if(gameRankings[i].NumReviews > max){
+		for i := 0; i < len(gameRankings); i++ {
+			if gameRankings[i].NumReviews > max {
 				featuredGame = gameRankings[i].GameName
 				max = gameRankings[i].NumReviews
 			}
 		}
-		response, _ := json.Marshal(featuredGame)
+		// get rawg.Game with name featuredGame
+		filter := rawg.NewGamesFilter().SetPageSize(1).SetSearch(featuredGame)
+
+		game, _, _:= client.GetGames(filter)
+
+		response, _ := json.Marshal(game)
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
 	}
