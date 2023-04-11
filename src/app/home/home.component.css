@@ -29,6 +29,12 @@ mat-grid-tile {
     border: 1px solid black;
 }
 
-.gameImage {
+
+img {
     width: 25%;
+    height: 200px;
+}
+
+.label1 {
+    padding: 10px;
 }

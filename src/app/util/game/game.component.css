@@ -1,0 +1,40 @@
+.content {
+    padding: 15px;
+}
+
+img {
+    width: 100%;
+}
+
+.header {
+    padding-top: 10px;
+}
+
+.box {
+    width: 100%;
+}
+
+.left-box {
+    float: left;
+    width: 40%;
+    height: 100%;
+}
+
+ .right-card {
+    float: right;
+    width: 59%;
+   border: 0px solid blue; 
+    height: 423px;
+}
+
+.box-text {
+    padding: 10px;
+}
+
+.spacer {
+    height: 15px;
+}
+
+.review-box {
+    text-align: center;
+}

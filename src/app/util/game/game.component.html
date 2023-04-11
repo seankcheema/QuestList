@@ -1,5 +1,31 @@
 <span *ngIf="dataSource">
-    <img src="{{dataSource[0].background_image}}">
-    <p>{{dataSource[0].name}}</p>
-    <p>is data</p>
+    <div class="content">
+
+        <!-- Game Header -->
+        <div class="header">
+            <h1>{{dataSource[0].name}}</h1>
+        </div>
+
+        <!-- Game Information Container -->
+        <div class="box">
+            <!-- Left side of the container -->
+            <div class="left-box">
+                <img src="{{dataSource[0].background_image}}">
+                <div class="spacer"></div>
+                <form class ="review-box">
+                    <h2>Review</h2>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Leave a review</mat-label>
+                        <textarea matInput placeholder="This game sucks!"></textarea>
+                    </mat-form-field>
+                </form>
+            </div>
+            <!-- Right side of the container -->
+            <div class="right-box">
+                <mat-card class="right-card">
+                    <h1 class="box-text">Test</h1>
+                </mat-card>
+            </div>
+        </div>
+    </div>
 </span>
