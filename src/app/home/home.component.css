@@ -36,6 +36,16 @@ img {
     padding: 1px;
 }
 
+.featured-game {
+    width: 100%;
+    height: 250px;
+    padding-top: 10px;
+}
+
+.featured-game-title {
+    text-align: center;
+}
+
 .label1 {
     padding: 10px;
 }

@@ -1,145 +1,125 @@
 <!--TODO: Beautify-->
-<span *ngIf="dataSource">
-    <!-- Left side of the home page-->
-    <div class="left-column"> 
+<!-- Left side of the home page-->
+<div class="left-column"> 
 
-        <!-- Games Widget-->
-        <article class="widget-container-left">
-            <!-- Popular Games Header-->
-            <div class="widget-header">
-                <h1 class="label1">
-                <p><em>Popular Games</em></p>
+    <!-- Games Widget-->
+    <article class="widget-container-left">
+        <!-- Popular Games Header-->
+        <div class="widget-header">
+            <h1 class="label1">
+            <p><em>Popular Games</em></p>
+            </h1>
+        </div>
+        <!-- Popular Games Content-->
+        <div class="widget-content">
+            <mat-grid-list cols="4" rows="2" rowHeight="1:1">
+                <!--TODO: Put in popular games-->
+                <a *ngFor="let game of gameSource | slice:0:4; let i = index " href="game/{{game.slug}}"><img class="gameImage" src="{{game.background_image}}"></a>
+            </mat-grid-list>
+        </div>
+    </article>
+
+    <div class="spacer"></div>
+
+    <!-- Games Widget-->
+    <article class ="widget-container-left">
+        <!-- Recently Released Header-->
+        <div class="widget-header">
+            <h1 class="label1">
+                <p><em>Recently Released</em></p>
+            </h1>
+        </div>
+        <!-- Recently Released Content-->
+        <div class="widget-content">
+            <span *ngIf="recentGameSource">
+                <mat-grid-list cols="4" rows="2" rowHeight="1:1">
+                    <a *ngFor="let game of recentGameSource | slice:0:4; let i = index " href="/game/{{game.slug}}"><img class="gameImage" src="{{game.background_image}}"></a>
+                </mat-grid-list>
+            </span>
+        </div>
+    </article>
+
+    <div class="spacer"></div>
+
+    <!-- Review and Top Rated Widget-->
+    <article class="widget-containter-left2">
+        <!--Review Widget-->
+        <article class="review-list">
+            <!--Review Header-->
+            <div class ="list-header">
+                <h1 class="label2">
+                    <p><em>New Reviews</em></p>
                 </h1>
             </div>
-            <!-- Popular Games Content-->
-            <div class="widget-content">
-                <mat-grid-list cols="4" rows="2" rowHeight="1:1">
-                    <!--TODO: Put in popular games-->
-                </mat-grid-list>
-            </div>
+            <!--Review Content-->
+            <mat-list>
+                <mat-list-item *ngFor="let review of recentReviewSource | slice:0:2; let i = index">
+                    <div matListItemTitle>{{review.GameName}}</div>
+                        {{review.Description}}
+                        <mat-divider></mat-divider>
+                </mat-list-item> 
+            </mat-list>
         </article>
 
         <div class="spacer"></div>
 
-        <!-- Games Widget-->
-        <article class ="widget-container-left">
-            <!-- Recently Released Header-->
-            <div class="widget-header">
-                <h1 class="label1">
-                    <p><em>Recently Released</em></p>
+        <!--Top Rated Widget-->
+        <article class="toprated-list">
+            <!--Top Rated Header-->
+            <div class ="list-header">
+                <h1 class="label2">
+                    <p><em>Top Rated </em></p>
                 </h1>
             </div>
-            <!-- Recently Released Content-->
-            <div class="widget-content">
-                <mat-grid-list cols="4" rows="2" rowHeight="1:1">
-                    <img *ngFor="let game of dataSource | slice:0:4; let i = index " class="gameImage" src="{{game.background_image}}">
-                </mat-grid-list>
-            </div>
-        </article>
-
-        <div class="spacer"></div>
-
-        <!-- Review and Top Rated Widget-->
-        <article class="widget-containter-left2">
-            <!--Review Widget-->
-            <article class="review-list">
-                <!--Review Header-->
-                <div class ="list-header">
-                    <h1 class="label2">
-                        <p><em>New Reviews</em></p>
-                    </h1>
-                </div>
-                <!--Review Content-->
-                <mat-list>
+            <!--Top Rated Content-->
+            <mat-list>
+                <span *ngIf="topRatedGameSource">
                     <mat-list-item>
-                    <div matListItemTitle>First Review</div>
-                    This game was great!
+                        <div matListItemTitle>{{topRatedGameSource[0].name}}</div>
                     </mat-list-item> 
                     <mat-divider></mat-divider>
                     <mat-list-item>
-                    <div matListItemTitle>Second Review</div>
-                    Terrible
-                    </mat-list-item> 
-                    <mat-divider></mat-divider>
-                </mat-list>
-            </article>
-
-            <div class="spacer"></div>
-
-            <!--Top Rated Widget-->
-            <article class="toprated-list">
-                <!--Top Rated Header-->
-                <div class ="list-header">
-                    <h1 class="label2">
-                        <p><em>Top Rated </em></p>
-                    </h1>
-                </div>
-                <!--Top Rated Content-->
-                <mat-list>
-                    <mat-list-item>
-                    <div matListItemTitle>Best Game of All Time</div>
-                    GOAT
-                    </mat-list-item> 
-                    <mat-divider></mat-divider>
-                    <mat-list-item>
-                    <div matListItemTitle>Minecraft</div>
-                    Classic
+                        <div matListItemTitle>{{topRatedGameSource[1].name}}</div>
                     </mat-list-item> 
                     <div class="spacer"></div>
                     <button mat-raised-button color="primary" routerLink="/top-games" routerLinkActive="active" ariaCurrentWhenActive="page">More Top Rated Games</button>
-                </mat-list>
-            </article>
+                </span>
+            </mat-list>
         </article>
-    </div>
+    </article>
+</div>
 
-    <div class="right-column">
-        <article class="widget-container-right">
-            <div class="widget-header2">
-                <h1 class="label1">
-                    <p><em>Coming Soon</em></p>
-                </h1>
-            </div>
-            <div class="widget-content2">
-                <mat-list>
-                <mat-list-item>
-                    <div matListItemTitle>Title</div>
-                    <div matListItemLine>blah blah</div>
-                </mat-list-item> 
-                <mat-divider></mat-divider>
-                <mat-list-item>
-                    <div matListItemTitle>Title</div>
-                    <div matListItemLine>blah blah</div>
-                </mat-list-item> 
-                <mat-divider></mat-divider>
-                <mat-list-item>
-                    <div matListItemTitle>Title</div>
-                    <div matListItemLine>blah blah</div>
-                </mat-list-item> 
-                <mat-divider></mat-divider>
-                <mat-list-item>
-                    <div matListItemTitle>Title</div>
-                    <div matListItemLine>blah blah</div>
-                </mat-list-item> 
-                <mat-divider></mat-divider>
-                <mat-list-item>
-                    <div matListItemTitle>Title</div>
-                    <div matListItemLine>blah blah</div>
-                </mat-list-item> 
-                <mat-divider></mat-divider>
-                </mat-list>
-            </div>
-        </article>
-        <div class="spacer"></div>
-        <article class="widget-container-right">
-            <mat-card class="card">
-                <mat-card-header>
-                    <mat-card-title>Featured Game</mat-card-title>
-                </mat-card-header>
-                <!-- img -->
-                <mat-card-content>
-                    <p>Video Game will go here, along with its cover image</p>
-                </mat-card-content>
-            </mat-card>
-        </article>
-    </div>
-</span>
+<div class="right-column">
+    <article class="widget-container-right">
+        <div class="widget-header2">
+            <h1 class="label1">
+                <p><em>Coming Soon</em></p>
+            </h1>
+        </div>
+        <div class="widget-content2">
+            <mat-list>
+            <mat-list-item *ngFor="let game of upcomingGameSource | slice:0:5; let i = index" >
+                <div matListItemTitle>
+                    <a href="game/{{game.slug}}">{{game.name}}</a>
+                    <mat-divider></mat-divider>
+                </div>
+            </mat-list-item> 
+            </mat-list>
+        </div>
+    </article>
+    <div class="spacer"></div>
+    <article class="widget-container-right">
+        <mat-card class="card">
+            <mat-card-header>
+                <mat-card-title>Featured Game</mat-card-title>
+            </mat-card-header>
+            <!-- img -->
+            <mat-card-content>
+                <span *ngIf="featuredGameSource">
+                    <a href="game/{{featuredGameSource[0].slug}}"><img class="featured-game" src="{{featuredGameSource[0].background_image}}"></a>
+                    <h3 class = "featured-game-title">{{featuredGameSource[0].name}}</h3>
+                </span>
+            </mat-card-content>
+        </mat-card>
+    </article>
+</div>
