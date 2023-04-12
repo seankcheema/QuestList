@@ -386,7 +386,6 @@ func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 // Returns up to 5? top games to be displayed on the homepage
 func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 	enableCors(&w)
-	
 
 	// Open GameRankings db
 	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
@@ -402,71 +401,47 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 
 	reviews = QuickSortDesc(reviews)
 
-
-
-
-	// var topGameNames []string
-	// var tempGameName string
-	// for j := 0; j < 5; j++ {
-	// 	max := reviews[0].AverageRating
-	// 	if j == 0 {
-	// 		for i := 0; i < len(reviews); i++ {
-	// 			if reviews[i].AverageRating > max {
-	// 				max = reviews[i].AverageRating
-	// 				tempGameName = reviews[i].GameName
-	// 			}
-	// 		}
-	// 	} else {
-	// 		for i := 0; i < len(reviews); i++ {
-	// 			if reviews[i].AverageRating > max && topGameNames[j-1] != reviews[i].GameName {
-	// 				max = reviews[i].AverageRating
-	// 				tempGameName = reviews[i].GameName
-	// 			}
-	// 		}
-	// 	}
-	// 	topGameNames[j] = tempGameName
-	// }
-
 	// Turn these game names into rawg.Game objects
 	var topGames []*rawg.Game
 	for i := 0; i < len(reviews); i++ {
+		//fmt.Print(reviews[i].GameName)
 		filter := rawg.NewGamesFilter().SetPageSize(1).SetSearch(reviews[i].GameName)
 		temp, _, _ := client.GetGames(filter)
-		topGames[i] = temp[0]
+
+		topGames = append(topGames, temp[0])
 	}
 
-	// if len(topGames) == 0 { // if 0 games, write an error to the header
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// } else { // else send games to front-end
-	// 	response, _ := json.Marshal(topGames)
-	// 	w.WriteHeader(http.StatusOK)
-	// 	w.Write(response)
-	// }
+	if len(topGames) == 0 { // if 0 games, write an error to the header
+		w.WriteHeader(http.StatusInternalServerError)
+	} else { // else send games to front-end
+		response, _ := json.Marshal(topGames)
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	}
 }
 
 func QuickSortDesc(arr []GameRanking) []GameRanking {
-    if len(arr) <= 1 {
-        return arr
-    }
-    
-    pivot := arr[0]
-    var left []GameRanking
-    var right []GameRanking
-    
-    for _, num := range arr[1:] {
-        if num.AverageRating >= pivot.AverageRating {
-            left = append(left, num)
-        } else {
-            right = append(right, num)
-        }
-    }
-    
-    left = QuickSortDesc(left)
-    right = QuickSortDesc(right)
-    
-    return append(append(left, pivot), right...)
-}
+	if len(arr) <= 1 {
+		return arr
+	}
 
+	pivot := arr[0]
+	var left []GameRanking
+	var right []GameRanking
+
+	for _, num := range arr[1:] {
+		if num.AverageRating >= pivot.AverageRating {
+			left = append(left, num)
+		} else {
+			right = append(right, num)
+		}
+	}
+
+	left = QuickSortDesc(left)
+	right = QuickSortDesc(right)
+
+	return append(append(left, pivot), right...)
+}
 
 // Returns upcoming games that haven't been released yet
 func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
