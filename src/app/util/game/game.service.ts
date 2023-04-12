@@ -80,6 +80,30 @@ export class GameService {
         )
     }
 
+    getUpcomingGames(): Observable<Game[]> {
+        return this.http.get<Game[]>(this.gamesUrl + "/upcominggames")
+        .pipe(
+            retry(3),
+            catchError(this.handleError)
+        )
+    }
+
+    getTopRatedGames(): Observable<Game[]> {
+        return this.http.get<Game[]>(this.gamesUrl + "/topgames")
+        .pipe(
+            retry(3),
+            catchError(this.handleError)
+        )
+    }
+
+    getFeaturedGame(): Observable<Game[]> {
+        return this.http.get<Game[]>(this.gamesUrl + "/featuredgame")
+        .pipe(
+            retry(3),
+            catchError(this.handleError)
+        )
+    }
+
     /**
      * Handles an error with getting games from the back-end API
      * @param error HttpErrorResponse
