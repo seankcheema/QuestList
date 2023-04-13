@@ -145,6 +145,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string)
 	}
 }
 
+// Create an object of a user made review using info passed in by the front end and store it in the databse
 func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string) *Review {
 	//Allows the domain to be accessed by frontend
 	enableCors(&w)
@@ -186,6 +187,7 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	}
 }
 
+// Helper function for WriteAReview
 func UserGameRankings(review *Review, add bool) {
 	// Open rankings db
 	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
@@ -384,7 +386,7 @@ func RecentGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 }
 
 // Returns up to 5? top games to be displayed on the homepage
-func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) []GameRanking {
 	enableCors(&w)
 
 	// Open GameRankings db
@@ -418,8 +420,11 @@ func TopGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
 	}
+
+	return reviews
 }
 
+// Quick-sort algoritm
 func QuickSortDesc(arr []GameRanking) []GameRanking {
 	if len(arr) <= 1 {
 		return arr
@@ -486,7 +491,7 @@ func UpcomingGames(w http.ResponseWriter, r *http.Request, client *rawg.Client) 
 }
 
 // Returns the usernames most similar to the username passed in through the URL
-func GetUsers(w http.ResponseWriter, r *http.Request) {
+func GetUsers(w http.ResponseWriter, r *http.Request) []User {
 	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
@@ -496,8 +501,14 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		panic("failed to connect to database")
 	}
 
-	//Get the username we will be working with
-	username := r.URL.Query().Get("user")
+	//Determine if its a unit test and get the string we will be working with
+	var username string
+	pass := r.ContentLength
+	if pass > 0 {
+		username = r.URL.Query().Get("user")
+	} else { // For unit testing
+		username = "UnitTest"
+	}
 
 	//Migrate the given json file and fomrat it in terms of the User struct so we may work with it
 	db.AutoMigrate(&User{})
@@ -506,7 +517,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	var users []User
 
 	//Search our databse for all the possible users that are "LIKE" the given string
-	hasUsers := db.Where("username LIKE = ?", username).Find(&users).Error
+	hasUsers := db.Where("username LIKE ?", username).Find(&users).Error
 
 	//If we the found material is some error, then it doesn't exist and we write an Internal Server error to the writer
 	//Otherwise, we return the marshalled user array and return successful
@@ -517,6 +528,8 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
 	}
+
+	return users
 }
 
 // Returns an array of reviews from the last month arranged from most recent to least recent

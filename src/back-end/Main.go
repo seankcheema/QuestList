@@ -155,7 +155,7 @@ func generateReviews() []Review {
 // Main function -> the main point of entry
 func main() {
 	//generateReviews() //<- this line was used to generate random reviews and users
-	
+
 	//Creates a rounter
 	router := mux.NewRouter()
 
@@ -249,7 +249,6 @@ func main() {
 	router.HandleFunc("/featuredgame", func(w http.ResponseWriter, r *http.Request) {
 		GetFeaturedGame(w, r, client)
 	}).Methods("GET")
-
 
 	//Start and listen for requests
 	http.ListenAndServe(":8080", router)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/dimuska139/rawg-sdk-go"
@@ -129,6 +130,9 @@ func TestAllGames(t *testing.T) {
 	}
 }
 
+// Tests that we can successfully put a new user with a unique username and email into the databse
+// Should fail if user already exists or if username/email are already used
+// {TESTS SIGNUP function}
 func TestSignUp(t *testing.T) {
 	t.Parallel()
 
@@ -163,9 +167,11 @@ func TestSignUp(t *testing.T) {
 			fmt.Println("User successfully added to database")
 		}
 	}
-
 }
 
+// Tests that we can find an existing user in our database and match their passwords
+// Should failif the user doesn't exist
+// {TESTS SIGNIN function}
 func TestSignIn(t *testing.T) {
 	t.Parallel()
 
@@ -198,9 +204,11 @@ func TestSignIn(t *testing.T) {
 			fmt.Println("User successfully found database")
 		}
 	}
-
 }
 
+// Tests that a new review can be written and put in the review database
+// If the review exists already for a specific game by the same user, its overwrttien
+// {TESTS WRITEREVIEW function}
 func TestWriteReview(t *testing.T) {
 	t.Parallel()
 
@@ -231,9 +239,11 @@ func TestWriteReview(t *testing.T) {
 	} else {
 		fmt.Println("Review found in database")
 	}
-
 }
 
+// Tests that a review can be found using a username passed into the fucntion and returned
+// Should fail if a review by that user doesn't exist
+// {TESTS GETREVIEW function}
 func TestGetReview(t *testing.T) {
 	t.Parallel()
 
@@ -262,6 +272,147 @@ func TestGetReview(t *testing.T) {
 		t.Errorf("Review not added successfully")
 	} else {
 		fmt.Println("Review found in database")
+	}
+}
+
+// Tests that the top rated games in our database are the one that have the highest average user rating
+// May change depending on the GameRanking's database entries and this test should be modified accordingly
+func TestTopGames(t *testing.T) {
+	t.Parallel()
+
+	//Create RAWG client
+	config := rawg.Config{
+		ApiKey:   "476cd66f8e4d44eb975aad199e0d7a07", //RAWG API key
+		Language: "en",                               // English
+		Rps:      5,                                  // Has to stay 5 (limit)
+	}
+
+	//Setup client to talk to database
+	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
+
+	// Open GameRankings db
+	db, err := gorm.Open(sqlite.Open("UserGameRankings.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect to database")
+	}
+
+	//Desired values as of 4/13 @ 1pm
+	//Highest rated game atm
+	highestRatedGameName := "Forza 5"
+	var highestRatedGameScore float32 = 4.5
+
+	//Second highest rated game atm
+	secondHighestRatedGameName := "Wizard101"
+	var secondHighestRatedGameScore float32 = 3.5
+
+	//Create parameters for the function and call it to get a list of the rawg jsons of the top games
+	r, _ := http.NewRequest("GET", "/topgames", nil)
+	w := httptest.NewRecorder()
+
+	collectionOfTopGames := TopGames(w, r, client)
+	var userRating GameRanking
+
+	//---------------------------------------------------------------------------------------------------------------------------------------------
+
+	//Find the supposed highest rated game in our database and store it in userRating
+	gameToLookup := collectionOfTopGames[0].GameName
+	fmt.Println("Game name retrived from the top of the collection: " + gameToLookup)
+
+	db.Where("game_name = ?", gameToLookup).First(&userRating)
+
+	//Perform first check to see if the expected values match the actual values of the highest game
+	gotName := userRating.GameName
+	wantName := highestRatedGameName
+
+	fmt.Println("Got Name: " + gotName + ":::")
+	fmt.Println("Want Name: " + wantName + ":::")
+
+	if gotName != wantName {
+		t.Errorf("Returned wrong game name: " + gotName)
+	} else {
+		fmt.Println("Successful Highest Rated Game Name Test")
+	}
+
+	gotScore := userRating.AverageRating
+	wantScore := highestRatedGameScore
+
+	if gotScore != wantScore {
+		fmt.Println(gotScore)
+		fmt.Println(wantScore)
+		t.Errorf("Returned wrong game score")
+	} else {
+		fmt.Println("Successful Highest Rated Game Score Test")
+	}
+
+	//--------------------------------------------------------------------------------------------------------------------------------------------
+
+	//Find the supposed second highest rated game in our database and store it in userRating
+	var userRating2 GameRanking
+	gameToLookup = collectionOfTopGames[1].GameName
+	fmt.Println("Game name retrived from the top of the collection: " + gameToLookup)
+
+	db.Where("game_name = ? ", gameToLookup).First(&userRating2)
+
+	//Perform first check to see if the expected values match the actual values of the highest game
+	gotName = userRating2.GameName
+	wantName = secondHighestRatedGameName
+
+	fmt.Println("Got Name 2: " + gotName + ":::")
+	fmt.Println("Want Name 2: " + wantName + ":::")
+
+	if gotName != wantName {
+		t.Errorf("Returned wrong game name: " + gotName)
+	} else {
+		fmt.Println("Successful Highest Rated Game Name Test")
+	}
+
+	gotScore = userRating2.AverageRating
+	wantScore = secondHighestRatedGameScore
+
+	if gotScore != wantScore {
+		t.Errorf("Returned wrong game score")
+	} else {
+		fmt.Println("Successful Highest Rated Game Name Test")
+	}
+}
+
+func TestGetUsers(t *testing.T) {
+	t.Parallel()
+
+	//Desired user to find
+	desiredUser := "UnitTest"
+
+	//Create parameters for the function
+	r, _ := http.NewRequest("GET", "/getuser", nil)
+	w := httptest.NewRecorder()
+
+	//Get the list of users that have some resemblance to the provided name
+	listOfPossibleUsers := GetUsers(w, r)
+	foundUser := false
+
+	fmt.Println(listOfPossibleUsers[0].Username)
+
+	//Check to see exact name can be found in the list
+	for i := 0; i < len(listOfPossibleUsers); i++ {
+		if listOfPossibleUsers[i].Username == desiredUser {
+			foundUser = true
+			fmt.Println("Found user that matches the exact name requested: " + listOfPossibleUsers[i].Username)
+			break
+		}
+	}
+
+	//If exact name can't be found, see if any name exists that includes those characters, else, user cannot be found
+	if !foundUser {
+		for i := 0; i < len(listOfPossibleUsers); i++ {
+			if strings.Contains(listOfPossibleUsers[i].Username, desiredUser) {
+				foundUser = true
+				fmt.Println("Found user that includes the text \"" + desiredUser + "\":" + listOfPossibleUsers[i].Username)
+			}
+		}
+	}
+
+	if !foundUser {
+		t.Errorf("No user with the username + \"" + desiredUser + "\"" + " exists nor were there any names that matched it")
 	}
 
 }
