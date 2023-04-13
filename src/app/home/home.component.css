@@ -49,3 +49,21 @@ img {
 .label1 {
     padding: 10px;
 }
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color:blue;
+}
+
+.reviewLine {
+    padding: 5px;
+    color: black;
+}
+
+.reviewColor {
+    color: blue;
+}
