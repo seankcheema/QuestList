@@ -44,14 +44,12 @@ func TestGame(t *testing.T) {
 
 	//Going to test 2 searches, Overwatch 2, Destiny 2, and Rocket Leauge
 	//TEST 1: Overwatch 2
-	r, _ := http.NewRequest("GET", "specific-game/overwatch-2", nil)
+	r, _ := http.NewRequest("GET", "specific-game", nil)
 	w := httptest.NewRecorder()
 
-	slug := map[string]string{
-		"slug": "overwatch-2",
-	}
-
-	r = mux.SetURLVars(r, slug)
+	values := r.URL.Query()
+	values.Add("slug", "overwatch-2")
+	r.URL.RawQuery = values.Encode()
 
 	got := Game(w, r, client)[0].Name
 	want := "Overwatch 2"
@@ -63,14 +61,12 @@ func TestGame(t *testing.T) {
 	}
 
 	//TEST 2: Destiny 2
-	r, _ = http.NewRequest("GET", "specific-game/destiny-2", nil)
+	r, _ = http.NewRequest("GET", "specific-game", nil)
 	w = httptest.NewRecorder()
 
-	slug = map[string]string{
-		"slug": "destiny-2",
-	}
-
-	r = mux.SetURLVars(r, slug)
+	values = r.URL.Query()
+	values.Set("slug", "destiny-2")
+	r.URL.RawQuery = values.Encode()
 
 	got = Game(w, r, client)[0].Name
 	want = "Destiny 2"
@@ -82,14 +78,12 @@ func TestGame(t *testing.T) {
 	}
 
 	//TEST 3: Rocket League
-	r, _ = http.NewRequest("GET", "specific-game/rocket-league", nil)
+	r, _ = http.NewRequest("GET", "specific-game", nil)
 	w = httptest.NewRecorder()
 
-	slug = map[string]string{
-		"slug": "rocket-league",
-	}
-
-	r = mux.SetURLVars(r, slug)
+	values = r.URL.Query()
+	values.Set("slug", "rocket-league")
+	r.URL.RawQuery = values.Encode()
 
 	got = Game(w, r, client)[0].Name
 	want = "Rocket League"
@@ -250,7 +244,7 @@ func TestGetReview(t *testing.T) {
 
 	// Desired vars
 	GameName := "Forza 5"
-	Rating := 5.0
+	Rating := 4.5
 	Description := "CAR GO VROOM"
 	Username := "UnitTest"
 	PlayStatus := "DROPPED"

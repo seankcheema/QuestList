@@ -220,7 +220,7 @@ func main() {
 		GetReviews(w, r, &currentlyActiveUser)
 	}).Methods("GET")
 
-	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}
+	//Returns the 4 most recent games added to the database {CALLS RECENTGAMES}//NO UNIT TEST
 	router.HandleFunc("/recent", func(w http.ResponseWriter, r *http.Request) {
 		RecentGames(w, r, client)
 	}).Methods("GET")
@@ -230,7 +230,7 @@ func main() {
 		TopGames(w, r, client)
 	}).Methods("GET")
 
-	// Returns upcoming games that haven't been released yet
+	// Returns upcoming games that haven't been released yet //NO UNIT TEST
 	router.HandleFunc("/upcominggames", func(w http.ResponseWriter, r *http.Request) {
 		UpcomingGames(w, r, client)
 	}).Methods("GET")
