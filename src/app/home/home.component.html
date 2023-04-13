@@ -33,7 +33,7 @@
         <div class="widget-content">
             <span *ngIf="recentGameSource">
                 <mat-grid-list cols="4" rows="2" rowHeight="1:1">
-                    <a *ngFor="let game of recentGameSource | slice:0:4; let i = index " href="/game/{{game.slug}}"><img class="gameImage" src="{{game.background_image}}"></a>
+                     <a *ngFor="let game of recentGameSource | slice:0:4; let i = index " href="/game/{{game.slug}}"><img class="gameImage" src="{{game.background_image}}"></a>
                 </mat-grid-list>
             </span>
         </div>
@@ -53,10 +53,12 @@
             </div>
             <!--Review Content-->
             <mat-list>
-                <mat-list-item *ngFor="let review of recentReviewSource | slice:0:2; let i = index">
-                    <div matListItemTitle>{{review.GameName}}</div>
-                        {{review.Description}}
+                <mat-list-item *ngFor="let review of recentReviewSource | slice:0:3; let i = index">
+                    <div matListItemTitle><a href="/game/{{review.GameName}}">{{review.GameName}}</a> | <span class="reviewColor">{{review.Rating}} stars</span></div>
+                    <div matListItemLine class="reviewLine">{{review.Description}}
+                    <div matListItemLine>Review by <a href="/user/{{review.Username}}">{{review.Username}}</a></div>
                         <mat-divider></mat-divider>
+                    </div>
                 </mat-list-item> 
             </mat-list>
         </article>
@@ -74,12 +76,11 @@
             <!--Top Rated Content-->
             <mat-list>
                 <span *ngIf="topRatedGameSource">
-                    <mat-list-item>
-                        <div matListItemTitle>{{topRatedGameSource[0].name}}</div>
-                    </mat-list-item> 
-                    <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <div matListItemTitle>{{topRatedGameSource[1].name}}</div>
+                    <mat-list-item *ngFor="let game of topRatedGameSource | slice:0:4; let i = index">
+                        <div matListItemTitle>
+                            <a href="/game/{{game.slug}}">{{topRatedGameSource[i].name}}</a>
+                            <mat-divider></mat-divider>
+                        </div>
                     </mat-list-item> 
                     <div class="spacer"></div>
                     <button mat-raised-button color="primary" routerLink="/top-games" routerLinkActive="active" ariaCurrentWhenActive="page">More Top Rated Games</button>
@@ -101,6 +102,8 @@
             <mat-list-item *ngFor="let game of upcomingGameSource | slice:0:5; let i = index" >
                 <div matListItemTitle>
                     <a href="game/{{game.slug}}">{{game.name}}</a>
+                </div>
+                <div matListItemLine>Releasing {{game.released}}
                     <mat-divider></mat-divider>
                 </div>
             </mat-list-item> 

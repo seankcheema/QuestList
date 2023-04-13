@@ -18,12 +18,18 @@
                         <mat-label>Leave a review</mat-label>
                         <textarea matInput placeholder="This game sucks!"></textarea>
                     </mat-form-field>
+                    <mat-card-actions>
+                        <button class="btn" mat-raised-button color="primary">Add Review</button>
+                    </mat-card-actions>
                 </form>
             </div>
             <!-- Right side of the container -->
             <div class="right-box">
                 <mat-card class="right-card">
-                    <h1 class="box-text">Test</h1>
+                    <h2 class="box-text">Released: {{dataSource[0].released}} </h2>
+                    <h2 class="box-text">Metacritic: {{dataSource[0].metacritic}}</h2>
+                    <h2 class="box-text">Rating: {{dataSource[0].rating}}</h2>
+                    <h2 class="box-text">Top Rating: {{dataSource[0].rating_top}}</h2>
                 </mat-card>
             </div>
         </div>
