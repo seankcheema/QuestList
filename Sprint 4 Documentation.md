@@ -1,51 +1,23 @@
 ﻿Javier Lopez, Richard Sorkin, Sean Cheema, and Thomas Gallego
 
-3/27/23
+4/14/23
 
 Professor Dobra
 
-**Sprint 3 Documentation**
+**Sprint 4 Documentation**
 <br/>
 
 **_User Stories Worked On This Sprint:_**
 <br />
 
-
-**1) Game Library** <hr />As a **website visiter** I would like to **have access and see a list of all the games documented on the website** for the purpose of **knowing what I would like to add to my user library**.
-<br />
-**Implementation Details** <hr /> 
-- Finding a useable public database of most available games in the market to use as our back bone for the video games users can add to their libraries 
-- Create a filter function that can search for games in the list in a time sensitive manner
-- Implemented by front and back end 
-- Front end handles game information display 
-- Back end handles library importing and file traversal
-<br />
-
-**2) Home Page** <hr />As a **site visitor** I would like to **access a home page** for the purpose of **create a hub for navigation.**
+**1) Home Page** <hr />As a **site visitor** I would like to **access a home page** for the purpose of **create a hub for navigation.**
 <br />
 **Implementation Details** <hr /> 
 - Implemented by front and back-end
 - Create a GUI to quickly access other pages
-- Display new game information to site visitors
-<br />
+- Display new game inform
 
-**3) Sign-Up** <hr />As a new user, I would like to sign up and create an account for the purpose of saving my activity on the site
-<br />
-**Implementation Details** <hr />
-- Implemented by front and back end
-- Create form gui
-- Add users to user database in backend
-<br />
-
-**4) Login** <hr />As a returning user I would like to log into the website for the purpose of seeing my previous activity on the site
-<br />
-**Implementation Details** <hr />
-- Implemented by front and back end
-- Front end create login gui
-- Back end get user information
-<br />
-
-**5) Review Issue** <hr />As a site visitor I would like to review games for the purpose of keeping track of the games I have played/am playing and how I liked them
+**2) Review Issue** <hr />As a site visitor I would like to review games for the purpose of keeping track of the games I have played/am playing and how I liked them
 <br />
 **Implementation Details** <hr />
 - Implemented by front and back end
@@ -54,43 +26,15 @@ Professor Dobra
 - If a user creates a review for a game they have already reviewed, it will overwrite that review
 <br />
 
-
 **Work Completed**<hr/>
 
 **Front-end:**
 
 _Work Completed_:<br/>
-We have successfully displayed the back-end onto the front end and have made advancements with our GUIs. Unit testing has been crucial in this sprint and has been successful. 
-
-_Recently Released / Home_:<br/>
-We have started displaying the games retrieved from the backend onto our home page. Our first section is the recently released section, as the backend has only worked on sending us the most recently released games from the database. We utilized our initial grid from Angular material and inserted the cover images of the first four games from the database. This was done by calling our getRecentGames() function and taking the first four elements and their background_image data from its array in our datasource. 
-
-_Top games table_:<br/>
-We have inserted the list of games from the database into our Angular material table. Currently, since the database is providing the recently released games, this will need to be adjusted to display the top rated games. We have called our getGames() function and iterated through the list of games provided within the table. 
-
-_Sign in_:<br/>
-Our sign in form will allow for users to access their accounts found in the back-end database. We have also cleaned up the page and added a nicer GUI for the form.
-
-_Sign up_:<br/>
-We added a separate sign up component instead of keeping both sign up and sign in functions within one component. This new component will utilize our addUser() function to send the user’s data to the back-end’s database. We have also added a new page and GUI for this form, which can be accessed through a hyperlink on the initial sign in page.
-
-_Units Tests_:<br/>
-We implemented a variety of front-end unit tests using Jasmine, built into Angular. Each component has a should create unit test that tests whether the component was successfully able to be created. We also implemented unit testing for our GameService. We accomplish this by creating a mock HttpClient and making sure that a value can be returned from the observable of the specific GameService function.
-
--getGames():<br/>
-This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService’s getGames() function is then called with the mock HttpClient injected and the observable returned is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
-
--getRecentGames():<br/>
-This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService’s geRecentGames() function is then called with the mock HttpClient injected and the observable returned is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
+ WORK IN PROGRESS
 
 Cypress Testing:<br/>
-We also implemented end-to-end Cypress testing that ensures many features of the site work as intended. 
-
-‘Should Display Games’: Ensures that the top games page can be navigated to and displays games received from our back-end API call.
-
-‘Should Sign Up’: Ensures that the sign-up page can be navigated to and that the form exists and can be filled.
-
-‘Should Sign In’: Ensures that the sign-in page can be navigated to and that the form exists and can be filled.
+WORK IN PROGRESS
 
 _Testing Challenges_: <br/>
 One issue we encountered was that the typescript compiler had chai type conflict errors when using Jasmine alongside Cypress. While the tests for both Cypress and Jasmine would still run, VSCode threw errors. This was important to fix, though, as it was difficult to leverage typescript’s errors for debugging purposes while these type conflict errors were present.
@@ -100,6 +44,8 @@ One issue we encountered was that the typescript compiler had chai type conflict
 
 _Work Completed_:<br/>
 In this sprint, we worked on the User and Review databases and all of the functions associated with it. We started by making User and Review structs to store specific information about these objects. The user struct stores a unique username, unique email, and a password. For the review struct, it stores the game being reviewed, rating out of 5, description, username of the user who reviewed the game, and a playstatus .To retrieve these objects from the front-end, we pull body content from the front-end using json.Decode() and format these objects into the struct. The main functionality that we changed in this sprint regarding back-end urls is how we read in parameters. Originally, we were pulling parameters via mux.Vars() which pulls the parameters straight from the url (e.g. /specific-game/overwatch), but now we are using the url query parameters to specify needed attributes (e.g. /games?page=1). To send, we used the json.Marshal() function and wrote to the header. As for the functionality associated with these databases, we are now able to create user and review structs, add them to the database, and look them up.
+
+WORK IN PROGRESS
 <br/>
 
 _Back End Unit Tests_: <br/>
@@ -124,7 +70,7 @@ This tests the function WriteAReview() with a review struct passed in containing
 This tests the function GetReview() with a user struct passed in containing elements such as a unique username, unique email, and a password. The intended functionality of GetReview() is that the function retrieves all instances of a specific user’s reviews from the review database and writes an error status to the header if the user has not created a review.
 
 -Testing Limitations:<br/>
-It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently.
+It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently. In a similar manner 
 
 -External Library Documentation_:<br/>
 The API we used is titled RAWG API. RAWG is a database of games storing a variety of information including but not limited to: name, image, different ratings, release date, and developers. We have used this data to organize and traverse the database to acquire desired information. In order to easily use the RAWG API, we found “RAWG SDK GO”, a client with built in functions to traverse the RAWG database. The documentation for both RAWG API and RAWG SDK GO are linked below. 
@@ -202,6 +148,20 @@ type Review struct {
 }
 
 <br />
+
+3) GameRanking Struct<br />
+
+Purpose<br />
+This is the structure for our overarching rating database for the games on our website. Every time a new game is added to our website or rated for the first time, an entry in the UserGameRanking database is made using this scheme. The GameName is the name of the video game, the AverageRating is an average calculated by dividing the overall sum of all user scores for a game by the number of reviews. NumReviews is the number of reviews a game has.
+
+Format 
+<br />
+type GameRanking struct {
+	gorm.Model
+	GameName      string  `gorm:"uniqueIndex"` // Name of game
+	AverageRating float32 // Average Rating (out of 5) of the game
+	NumReviews    int     // Number of times a game has been reviewed
+}
 <hr />
 
 **Handler Functions and their Functionality**
@@ -576,8 +536,124 @@ type Game struct {
 	} `json:"short_screenshots"`
 }
 
+<br />
+
+10) GET: {Get a json, of the requested size, of games that will release within the next month}: 
+http://localhost:8080/upcominggames
+
+Functionality
+<br />
+This function returns an array of RAWG games that have not been released yet, but will be available within the next month, starting tomorrow. This uses a simple time calculation to calculate the next month’s time frame and pass that information to the RAWG SDK. An SDK filter is used with the NewGameFilter(), SetPageSize(), SetDates(), and SetOrdering function to find games within the time frame that will release soon, ordered in terms of pre-existing anticipation of the game retrieved from RAWG itself. The array of games are then marshaled and packed into a json file and sent to the header.
+
+Status Returned:
+<br />
+If Successful: http.StatusOK
+<br />
+If Unsuccessful: N/A
+
+Json Returned & Format: {An Array of:}
+<br />
+type Game struct {
+	ID               int            `json:"id"`
+	Slug             string         `json:"slug"`
+	Name             string         `json:"name"`
+	Released         DateTime       `json:"released"`
+	Tba              bool           `json:"tba"`
+	ImageBackground  string         `json:"background_image"`
+	Rating           float32        `json:"rating"`
+	RatingTop        int            `json:"rating_top"`
+	Ratings          []*Rating      `json:"ratings"`
+	RatingsCount     int            `json:"ratings_count"`
+	ReviewsTextCount int            `json:"reviews_text_count"`
+	Added            int            `json:"added"`
+	AddedByStatus    *AddedByStatus `json:"added_by_status"`
+	Metacritic       int            `json:"metacritic"`
+	Playtime         int            `json:"playtime"`
+	SuggestionsCount int            `json:"suggestions_count"`
+	ReviewsCount     int            `json:"reviews_count"`
+	SaturatedColor   string         `json:"saturated_color"`
+	DominantColor    string         `json:"dominant_color"`
+	Platforms        []*struct {
+		Platform       *Platform    `json:"platform"`
+		ReleasedAt     DateTime     `json:"released_at"`
+		RequirementsEn *Requirement `json:"requirements_en"`
+		RequirementsRu *Requirement `json:"requirements_ru"`
+	} `json:"platforms"`
+	ParentPlatforms []*struct {
+		Platform struct {
+			ID   int    `json:"id"`
+			Slug string `json:"slug"`
+			Name string `json:"name"`
+		}
+	} `json:"parent_platforms"`
+	Genres []*Genre `json:"genres"`
+	Stores []*struct {
+		ID    int    `json:"id"`
+		Store *Store `json:"store"`
+		UrlEn string `json:"url_en"`
+		UrlRu string `json:"url_ru"`
+	} `json:"stores"`
+	Clip             *Clip  `json:"clip"`
+	Tags             []*Tag `json:"tags"`
+	ShortScreenshots []*struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"short_screenshots"`
+}
+
+<br />
 
 
+11) GET: {Returns a json file of an array of user struct’s whose names somewhat match the passed in name}: 
+http://localhost:8080/getuser
+
+Functionality
+<br />
+This function returns an array of User objects most similar to the username provided in the URL contents. The function begins by opening the user database, “currentUsers.db”, and pulling the username with parameter name “user” from the URL. GORM’s AutoMigrate is then called to format the database to accept the User{} struct. Next, GORM’s db.Where() function is called with functionality “LIKE” to find all users with a name similar to the username pulled from the URL previously and stores it in the array titled users of type []User also storing an error in the hasUsers variable of type err. Lastly, if there are no users with a name similar to the query parameter, hasUsers will store an error and http.StatusInternalServerError will be thrown. Otherwise, if there are users in the the “users” array, those objects will be converted to a byte array using json.Marshal() and written to the header along with a http.StatusOK. Additionally, the function returns the users array to be used for Unit Testing.
+
+Status Returned:
+<br />
+If Successful: http.StatusCreated
+<br />
+If Unsuccessful: http.StatusInternalServerError
+
+Json Returned & Format: 
+<br />
+type User struct {
+    gorm.Model
+    Username string `gorm:"uniqueIndex"`
+    Email    string `gorm:"uniqueIndex"`
+    Password string
+}
+
+<br />
+
+
+12) GET: {Returns a json file of an array of review structs added within the past month from most recent to least recent}: 
+http://localhost:8080/recentreviews
+
+Functionality
+<br />
+This function returns all of the reviews from the last month in order of recency. This function starts by opening the “Reviews.db” database and setting the time frame for the function starting from the current time (start) to a month ago(end). Next, GORM’s AutoMigrate is then called to format the database to accept the Review{} struct. GORM’s db.Where() function then uses the “>” functionality with the updated_at column to find all reviews with an updated time greater than a month ago. The reviews are then stored in latestReviews of type []Review and recentReviews of type err. If recentReviews has a non-nil error, a http.StatusInternalServerError is written to the header, else latestReviews is reversed using the reverseArray([]Review) function to order the reviews from most to least recent and latestReviews is converted into a json and written to the header along with the status http.StatusOK. Additionally, if latestReviews has elements in it, they are returned for Unit Testing, else nil is returned.
+
+Status Returned:
+<br />
+If Successful: http.StatusOK
+<br />
+If Unsuccessful: http.StatusInternalServerError
+
+Json Returned & Format: 
+<br />
+type Review struct {
+    gorm.Model
+    GameName    string  //Names of game being reviewed
+    Rating      float32 //Rating (out of 5) of the game
+    Description string  //Description of the game played
+    Username    string  //Name of the account
+    PlayStatus  string  //PLAYING, DROPPED, COMPLETED, ON HOLD
+}
+
+<br />
 
 
 
