@@ -26,7 +26,7 @@
             <!-- Right side of the container -->
             <div class="right-box">
                 <mat-card class="right-card">
-                    <h2 class="box-text">Released: {{dataSource[0].released}} </h2>
+                    <h2 class="box-text">Released: {{dataSource[0].released.slice(0,10)}} </h2>
                     <h2 class="box-text">Metacritic: {{dataSource[0].metacritic}}</h2>
                     <h2 class="box-text">Rating: {{dataSource[0].rating}}</h2>
                     <h2 class="box-text">Top Rating: {{dataSource[0].rating_top}}</h2>
