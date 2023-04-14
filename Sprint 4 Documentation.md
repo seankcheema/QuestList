@@ -76,6 +76,12 @@ This tests the function WriteAReview() with a review struct passed in containing
 -TestGetReview():<br/>
 This tests the function GetReview() with a user struct passed in containing elements such as a unique username, unique email, and a password. The intended functionality of GetReview() is that the function retrieves all instances of a specific user’s reviews from the review database and writes an error status to the header if the user has not created a review.
 
+-TestTopGames():<br/>
+This tests the functionality of TopGames(). TopGames() should return the most popular games based on QuestList user rankings, which are stored in a database and updated in real time as new reviews are made. The test compares the expected names and scores of the 2 highest rated games with the values found in the database "UserGameRankings." The expected values are found by observing the values in the databse and writing down the name and rating field as expected values. The TopGames() function is then called and the first two games from the returned array are compared with the expected name and ratings. If they match, the test passes.
+
+-TestGetUser():<br/>
+This tests the fucntionailty of GetUsers(). GetUsers() returns an array of user structs found in the "currentUsers" database that have names that are somewhat similar to the passed in user name that is being searched. The test can be changed to search different usernames, but for the sake of simplicity, the test searches for a precreated user called "UnitTest" to see if an existing user can be searched and returned. The test parses the array of returned users and checks if the exact name is found. If it is, the test is successful and says that the exact name was found. Otherwise, the test checks if a name containing the passed in username exisits and returns correct if one is found. A print statement is also made that alerts that it is not an exact match. If none of these tests work, the unit test fails. In our case, we get an exact match and pass the test.
+
 -TestRecentReviews():<br/>
 This tests the functionality of RecentReviews(). The intended functionality is to access the Reviews database and extract all reviews updated (and subsequently created) in the last month and returns an array of them in order of recency with the most recent review being at the 0th index. The test function pulls this most recent review and compares it with the expected review. If they are not the same or the review array is empty, the test throws an error, otherwise the test passes.
 
@@ -83,7 +89,7 @@ This tests the functionality of RecentReviews(). The intended functionality is t
 This tests the functionality of GetFeaturedGame(). The intended functionality is to access the UserGameRankings database and find the GameRanking object within that database with the highest number of reviews. Once this object is found, the name is used to find the corresponding rawg.Game object and returns it. The test function throws an error if the expected featured game is not the same as the one returned from the function, or if the returned value is nil, otherwise the test passes
 
 -Testing Limitations:<br/>
-It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently. In a similar manner 
+It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently. In a similar manner, the function "upcominggames" cannot be unit tested. This function returns games that are going to be released within the next month, starting from one day from the present. Since the dates change daily (and possibly hourly at times due to time zone differences) any unit test created would result in different values and thua cannot be properly unit tested. However, first hand use of the functions have shown that correct values are returned.
 
 -External Library Documentation_:<br/>
 The API we used is titled RAWG API. RAWG is a database of games storing a variety of information including but not limited to: name, image, different ratings, release date, and developers. We have used this data to organize and traverse the database to acquire desired information. In order to easily use the RAWG API, we found “RAWG SDK GO”, a client with built in functions to traverse the RAWG database. The documentation for both RAWG API and RAWG SDK GO are linked below. 
@@ -622,7 +628,7 @@ http://localhost:8080/getuser
 
 Functionality
 <br />
-This function returns an array of User objects most similar to the username provided in the URL contents. The function begins by opening the user database, “currentUsers.db”, and pulling the username with parameter name “user” from the URL. GORM’s AutoMigrate is then called to format the database to accept the User{} struct. Next, GORM’s db.Where() function is called with functionality “LIKE” to find all users with a name similar to the username pulled from the URL previously and stores it in the array titled users of type []User also storing an error in the hasUsers variable of type err. Lastly, if there are no users with a name similar to the query parameter, hasUsers will store an error and http.StatusInternalServerError will be thrown. Otherwise, if there are users in the the “users” array, those objects will be converted to a byte array using json.Marshal() and written to the header along with a http.StatusOK. Additionally, the function returns the users array to be used for Unit Testing.
+This function returns an array of User objects most similar to the username provided in the URL contents. The function begins by opening the user database, “currentUsers.db”, and pulling the username with parameter name “user” from the URL. GORM’s AutoMigrate is then called to format the database to accept the User{} struct. Next, GORM’s db.Where() function is called with functionality “LIKE” to find all users with a name similar to the username pulled from the URL previously and stores it in the array titled users of type []User also storing an error in the hasUsers variable of type err. Lastly, if there are no users with a name similar to the query parameter, hasUsers will store an error and http.StatusInternalServerError will be thrown. Otherwise, if there are users in the “users” array, those objects will be converted to a byte array using json.Marshal() and written to the header along with a http.StatusOK. Additionally, the function returns the users array to be used for Unit Testing.
 
 Status Returned:
 <br />
@@ -668,6 +674,67 @@ type Review struct {
 
 <br />
 
+13) GET: {Returns a json of the game with the most number of reviews in the last month}: 
+http://localhost:8080/featuredgame 
+
+Functionality
+<br />
+This function returns a RAWG game ame object that corresponds to the element in UserGameRankings.db with the most reviews. This function starts by opening the “UserGameRankings.db” and setting the time frame for the function starting from the current time (start) to a month ago(end). Next, GORM’s AutoMigrate is then called to format the database to accept the GameRanking{} struct. GORM’s db.Where() function then uses the “>” functionality with the updated_at column to find all reviews with an updated time greater than a month ago. The game rankings are then stored in gameRankings of type []GameRankings and recentRankings of type err. If recentRankings has a non-nil error, a http.StatusInternalServerError is written to the header. Otherwise, the name of the game with the highest number of reviews is stored in featuredGame of type string. The rawg function chain NewGamesFilter().SetPageSize(int pageSize).SetSearch(string gameName) is then used with parameters 1 and featuredGame respectively and stores a []*rawg.Game object in games. The array games is an array of size 1 containing the game with name featuredGame. For functionality purposes, this game is stored in variable “game” of type *rawg.Game by defining it with games[0]. This game is then converted to a json file and sent to the header along with the status http.StatusOK. Additionally, if game is defined, it is returned for Unit Testing, else nil is returned.
+
+Status Returned:
+<br />
+If Successful: http.StatusOK
+<br />
+If Unsuccessful: http.StatusInternalServerError
+
+Json Returned & Format: 
+type Game struct {
+	ID               int            `json:"id"`
+	Slug             string         `json:"slug"`
+	Name             string         `json:"name"`
+	Released         DateTime       `json:"released"`
+	Tba              bool           `json:"tba"`
+	ImageBackground  string         `json:"background_image"`
+	Rating           float32        `json:"rating"`
+	RatingTop        int            `json:"rating_top"`
+	Ratings          []*Rating      `json:"ratings"`
+	RatingsCount     int            `json:"ratings_count"`
+	ReviewsTextCount int            `json:"reviews_text_count"`
+	Added            int            `json:"added"`
+	AddedByStatus    *AddedByStatus `json:"added_by_status"`
+	Metacritic       int            `json:"metacritic"`
+	Playtime         int            `json:"playtime"`
+	SuggestionsCount int            `json:"suggestions_count"`
+	ReviewsCount     int            `json:"reviews_count"`
+	SaturatedColor   string         `json:"saturated_color"`
+	DominantColor    string         `json:"dominant_color"`
+	Platforms        []*struct {
+		Platform       *Platform    `json:"platform"`
+		ReleasedAt     DateTime     `json:"released_at"`
+		RequirementsEn *Requirement `json:"requirements_en"`
+		RequirementsRu *Requirement `json:"requirements_ru"`
+	} `json:"platforms"`
+	ParentPlatforms []*struct {
+		Platform struct {
+			ID   int    `json:"id"`
+			Slug string `json:"slug"`
+			Name string `json:"name"`
+		}
+	} `json:"parent_platforms"`
+	Genres []*Genre `json:"genres"`
+	Stores []*struct {
+		ID    int    `json:"id"`
+		Store *Store `json:"store"`
+		UrlEn string `json:"url_en"`
+		UrlRu string `json:"url_ru"`
+	} `json:"stores"`
+	Clip             *Clip  `json:"clip"`
+	Tags             []*Tag `json:"tags"`
+	ShortScreenshots []*struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"short_screenshots"`
+}
 
 
  
