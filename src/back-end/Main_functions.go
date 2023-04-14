@@ -533,7 +533,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) []User {
 }
 
 // Returns an array of reviews from the last month arranged from most recent to least recent
-func RecentReviews(w http.ResponseWriter, r *http.Request) {
+func RecentReviews(w http.ResponseWriter, r *http.Request) []Review{
 	//Allows the domain to be accessed by front-end
 	enableCors(&w)
 
@@ -557,15 +557,25 @@ func RecentReviews(w http.ResponseWriter, r *http.Request) {
 	if recentReviews != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {
+		latestReviews = reverseArray(latestReviews)
 		response, _ := json.Marshal(latestReviews)
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
+		return latestReviews
 	}
-
+	return nil
 }
 
+// reverse order of review array
+func reverseArray(arr []Review) []Review{
+	for i, j := 0, len(arr)-1; i<j; i, j = i+1, j-1 {
+	   arr[i], arr[j] = arr[j], arr[i]
+	}
+	return arr
+ }
+
 // Returns the game with the most number of reviews in the last month
-func GetFeaturedGame(w http.ResponseWriter, r *http.Request, client *rawg.Client) {
+func GetFeaturedGame(w http.ResponseWriter, r *http.Request, client *rawg.Client) *rawg.Game{
 	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 
@@ -600,10 +610,13 @@ func GetFeaturedGame(w http.ResponseWriter, r *http.Request, client *rawg.Client
 		// get rawg.Game with name featuredGame
 		filter := rawg.NewGamesFilter().SetPageSize(1).SetSearch(featuredGame)
 
-		game, _, _ := client.GetGames(filter)
+		games, _, _ := client.GetGames(filter)
 
+		game := games[0]
 		response, _ := json.Marshal(game)
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
+		return game
 	}
+	return nil
 }

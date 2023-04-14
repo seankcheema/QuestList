@@ -414,5 +414,65 @@ func TestGetUsers(t *testing.T) {
 	if !foundUser {
 		t.Errorf("No user with the username + \"" + desiredUser + "\"" + " exists nor were there any names that matched it")
 	}
+}
 
+// Test RecentReviews() which should pull the reviews from the last month in order of most recent to least recent
+func TestRecentReviews(t *testing.T) {
+	t.Parallel()
+
+	//Create parameters for the function
+	r, _ := http.NewRequest("GET", "/recentreviews", nil)
+	w := httptest.NewRecorder()
+
+	//Call function and set desired return
+	reviews := RecentReviews(w, r)
+	desired := Review{GameName: "Forza 5", Rating: float32(4.5), Description: "CAR GO VROOM", Username: "UnitTest", PlayStatus: "DROPPED"}
+
+	if reviews != nil { // if there are reviews, proceed
+		review := reviews[0] // Get most recent review
+
+		fmt.Println("Game Name: ", review.GameName, "\nRating: ", review.Rating, "\nDescription: ", review.Description, "\nUsername: ", review.Username, "\nPlay Status: ", review.PlayStatus)
+		if desired.GameName != review.GameName || desired.Rating != float32(review.Rating) || desired.Description != review.Description || desired.Username != review.Username || desired.PlayStatus != review.PlayStatus {
+			t.Errorf("Review not found successfully")
+		} else {
+			fmt.Println("Most recent review found in database")
+		}
+
+	} else { // else fail the test
+		t.Errorf("No reviews returned from RecentReviews()")
+	}
+
+}
+
+// Tests GetFeaturedGame() which should pull the game with the highest number of reviews in UserGameRankings.db
+func TestFeaturedGame(t *testing.T) {
+	t.Parallel()
+
+	//Create RAWG client
+	config := rawg.Config{
+		ApiKey:   "476cd66f8e4d44eb975aad199e0d7a07", //RAWG API key
+		Language: "en",                               // English
+		Rps:      5,                                  // Has to stay 5 (limit)
+	}
+
+	//Setup client to talk to database
+	var client *rawg.Client = rawg.NewClient(http.DefaultClient, &config)
+
+	//Create parameters for the function
+	r, _ := http.NewRequest("GET", "/featuredgame", nil)
+	w := httptest.NewRecorder()
+
+	featuredGame := GetFeaturedGame(w, r, client)
+	desiredGame := "Destiny"
+
+	if featuredGame != nil{
+		fmt.Println(featuredGame.Name)
+		if featuredGame.Name == desiredGame{
+			fmt.Println("Successfully found featured game: ", featuredGame.Name)
+		} else{
+			t.Errorf("Incorrect featured game")
+		}
+	} else{
+		t.Errorf("Did not find featured game")
+	}
 }
