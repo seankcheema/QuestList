@@ -204,7 +204,6 @@ func UserGameRankings(review *Review, add bool) {
 	if hasGame == nil && add { // game already exists and we're adding
 		num := temp.AverageRating * float32(temp.NumReviews)
 		num += review.Rating
-		//temp.GameName = review.GameName
 		temp.NumReviews++
 		temp.AverageRating = (num / float32(temp.NumReviews))
 		db.Save(&temp)

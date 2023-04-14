@@ -31,7 +31,14 @@ Professor Dobra
 **Front-end:**
 
 _Work Completed_:<br/>
- WORK IN PROGRESS
+In Sprint 4 we focused primarily on correcting and improving previous functions, organization of code, and functions to be used for the front-end’s homepage implementations. 
+
+We began by refining the WriteAReview() function as it was returning faulty data. The way we were doing look-ups in the database when multiple parameters were needed (in this case username and game name) was incorrect as it was returning the first instance of the first parameter rather than taking both parameters into consideration. In this function a new function called UserGameRankings() was added with the purpose of storing combined metadata in a separate database of new GameRanking structs every time a new review is made to help with the performance of other functions. For example, with this implementation the entire review database would not need to be parsed every time the TopGames() or GetFeaturedGame() functions are called. Additionally, the Game() function was reconfigured to take in query parameters.
+
+To organize our code, we deviated from the Main.go file and created a Main_functions.go file. The Main.go file only contains our handler functions and other necessary code such as client definition, gorilla mux variable definitions, and functions used to randomly generate users and reviews for testing purposes. Our Main_functions.go file on the other hand contains all previous functions plus the new ones added in this sprint.
+
+Most of the functions added in this sprint were designed with homepage implementation in mind. From these functions, some issues that arose were in TopGames(), UpcomingGames(), and RecentReviews(). With TopGames(), we struggled with appending and finding games by name. We fixed this by using a slice and golang’s append function to prevent an out of bounds error that frequently popped up. Additionally, chose to use a quick sort algorithm to sort the games returned from the UserGameRankings database in descending order of rating starting with the highest rated game. With UpcomingGames(), we struggled in the time frame functionality as we had to look forward in time. To fix this issue, the date range begins one day after golang’s time.Now() which is the current time. Lastly, with RecentReviews(), the original functionality returned an array of reviews starting with the least recent since this is what GORM’s lookup returns by default, but the intended functionality should return one starting with the most recent. To account for this, the reverseArray() function was created and used to return the array in the correct order. Additional functions we added with minimal to no issues include the GetUser() function to be used for user lookup and RecentReviews() for homepage display.
+
 
 Cypress Testing:<br/>
 WORK IN PROGRESS
