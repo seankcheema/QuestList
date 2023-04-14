@@ -69,6 +69,12 @@ This tests the function WriteAReview() with a review struct passed in containing
 -TestGetReview():<br/>
 This tests the function GetReview() with a user struct passed in containing elements such as a unique username, unique email, and a password. The intended functionality of GetReview() is that the function retrieves all instances of a specific user’s reviews from the review database and writes an error status to the header if the user has not created a review.
 
+-TestRecentReviews():<br/>
+This tests the functionality of RecentReviews(). The intended functionality is to access the Reviews database and extract all reviews updated (and subsequently created) in the last month and returns an array of them in order of recency with the most recent review being at the 0th index. The test function pulls this most recent review and compares it with the expected review. If they are not the same or the review array is empty, the test throws an error, otherwise the test passes.
+
+-TestFeaturedGame():<br/>
+This tests the functionality of GetFeaturedGame(). The intended functionality is to access the UserGameRankings database and find the GameRanking object within that database with the highest number of reviews. Once this object is found, the name is used to find the corresponding rawg.Game object and returns it. The test function throws an error if the expected featured game is not the same as the one returned from the function, or if the returned value is nil, otherwise the test passes
+
 -Testing Limitations:<br/>
 It should be noted that RecentGames() could not be tested. For RecentGames(), there is no way to predict the outcome of RecentGames() as new games are being added to the API every day causing the RecentGames() output to be changed frequently. In a similar manner 
 
