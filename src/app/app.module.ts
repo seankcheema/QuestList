@@ -34,6 +34,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { UserAuthService } from './util/user-auth/user-auth.service';
 import { SearchBarComponent } from './util/search-bar/search-bar.component';
 import { ReviewService } from './util/review/review.service';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { ReviewService } from './util/review/review.service';
     GameComponent,
     UserComponent,
     SignInComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

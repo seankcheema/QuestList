@@ -4,11 +4,6 @@
         <!-- Create table if the datasource exists -->
         <span *ngIf="dataSource">
             <table mat-table [dataSource]="dataSource">
-                <!-- Rank column -->
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef> Game ID </th>
-                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-                </ng-container>
                 <!-- Name Column -->
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -25,10 +20,15 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-            <!-- TODO: Do we want a paginator or just a button that will add query parameter? -->
-            <mat-paginator [pageSizeOptions]="[10, 20, 30]" 
-                aria-label="Select page of top games">
-            </mat-paginator>
+            <span *ngIf="pageCounter==1">
+                    <button class="page1" mat-raised-button color="primary" routerLink="/top-games" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="forwardPage()">Next 40 ></button>
+            </span>
+            <span *ngIf="pageCounter != 1">
+                <div class="button-container">
+                    <button class="button-left" mat-raised-button color="primary" routerLink="/top-games" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="previousPage()">< Previous 40</button>
+                    <button class="button-right" mat-raised-button color="primary" routerLink="/top-games" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="forwardPage()">Next 40 ></button>
+                </div>
+            </span>
         </span>
     </article>
 </div>

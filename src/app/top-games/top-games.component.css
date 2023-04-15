@@ -1,1 +1,18 @@
+.page1 {
+    margin: 0 auto;
+    display: block;
+}
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .left-button {
+    margin-right: auto;
+  }
+  
+  .right-button {
+    margin-left: auto;
+  }
