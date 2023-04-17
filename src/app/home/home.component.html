@@ -119,8 +119,8 @@
             <!-- img -->
             <mat-card-content>
                 <span *ngIf="featuredGameSource">
-                    <a href="game/{{featuredGameSource[0].slug}}"><img class="featured-game" src="{{featuredGameSource[0].background_image}}"></a>
-                    <h3 class = "featured-game-title">{{featuredGameSource[0].name}}</h3>
+                    <a href="game/{{featuredGameSource.slug}}"><img class="featured-game" src="{{featuredGameSource.background_image}}"></a>
+                    <h3 class = "featured-game-title">{{featuredGameSource.name}}</h3>
                 </span>
             </mat-card-content>
         </mat-card>

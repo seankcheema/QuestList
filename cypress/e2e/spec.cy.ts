@@ -52,4 +52,15 @@ describe('template spec', () => {
     cy.url().should('include', '/home')
   });
 
+  /**
+   * Clicking a game should bring you to game page
+   */
+  it('should go to game page on click', () => {
+    cy.visit('localhost:4200')
+
+    cy.get('img[class="featured-game"]').click()
+
+    cy.url().should('include', '/game')
+  })
+
 });

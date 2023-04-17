@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   recentGameSource: Game[] | undefined;
   upcomingGameSource: Game[] | undefined;
   topRatedGameSource: Game[] | undefined;
-  featuredGameSource: Game[] | undefined;
+  featuredGameSource: Game | undefined;
   recentReviewSource: Review[] | undefined;
 
   constructor(private gameService: GameService, private reviewService: ReviewService) { }
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     .subscribe((data: Game[]) => this.topRatedGameSource = data );
 
     this.gameService.getFeaturedGame()
-    .subscribe((data: Game[]) => this.featuredGameSource = data );
+    .subscribe((data: Game) => this.featuredGameSource = data );
 
     this.reviewService.getRecentReviews()
     .subscribe((data: Review[]) => this.recentReviewSource = data );

@@ -80,6 +80,10 @@ export class GameService {
         )
     }
 
+    /**
+     * Gets a list of upcoming games from the back-end API
+     * @returns an observable of type Game[]
+     */
     getUpcomingGames(): Observable<Game[]> {
         return this.http.get<Game[]>(this.gamesUrl + "/upcominggames")
         .pipe(
@@ -88,6 +92,10 @@ export class GameService {
         )
     }
 
+    /**
+     * Gets a list of top-rated games from the back-end API
+     * @returns an obserable of type Game[]
+     */
     getTopRatedGames(): Observable<Game[]> {
         return this.http.get<Game[]>(this.gamesUrl + "/topgames")
         .pipe(
@@ -96,8 +104,12 @@ export class GameService {
         )
     }
 
-    getFeaturedGame(): Observable<Game[]> {
-        return this.http.get<Game[]>(this.gamesUrl + "/featuredgame")
+    /**
+     * Gets a list of featured games from the back-end
+     * @returns an observable of type Game[]
+     */
+    getFeaturedGame(): Observable<Game> {
+        return this.http.get<Game>(this.gamesUrl + "/featuredgame")
         .pipe(
             retry(3),
             catchError(this.handleError)

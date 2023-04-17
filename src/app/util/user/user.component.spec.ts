@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { UserComponent } from './user.component';
 import { UserService } from './user.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('UserComponent', () => {
   let component: UserComponent;
@@ -16,7 +17,7 @@ describe('UserComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, HttpClientTestingModule, MatCardModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, BrowserAnimationsModule],
+      imports: [HttpClientModule, HttpClientTestingModule, MatCardModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, BrowserAnimationsModule, RouterTestingModule],
       providers: [UserService],
       declarations: [ UserComponent ]
     })
