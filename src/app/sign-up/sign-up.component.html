@@ -38,6 +38,6 @@
     <!--Sign Up Button-->
     <mat-card-actions>
         <button mat-raised-button (click)="addUser(this.profileForm.controls['username'].value || '', this.profileForm.controls['email'].value || '', this.profileForm.controls['password'].value || '')" color="accent" class="btn">Sign Up</button>
-        <div class="mini-text">Already have an account? <a id="signin" routerLink="/sign-in">Sign In</a></div>
     </mat-card-actions>
+    <div class="mini-text">Already have an account? <a id="signin" routerLink="/sign-in">Sign In</a></div>
 </form>
