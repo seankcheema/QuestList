@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DocsComponent } from './docs.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('DocsComponent', () => {
   let component: DocsComponent;
@@ -8,7 +10,8 @@ describe('DocsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DocsComponent ]
+      imports: [ MatCardModule, MatIconModule ],
+      declarations: [ DocsComponent]
     })
     .compileComponents();
 
