@@ -1,5 +1,27 @@
 <span *ngIf="isLoggedIn">
     <p> we're in >:)</p>
+    <div class="content">
+
+        <!-- Username Header -->
+        <div class="header">
+            <h1>Username</h1>
+        </div>
+
+        <!-- User Information Container -->
+        <div class="box">
+            <!-- Left side of the container -->
+            <div class="left-box">
+                <img src="../../../assets/icon-profile.png">
+                <div class="spacer"></div>
+            </div>
+            <!-- Right side of the container -->
+            <div class="right-box">
+                <mat-card class="right-card">
+                    <h2 class="box-text">Profile Information</h2>
+                </mat-card>
+            </div>
+        </div>
+    </div>
 </span>
 
 <span *ngIf="!isLoggedIn">

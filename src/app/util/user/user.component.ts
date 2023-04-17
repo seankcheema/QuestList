@@ -15,6 +15,7 @@ import { User, UserService } from './user.service';
 export class UserComponent {
 
   isLoggedIn: boolean = false;
+  dataSource: User[] | undefined;
 
   /**
    * Constuctor for UserComponent class
@@ -29,6 +30,9 @@ export class UserComponent {
     if(username != null)
     this.isLoggedIn = this.userAuthService.isUserLoggedIn(username);
   }
+
+  
+
 
 }
 
