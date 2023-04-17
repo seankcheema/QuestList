@@ -1,0 +1,38 @@
+.content {
+    padding: 15px;
+}
+
+img {
+    padding-top: 20px;
+   width: 70%; 
+}
+
+.header {
+    padding-top: 10px;
+}
+
+.box {
+    width: 100%;
+}
+
+.left-box {
+    float: left;
+    width: 20%;
+    height: 100%;
+    text-align: center;
+}
+
+ .right-card {
+    float: right;
+    width: 80%;
+   border: 0px solid blue; 
+    height: 423px;
+}
+
+.box-text {
+    padding: 10px;
+}
+
+.spacer {
+    height: 15px;
+}
