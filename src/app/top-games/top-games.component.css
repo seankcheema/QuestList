@@ -1,9 +1,9 @@
-.page1 {
+  .page1 {
     margin: 0 auto;
     display: block;
-}
+  }
 
-.button-container {
+  .button-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,4 +15,13 @@
   
   .right-button {
     margin-left: auto;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  a:hover {
+    color:blue;
   }
