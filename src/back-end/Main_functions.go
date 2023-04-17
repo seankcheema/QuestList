@@ -75,8 +75,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	if pass > 0 {
 		json.NewDecoder(r.Body).Decode(&user)
 	} else { // For unit testing
-		user.Username = "UnitTestSprint4"
-		user.Email = "UnitTestSprint4@gmail.com"
+		user.Username = "UnitTest2"
+		user.Email = "UnitTest2@gmail.com"
 		user.Password = "PASSWORD"
 	}
 
@@ -121,7 +121,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string)
 	if pass > 0 {
 		json.NewDecoder(r.Body).Decode(&user)
 	} else { // For unit testing
-		user.Username = "UnitTestSprint4"
+		user.Username = "UnitTestSprint5"
 		user.Password = "PASSWORD"
 	}
 
@@ -165,17 +165,21 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	if pass > 0 {
 		json.NewDecoder(r.Body).Decode(&review)
 	} else { // For unit testing
-		review.GameName = "Forza Sprint4UnitTest"
-		review.Rating = 4.5
-		review.Description = "CAR GO VROOM"
+		review.GameName = "Final Fantasy 3"
+		review.Rating = 5.0
+		review.Description = "Game guud"
 		review.Username = "UnitTest"
-		review.PlayStatus = "DROPPED"
+		review.PlayStatus = "PLAYING"
 	}
 
-	hasReview := db.Where("username = ?", review.Username).Where("game_name = ?", review.GameName).First(&review).Error
+	var old Review
+	hasReview := db.Where("username = ?", review.Username).Where("game_name = ?", review.GameName).First(&old).Error
 	if hasReview == nil { // if review already exists, overwrite it
-		UserGameRankings(&review, false)
-		db.Save(&review)
+		UserGameRankings(&old, false)
+		old.Description = review.Description
+		old.Rating = review.Rating
+		old.PlayStatus = review.PlayStatus
+		db.Save(&old)
 		UserGameRankings(&review, true)
 		w.WriteHeader(http.StatusOK)
 		return &review
@@ -532,7 +536,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) []User {
 }
 
 // Returns an array of reviews from the last month arranged from most recent to least recent
-func RecentReviews(w http.ResponseWriter, r *http.Request) []Review{
+func RecentReviews(w http.ResponseWriter, r *http.Request) []Review {
 	//Allows the domain to be accessed by front-end
 	enableCors(&w)
 
@@ -566,15 +570,15 @@ func RecentReviews(w http.ResponseWriter, r *http.Request) []Review{
 }
 
 // reverse order of review array
-func reverseArray(arr []Review) []Review{
-	for i, j := 0, len(arr)-1; i<j; i, j = i+1, j-1 {
-	   arr[i], arr[j] = arr[j], arr[i]
+func reverseArray(arr []Review) []Review {
+	for i, j := 0, len(arr)-1; i < j; i, j = i+1, j-1 {
+		arr[i], arr[j] = arr[j], arr[i]
 	}
 	return arr
- }
+}
 
 // Returns the game with the most number of reviews in the last month
-func GetFeaturedGame(w http.ResponseWriter, r *http.Request, client *rawg.Client) *rawg.Game{
+func GetFeaturedGame(w http.ResponseWriter, r *http.Request, client *rawg.Client) *rawg.Game {
 	//Allows the doamin to be accessed by frontend
 	enableCors(&w)
 

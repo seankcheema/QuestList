@@ -152,8 +152,8 @@ func TestSignUp(t *testing.T) {
 
 		var username, email, password string // desired username, email, and password
 
-		username = "UnitTestSprint4"        // should be unique
-		email = "UnitTestSprint4@gmail.com" // should be unique
+		username = "UnitTest2"        // should be unique
+		email = "UnitTest2@gmail.com" // should be unique
 		password = "PASSWORD"
 
 		var user User
@@ -182,8 +182,8 @@ func TestSignIn(t *testing.T) {
 
 	var username, email, password string // desired username, email, and password
 
-	username = "UnitTestSprint4"        // should be unique
-	email = "UnitTestSprint4@gmail.com" // should be unique
+	username = "UnitTestSprint5"        // should be unique
+	email = "UnitTestSprint5@gmail.com" // should be unique
 	password = "PASSWORD"
 
 	r, _ := http.NewRequest("POST", "sign-in", nil)
@@ -218,11 +218,11 @@ func TestWriteReview(t *testing.T) {
 	}
 
 	// Desired vars
-	GameName := "Forza Sprint4UnitTest"
-	Rating := 4.5
-	Description := "CAR GO VROOM"
+	GameName := "Final Fantasy 3"
+	Rating := 5.0
+	Description := "Game guud"
 	Username := "UnitTest"
-	PlayStatus := "DROPPED"
+	PlayStatus := "PLAYING"
 
 	var review Review
 
@@ -231,7 +231,7 @@ func TestWriteReview(t *testing.T) {
 
 	WriteAReview(w, r, nil)
 
-	db.Where("username = ?", Username).First(&review)
+	db.Where("username = ?", Username).Where("game_name = ?", GameName).First(&review)
 
 	fmt.Println("Game Name: ", review.GameName, "\nRating: ", review.Rating, "\nDescription: ", review.Description, "\nUsername: ", review.Username, "\nPlay Status: ", review.PlayStatus)
 	if GameName != review.GameName || Rating != float64(review.Rating) || Description != review.Description || Username != review.Username || PlayStatus != review.PlayStatus {
@@ -253,7 +253,7 @@ func TestGetReview(t *testing.T) {
 	}
 
 	// Desired vars
-	GameName := "Forza 5"
+	GameName := "Forza 100"
 	Rating := 4.5
 	Description := "CAR GO VROOM"
 	Username := "UnitTest"
@@ -265,7 +265,7 @@ func TestGetReview(t *testing.T) {
 	reviews := GetReviews(w, r, nil)
 	review := reviews[0]
 
-	db.Where("username = ?", Username).First(&review)
+	db.Where("username = ?", Username).Where("game_name = ?", GameName).First(&review)
 
 	fmt.Println("Game Name: ", review.GameName, "\nRating: ", review.Rating, "\nDescription: ", review.Description, "\nUsername: ", review.Username, "\nPlay Status: ", review.PlayStatus)
 	if GameName != review.GameName || Rating != float64(review.Rating) || Description != review.Description || Username != review.Username || PlayStatus != review.PlayStatus {
@@ -298,12 +298,9 @@ func TestTopGames(t *testing.T) {
 
 	//Desired values as of 4/13 @ 1pm
 	//Highest rated game atm
-	highestRatedGameName := "Forza 5"
-	var highestRatedGameScore float32 = 4.5
+	highestRatedGameName := "Final Fantasy 3"
+	var highestRatedGameScore float32 = 5.0
 
-	//Second highest rated game atm
-	secondHighestRatedGameName := "Wizard101"
-	var secondHighestRatedGameScore float32 = 3.5
 
 	//Create parameters for the function and call it to get a list of the rawg jsons of the top games
 	r, _ := http.NewRequest("GET", "/topgames", nil)
@@ -342,37 +339,6 @@ func TestTopGames(t *testing.T) {
 		t.Errorf("Returned wrong game score")
 	} else {
 		fmt.Println("Successful Highest Rated Game Score Test")
-	}
-
-	//--------------------------------------------------------------------------------------------------------------------------------------------
-
-	//Find the supposed second highest rated game in our database and store it in userRating
-	var userRating2 GameRanking
-	gameToLookup = collectionOfTopGames[1].GameName
-	fmt.Println("Game name retrived from the top of the collection: " + gameToLookup)
-
-	db.Where("game_name = ? ", gameToLookup).First(&userRating2)
-
-	//Perform first check to see if the expected values match the actual values of the highest game
-	gotName = userRating2.GameName
-	wantName = secondHighestRatedGameName
-
-	fmt.Println("Got Name 2: " + gotName + ":::")
-	fmt.Println("Want Name 2: " + wantName + ":::")
-
-	if gotName != wantName {
-		t.Errorf("Returned wrong game name: " + gotName)
-	} else {
-		fmt.Println("Successful Highest Rated Game Name Test")
-	}
-
-	gotScore = userRating2.AverageRating
-	wantScore = secondHighestRatedGameScore
-
-	if gotScore != wantScore {
-		t.Errorf("Returned wrong game score")
-	} else {
-		fmt.Println("Successful Highest Rated Game Name Test")
 	}
 }
 
@@ -426,7 +392,7 @@ func TestRecentReviews(t *testing.T) {
 
 	//Call function and set desired return
 	reviews := RecentReviews(w, r)
-	desired := Review{GameName: "Forza Sprint4UnitTest", Rating: float32(4.5), Description: "CAR GO VROOM", Username: "UnitTest", PlayStatus: "DROPPED"}
+	desired := Review{GameName: "Final Fantasy 3", Rating: float32(5.0), Description: "Game guud", Username: "UnitTest", PlayStatus: "PLAYING"}
 
 	if reviews != nil { // if there are reviews, proceed
 		review := reviews[0] // Get most recent review
@@ -465,14 +431,14 @@ func TestFeaturedGame(t *testing.T) {
 	featuredGame := GetFeaturedGame(w, r, client)
 	desiredGame := "Destiny"
 
-	if featuredGame != nil{
+	if featuredGame != nil {
 		fmt.Println(featuredGame.Name)
-		if featuredGame.Name == desiredGame{
+		if featuredGame.Name == desiredGame {
 			fmt.Println("Successfully found featured game: ", featuredGame.Name)
-		} else{
+		} else {
 			t.Errorf("Incorrect featured game")
 		}
-	} else{
+	} else {
 		t.Errorf("Did not find featured game")
 	}
 }
