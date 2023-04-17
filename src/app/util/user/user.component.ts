@@ -16,6 +16,7 @@ export class UserComponent {
 
   isLoggedIn: boolean = false;
   dataSource: User[] | undefined;
+  username: string | undefined;
 
   /**
    * Constuctor for UserComponent class
@@ -27,8 +28,11 @@ export class UserComponent {
 
     const username = this.route.snapshot.paramMap.get('username');
 
-    if(username != null)
-    this.isLoggedIn = this.userAuthService.isUserLoggedIn(username);
+    if(username != null) {
+      this.isLoggedIn = this.userAuthService.isUserLoggedIn(username);
+    }
+
+    this.username = username || '';
   }
 
   
