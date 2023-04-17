@@ -42,3 +42,15 @@ img {
 .btn {
     margin: auto;
 }
+
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    font-size: 24px;
+    color: #ccc;
+  }
+  
+  .star-filled {
+    color: #ffc107;
+    cursor: pointer;
+  }

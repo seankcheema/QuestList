@@ -13,7 +13,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import { MatMenuModule } from '@angular/material/menu'
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -73,7 +75,9 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     MatInputModule,
     BrowserAnimationsModule,
     MatAutocompleteModule,
-    MatMenuModule
+    MatMenuModule,
+    MatIconModule,
+    MatCheckboxModule
   ],
   providers: [
     GameService,

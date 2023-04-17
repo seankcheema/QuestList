@@ -1,6 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json',
+  })
+}
 
 export interface Review {
   ID: number;
@@ -25,5 +31,9 @@ export class ReviewService {
 
   getRecentReviews(): Observable<Review[]> {
     return this.http.get<Review[]>(this.baseURL + '/recentreviews');
+  }
+
+  addReview(review: any): Observable<any> {
+    return this.http.post<any>(this.baseURL + '/writeareview', review, httpOptions);
   }
 }

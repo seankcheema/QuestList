@@ -16,10 +16,18 @@
                     <h2>Review</h2>
                     <mat-form-field class="example-full-width">
                         <mat-label>Leave a review</mat-label>
-                        <textarea matInput placeholder="This game sucks!"></textarea>
+                        <textarea matInput placeholder="This game sucks!" #reviewTextArea></textarea>
                     </mat-form-field>
+                <br>
+                    <div class="star-rating">
+                        <mat-icon (click)="ratingControl.setValue(1)" [ngClass]="{'star-filled': ratingControl.value >= 1}">star</mat-icon>
+                        <mat-icon (click)="ratingControl.setValue(2)" [ngClass]="{'star-filled': ratingControl.value >= 2}">star</mat-icon>
+                        <mat-icon (click)="ratingControl.setValue(3)" [ngClass]="{'star-filled': ratingControl.value >= 3}">star</mat-icon>
+                        <mat-icon (click)="ratingControl.setValue(4)" [ngClass]="{'star-filled': ratingControl.value >= 4}">star</mat-icon>
+                        <mat-icon (click)="ratingControl.setValue(5)" [ngClass]="{'star-filled': ratingControl.value >= 5}">star</mat-icon>
+                    </div>
                     <mat-card-actions>
-                        <button class="btn" mat-raised-button color="primary">Add Review</button>
+                        <button class="btn" mat-raised-button color="primary" (click)="addReview(reviewTextArea.value)">Add Review</button>
                     </mat-card-actions>
                 </form>
             </div>
