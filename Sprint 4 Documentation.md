@@ -181,6 +181,29 @@ type GameRanking struct {
 }
 <hr />
 
+**Databases Used Throughout the Backend**
+<br />
+
+1) User Database: “currentlyUsers.db”<br />
+
+Purpose<br />
+Stores and catalogs all the existing users that Quest List has. Users are stored in rows formatted using the “User” struct. Existing users can be added using the “sign-up” function and retrieved using “getusers.” 
+<br />
+
+2) Review Database: “reviews.db”<br />
+
+Purpose<br />
+Stores and catalogs every review made by a user of the website. Each row is formatted using the “Review” struct. Each entry is for a different game by a different user. Reviews for an existing game by an existing user can be overwritten to limit memory use. New reviews can be added using “writereview” and retrieved using “getreview.”  
+<br />
+
+3) Quest List Average Ratings Per Game: “UserGameRankings.db”<br />
+
+Purpose<br />
+Stores and constantly updates the average ratings each game on the Quest List website has. Each game has one entry and has an average rating score and a count of the total reviews made. Each row is formatted using the “AverageUserRating” struct. This database is updated automatically when a new review is created or updated.
+<br />
+
+<hr />
+
 **Handler Functions and their Functionality**
 
 1) GET: {HelloWorld}: http://localhost:8080/
