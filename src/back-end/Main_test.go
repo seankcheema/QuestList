@@ -152,8 +152,8 @@ func TestSignUp(t *testing.T) {
 
 		var username, email, password string // desired username, email, and password
 
-		username = "UnitTest"        // should be unique
-		email = "UnitTest@gmail.com" // should be unique
+		username = "UnitTestSprint4"        // should be unique
+		email = "UnitTestSprint4@gmail.com" // should be unique
 		password = "PASSWORD"
 
 		var user User
@@ -182,8 +182,8 @@ func TestSignIn(t *testing.T) {
 
 	var username, email, password string // desired username, email, and password
 
-	username = "UnitTest"        // should be unique
-	email = "UnitTest@gmail.com" // should be unique
+	username = "UnitTestSprint4"        // should be unique
+	email = "UnitTestSprint4@gmail.com" // should be unique
 	password = "PASSWORD"
 
 	r, _ := http.NewRequest("POST", "sign-in", nil)
@@ -218,7 +218,7 @@ func TestWriteReview(t *testing.T) {
 	}
 
 	// Desired vars
-	GameName := "Forza 5"
+	GameName := "Forza Sprint4UnitTest"
 	Rating := 4.5
 	Description := "CAR GO VROOM"
 	Username := "UnitTest"
@@ -426,7 +426,7 @@ func TestRecentReviews(t *testing.T) {
 
 	//Call function and set desired return
 	reviews := RecentReviews(w, r)
-	desired := Review{GameName: "Forza 5", Rating: float32(4.5), Description: "CAR GO VROOM", Username: "UnitTest", PlayStatus: "DROPPED"}
+	desired := Review{GameName: "Forza Sprint4UnitTest", Rating: float32(4.5), Description: "CAR GO VROOM", Username: "UnitTest", PlayStatus: "DROPPED"}
 
 	if reviews != nil { // if there are reviews, proceed
 		review := reviews[0] // Get most recent review

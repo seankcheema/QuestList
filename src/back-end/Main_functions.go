@@ -75,8 +75,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) *User {
 	if pass > 0 {
 		json.NewDecoder(r.Body).Decode(&user)
 	} else { // For unit testing
-		user.Username = "UnitTest"
-		user.Email = "UnitTest@gmail.com"
+		user.Username = "UnitTestSprint4"
+		user.Email = "UnitTestSprint4@gmail.com"
 		user.Password = "PASSWORD"
 	}
 
@@ -121,7 +121,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, currentlyActiveUser *string)
 	if pass > 0 {
 		json.NewDecoder(r.Body).Decode(&user)
 	} else { // For unit testing
-		user.Username = "UnitTest"
+		user.Username = "UnitTestSprint4"
 		user.Password = "PASSWORD"
 	}
 
@@ -165,7 +165,7 @@ func WriteAReview(w http.ResponseWriter, r *http.Request, currentlyActiveUser *s
 	if pass > 0 {
 		json.NewDecoder(r.Body).Decode(&review)
 	} else { // For unit testing
-		review.GameName = "Forza 5"
+		review.GameName = "Forza Sprint4UnitTest"
 		review.Rating = 4.5
 		review.Description = "CAR GO VROOM"
 		review.Username = "UnitTest"
