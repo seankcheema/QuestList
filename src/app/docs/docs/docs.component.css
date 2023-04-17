@@ -1,0 +1,23 @@
+video {
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 15px;
+}
+
+.video-title {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.card {
+    margin: 0 auto;
+    width: 50%;
+}
+
+p {
+    padding: 5px;
+}
+
+mat-icon {
+    padding-right: 5px;
+}

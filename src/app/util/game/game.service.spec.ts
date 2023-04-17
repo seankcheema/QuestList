@@ -144,12 +144,12 @@ describe("GameService", () => {
 
         const expectedGameSlug:string = 'featured game';
     
-            httpClientSpy.get.and.returnValue(of([{
+            httpClientSpy.get.and.returnValue(of({
                 slug: expectedGameSlug
-            }]));
+            }));
     
             service.getFeaturedGame().subscribe(value => {
-                expect(value[0].slug)
+                expect(value.slug)
                     .withContext('expected game slug')
                     .toEqual(expectedGameSlug);
                 done();

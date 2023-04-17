@@ -37,6 +37,7 @@ import { UserAuthService } from './util/user-auth/user-auth.service';
 import { SearchBarComponent } from './util/search-bar/search-bar.component';
 import { ReviewService } from './util/review/review.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { DocsComponent } from './docs/docs/docs.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     UserComponent,
     SignInComponent,
     SearchBarComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    DocsComponent
   ],
   imports: [
     BrowserModule,

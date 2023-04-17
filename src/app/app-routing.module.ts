@@ -9,6 +9,7 @@ import { TopGamesComponent } from './top-games/top-games.component';
 import { UserComponent } from './util/user/user.component';
 import { GameComponent } from './util/game/game.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { DocsComponent } from './docs/docs/docs.component';
 
 // Routes for the application
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'sign-in', component: SignInComponent},
   { path: 'user/:username', component: UserComponent },
   { path: 'game/:game-slug', component: GameComponent },
+  { path: 'docs', component: DocsComponent},
   { path: '**', component: PageNotFoundComponent}
 ];
 

@@ -6,8 +6,8 @@
 
     <div class="spacer"></div>
 
+    <button mat-button routerLink="/docs" routerLinkActive="active" ariaCurrentWhenActive="page">Docs</button>
     <button mat-button routerLink="/top-games" routerLinkActive="active" ariaCurrentWhenActive="page">Top Games</button>
-    <button mat-button routerLink="/community" routerLinkActive="active" ariaCurrentWhenActive="page">Commmunity</button>
     <button mat-button routerLink="/about-us" routerLinkActive="active" ariaCurrentWhenActive="page">About Us</button>
     <span *ngIf="!isLoggedIn">
       <button mat-raised-button color="accent" routerLink="/sign-in" routerLinkActive="active" ariaCurrentWhenActive="page">Sign In</button>
