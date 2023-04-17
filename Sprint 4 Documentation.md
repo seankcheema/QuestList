@@ -30,16 +30,45 @@ Professor Dobra
 
 **Front-end:**
 
-_Work Completed_:<br/>
-WIP
+**_Units Tests_**:  <br/>
+-getGames():  
+This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService’s getGames() function is then called with the mock HttpClient injected and the observable returned is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
 
+-getRecentGames():  
+This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService’s getRecentGames() function is then called with the mock HttpClient injected and the observable returned is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
 
-Cypress Testing:<br/>
-WORK IN PROGRESS
+-getGame():  
+This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService's getGame() function is called with the mock HttpClient injected and the observable is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
 
-_Testing Challenges_: <br/>
-One issue we encountered was that the typescript compiler had chai type conflict errors when using Jasmine alongside Cypress. While the tests for both Cypress and Jasmine would still run, VSCode threw errors. This was important to fix, though, as it was difficult to leverage typescript’s errors for debugging purposes while these type conflict errors were present.
-<hr />
+-getUpcomingGames():  
+This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService's getUpcomingGames() function is called with the mock HttpClient injected and the observable is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
+
+-getTopRatedGames():  
+This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService's getTopRatedGames() function is called with the mock HttpClient injected and the observable is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
+
+-getFeaturedGame():  
+This test function creates a mock HttpClient with an object with a game slug property to mimic the array of games returned from the back-end. The GameService's getFeaturedGame() function is called with the mock HttpClient injected and the observable is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
+
+-getRecentReviews():
+  This test function creates a mock HttpClient with an array of objects with a description to mimic a review returned from the back-end. The ReviewService's getRecentReviews() function is called with the mock HttpClient injected and the observable is subscribed to. An expect statement ensures that the value after subscribing to the observable is equal to the mock HttpClient's description property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
+
+**_Cypress Testing_**: <br/> 
+We also implemented end-to-end Cypress testing that ensures many features of the site work as intended.
+
+'Should Go To About Us Page': Ensures that the about us page can be navigated to.
+
+‘Top Games Should Display Games’: Ensures that the top games page can be navigated to and displays games received from our back-end API call.
+
+'Top Games Buttons Should Work': Ensures that a user can navigate between top game pages using the buttons located at the bottom of the page.
+
+'Should go to game page on click': Ensures that a game can be navigated to by clicking on the image located on the home page.
+
+‘Should Sign Up’: Ensures that the sign-up page can be navigated to and that the form exists and can be filled.
+
+‘Should Sign In’: Ensures that the sign-in page can be navigated to and that the form exists and can be filled.
+
+**_Testing Challenges_**: <br/>
+Some of our functions created in this sprint were post requests and thus creating a mock HttpClient to mock an object sent from the backend wasn't possible.
 
 **Backend:**
 
