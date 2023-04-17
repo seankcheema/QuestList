@@ -30,7 +30,7 @@ Professor Dobra
 
 **Front-end:**
 
-_Work Completed_:<br/>
+**_Work Completed_**:<br/>
 We have completed all of our planned functionality for the four sprints. Our functions and accessibility for the users has been our focal points in this sprint. 
 
 _Home_: 
