@@ -30,6 +30,39 @@ Professor Dobra
 
 **Front-end:**
 
+_Work Completed_:<br/>
+We have completed all of our planned functionality for the four sprints. Our functions and accessibility for the users has been our focal points in this sprint. 
+
+_Home_: 
+Our home page and its individual sections has been completely populated with the data from the backend. 
+- The "Recently Released" section is the same as Sprint 3, but now, each image is now clickable and will direct you to the game's page. 
+- The "Popular Games" section utilizes an identical approach as the "Recently Released" section using our getGames() function, the section grabs the top four elements and their background_images in an Angular grid list. The images are clickable and will direct you to the game's page.
+- The "New Reviews" section uses the getRecentReviews() function to call the first three elements in the array and is then displayed uses an Angular list. Each displayed review displays the name of the video game being reviewed, its star rating from the reviewer, the text of the review, and the username of the reviewer. The title of the video game and the reviewer's username  are clickable and will direct you to their individual pages.
+- The "Top Rated" section uses getTopRatedGames() function to call the first four elements in the array and is then displayed using an Angular list. The titles of the video games are clickable and will direct you to their pages. 
+- The "Coming Soon" section uses getUpcomingGames() function to call the first five elements in the array and is then displayed using an Angular list. Each list item gives the title of the video game and its upcoming release date. The titles of the video games are clickable and will direct you to their pages. From the backend, the release date provides both the day and the time of release. We decided to just display the release day by slicing the date off the string. 
+- The "Featured Game" section uses getFeaturedGame() function to call a video game object and is then displayed using an Angular card. The card contains the cover image and title of the video game. The image is clickable and will direct you to the game's page.
+
+_Search bar_:
+We created a search bar utilizing Angular form fields and autocompletion. The search bar has a filter() function which takes in a string and searches throughout the getGame() array. The autocompletion allows multiple video games with similar titles to be displayed as the title gets typed in. The video game searched for can be selected and will use redirectToGame() function to go its game page. 
+
+_Top Games_:
+The top games table now uses the correct data within by calling the getGames() function. The previous paginator has been fixed and now uses forwardPage() and previousPage() functions to navigate through the query parameters. 
+
+_Sign In / Sign Up_:
+Upon signing up or signing in to a current account, the user will be redirected to the home page, and the sign in button will change to a user logo (to show that the user is logged in by using isLoggedIn() function). Hovering over the user logo allows a user to go to their profile (using redirectToProfile() function) or to logout (using logout() function). 
+
+_User Page_:
+The user/profile pages have been created utilizing html/css styling and Angular material. The page displays the user's username, their profile image (currently a templated user logo), and their profile information (none currently).
+
+_Game Page_:
+The game pages have been created utilizing html/css styling and Angular material. The page displays the title, the cover image, and game information like released date, metacritic, rating, and top rating. The page also allows a user to write a review of the game (not fully functional). 
+
+_Page Not Found_:
+We created a case for when users try to access a non-existing page within our app. If a user types in an incorrect query, it will appear that the page is not found.
+
+_Docs_: 
+Utilizing html video attribute and our assets folder, we have displayed what users can do within the app along with notes of what is going on. The notes are created with Angular cards. 
+
 **_Units Tests_**:  <br/>
 -getGames():  
 This test function creates a mock HttpClient with an array of objects with a game slug property to mimic the array of games returned from the back-end. The GameService’s getGames() function is then called with the mock HttpClient injected and the observable returned is subscribed to. An expect statement then ensures that the value after subscribing to the observable is equal to the mock HttpClient’s slug property. We then also ensure that the HttpClient was only called once (to test for potential duplicative calls).
